@@ -23,6 +23,10 @@ export default function User(){
             //navigate("/login");
         }
 
+        if(sessionStorage.getItem("type") !== "Admin"){
+            window.location.replace("/dashboard");
+        }
+
         fetchData();
     },[]);
 
