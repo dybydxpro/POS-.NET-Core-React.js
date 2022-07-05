@@ -16,7 +16,7 @@ CREATE TABLE Users
     NIC VARCHAR(225) UNIQUE,
     Address VARCHAR(255),
     UserName VARCHAR(255) UNIQUE,
-    Password VARCHAR(255),
+    Password TEXT,
     Type VARCHAR(255) CHECK (Type = 'Admin' OR Type = 'Cashier'),
     Status BIT
 )
@@ -120,24 +120,26 @@ DROP TABLE ReturnItem
 
 ALTER TABLE Users ADD CONSTRAINTS UQ_NIC UNIQUE(NIC);
 
+ALTER TABLE Users ALTER COLUMN Password TEXT;
+
 
 --- Selection
 SELECT *
-FROM Users
+FROM Users;
 SELECT *
-FROM Item
+FROM Item;
 SELECT *
-FROM Stock
+FROM Stock;
 SELECT *
-FROM Supplier
+FROM Supplier;
 SELECT *
-FROM GRN
+FROM GRN;
 SELECT *
-FROM Cart
+FROM Cart;
 SELECT *
-FROM Sale
+FROM Sale;
 SELECT *
-FROM ReturnItem
+FROM ReturnItem;
 
 --- Stored Procidures
 
@@ -150,10 +152,117 @@ END;
 
 EXEC sp_GetAllUsers;
 
-CREATE PROCEDURE sp_CreateUser(@Name AS VARCHAR(255), @NIC AS VARCHAR(255), @Address AS VARCHAR(255), @UserName AS VARCHAR(255), @Password AS VARCHAR(255), @Type AS VARCHAR(255))
+CREATE PROCEDURE sp_GetByOne(
+    @UserID As INTEGER)
 AS
 BEGIN
-    INSERT INTO Users(Name, NIC, Address, UserName, Password, Type, Status) VALUES(@Name, @NIC, @Address, @UserName, @Password, @Type, 'True') 
+    SELECT UserID, Name, NIC, Address, Type
+    FROM Users
+    WHERE UserID = @UserID
+END;
+
+EXEC sp_GetByOne @UserID = 1;
+
+CREATE PROCEDURE sp_CreateUser(
+    @Name AS VARCHAR(255),
+    @NIC AS VARCHAR(255),
+    @Address AS VARCHAR(255),
+    @UserName AS VARCHAR(255),
+    @Password AS TEXT,
+    @Type AS VARCHAR(255))
+AS
+BEGIN
+    INSERT INTO Users
+        (Name, NIC, Address, UserName, Password, Type, Status)
+    VALUES(@Name, @NIC, @Address, @UserName, @Password, @Type, 'True')
 END;
 
 EXEC sp_CreateUser @Name = 'Tharindu', @NIC = '982603056V', @Address = 'Ambalantota', @UserName = 'TharinduD', @Password = '123', @Type = 'Admin';
+
+CREATE PROCEDURE sp_EditUser(
+    @UserID As INTEGER,
+    @Name AS VARCHAR(255),
+    @NIC AS VARCHAR(255),
+    @Address AS VARCHAR(255),
+    @Type AS VARCHAR(255))
+AS
+BEGIN
+    UPDATE Users
+    SET Name = @Name, NIC = @NIC, Address = @Address, Type = @Type
+    WHERE UserID = @UserID
+END;
+
+EXEC sp_EditUser @UserID = 1, @Name = 'Tharindu Theekshana', @NIC = '982603056V', @Address = 'Ambalantota', @Type = 'Admin';
+
+
+CREATE PROCEDURE sp_ActiveDeactiveUser(
+    @UserID AS INTEGER)
+AS
+BEGIN
+    DECLARE @AvailableStatus BIT;
+    SET @AvailableStatus = (SELECT Status FROM Users WHERE UserID = @UserID);
+
+    IF @AvailableStatus != 'True'
+    BEGIN
+        UPDATE Users SET Status = 'True' WHERE UserID = @UserID
+    END
+    ELSE
+    BEGIN
+        UPDATE Users SET Status = 'False' WHERE UserID = @UserID
+    END
+END;
+
+EXEC sp_ActiveDeactiveUser @UserID = 1;
+
+CREATE PROCEDURE sp_CheckPassword(
+    @UserName AS VARCHAR(255),
+    @Password AS VARCHAR(255))
+AS
+BEGIN
+    SELECT * FROM Users WHERE UserName LIKE @UserName AND Password LIKE @Password
+END;
+
+EXEC sp_CheckPassword @UserName = 'TharinduD', @Password = '125';
+
+CREATE PROCEDURE sp_ChangePassword(
+    @UserID AS INTEGER,
+    @Password AS VARCHAR(255))
+AS
+BEGIN
+    UPDATE Users SET Password = @Password WHERE UserID = @UserID
+END;
+
+EXEC sp_ChangePassword @UserID = 1, @Password = '125';
+
+CREATE PROCEDURE sp_Login(
+    @UserName AS VARCHAR(255),
+    @Password AS VARCHAR(255))
+AS
+BEGIN
+    SELECT UserID, UserName, Type
+    FROM Users
+    WHERE UserName LIKE @UserName AND Password LIKE @Password
+END;
+
+EXEC sp_Login @UserName = 'TharinduD', @Password = '125';
+
+CREATE PROCEDURE sp_ResetPassword(
+    @UserID AS INTEGER,
+    @Password AS VARCHAR(255))
+AS
+BEGIN
+    UPDATE Users SET Password = @Password WHERE UserID = @UserID
+END;
+
+EXEC sp_ResetPassword @UserID = 1, @Password = '125';
+
+CREATE PROCEDURE sp_GetSearchUsers(
+    @Search AS VARCHAR(255))
+AS
+BEGIN
+    SELECT UserID, Name, NIC, Address, UserName, Type, Status
+    FROM Users
+    WHERE Name LIKE @Search OR NIC LIKE @Search OR Address LIKE @Search OR Type LIKE @Search
+END;
+
+EXEC sp_GetSearchUsers @Search = '%Ma%';
