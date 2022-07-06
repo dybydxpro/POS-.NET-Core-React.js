@@ -372,9 +372,9 @@ export default function User(){
                             <p className="h2 mb-4">List of Users</p>
                         </div>
 
-                        <div class="d-flex justify-content-end container">
-                            <div class="form-floating mb-2">
-                                <input type="text" class="form-control" id="search" placeholder="Search" onChange={(e) => SearchText(e)}/>
+                        <div className="d-flex justify-content-end container">
+                            <div className="form-floating mb-2">
+                                <input type="text" className="form-control" id="search" placeholder="Search" onChange={(e) => SearchText(e)}/>
                                 <label for="search">Search</label>
                             </div>
                         </div>

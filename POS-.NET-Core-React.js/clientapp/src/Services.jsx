@@ -1,6 +1,7 @@
 import httpCommon from "./http-common";
 
 class Services{
+    //User Functions
     login(data){
         return httpCommon.post("/User/Login", data);
     }
@@ -31,6 +32,28 @@ class Services{
 
     SearchUser(text){
         return httpCommon.get(`/User/Search/${text}`)
+    }
+
+    //User Functions
+
+    GetAllItems(){
+        return httpCommon.get("/Item")
+    }
+
+    GetOneItem(id){
+        return httpCommon.get(`/Item/${id}`)
+    }
+
+    GetSearchItems(text){
+        return httpCommon.get(`/Item/Search/${text}`)
+    }
+
+    PostItem(data){
+        return httpCommon.post("/Item", data)
+    }
+
+    EditItem(data){
+        return httpCommon.put("/Item", data)
     }
 }
 

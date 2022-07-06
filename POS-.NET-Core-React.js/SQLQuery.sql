@@ -25,8 +25,7 @@ CREATE TABLE Item
 (
     ItemID INTEGER IDENTITY PRIMARY KEY,
     ItemName VARCHAR(255),
-    Unit VARCHAR(255),
-    Address VARCHAR(255)
+    Unit VARCHAR(255)
 )
 
 CREATE TABLE Stock
@@ -122,6 +121,8 @@ ALTER TABLE Users ADD CONSTRAINTS UQ_NIC UNIQUE(NIC);
 
 ALTER TABLE Users ALTER COLUMN Password TEXT;
 
+ALTER TABLE Item DROP COLUMN Address;
+
 
 --- Selection
 SELECT *
@@ -142,7 +143,7 @@ SELECT *
 FROM ReturnItem;
 
 --- Stored Procidures
-
+---- User SPs
 CREATE PROCEDURE sp_GetAllUsers
 AS
 BEGIN
@@ -266,3 +267,49 @@ BEGIN
 END;
 
 EXEC sp_GetSearchUsers @Search = '%Ma%';
+
+---- Items SPs
+
+CREATE PROCEDURE sp_GetAllItems
+AS
+BEGIN
+    SELECT ItemID, ItemName, Unit
+    FROM Item
+END;
+
+EXEC sp_GetAllItems;
+
+CREATE PROCEDURE sp_GetOnce(
+    @ItemID AS INTEGER
+)
+AS
+BEGIN
+    SELECT ItemID, ItemName, Unit
+    FROM Item
+    WHERE ItemID = @ItemID
+END;
+
+EXEC sp_GetOnce @ItemID = 1;
+
+CREATE PROCEDURE sp_GetSearchItems(
+    @Search AS VARCHAR(255))
+AS
+BEGIN
+    SELECT ItemID, ItemName, Unit
+    FROM Item
+    WHERE ItemName LIKE @Search
+END;
+
+EXEC sp_GetSearchItems @Search = '%Ro%';
+
+CREATE PROCEDURE sp_CreateItem(
+    @ItemName AS VARCHAR(255),
+    @Unit AS VARCHAR(255)
+)
+AS
+BEGIN
+    INSERT INTO Item(ItemName, Unit)
+    VALUES(@ItemName, @Unit)
+END;
+
+EXEC sp_CreateItem @ItemName = 'Rocell Water Closet - URBAN D', @Unit = "NOS";
