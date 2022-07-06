@@ -41,17 +41,22 @@ export default function SlideBar(){
                     </li>*/}
                     <li>
                         <a href="/dashboard" className="nav-link link-dark text-light">
-                            Dashboard
+                            <i className="bi bi-grid"></i> &nbsp; Dashboard
                         </a>
                     </li>
                     <li>
                         <a href="/dashboard/user" className="nav-link link-dark text-light">
-                            Users
+                            <i className="bi bi-person"></i> &nbsp; Users
                         </a>
                     </li>
                     <li>
                         <a href="/dashboard/item" className="nav-link link-dark text-light">
-                            Items
+                            <i className="bi bi-box"></i> &nbsp; Items
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/dashboard/stock" className="nav-link link-dark text-light">
+                            <i className="bi bi-grid-1x2"></i> &nbsp; Stock
                         </a>
                     </li>
                 </ul>

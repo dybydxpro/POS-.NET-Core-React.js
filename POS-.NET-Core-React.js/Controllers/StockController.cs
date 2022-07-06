@@ -8,24 +8,24 @@ namespace POS_.NET_Core_React.js.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ItemController : ControllerBase
+    public class StockController : ControllerBase
     {
-        ItemContext db = new ItemContext();
+        StockContext db = new StockContext();
 
         [HttpGet]
-        public async Task<ActionResult<List<Item>>> GetAllItems()
+        public async Task<ActionResult<List<StockGetDTO>>> GetAllStocks()
         {
-            List<Item> items = db.GetItems().ToList();
-            return Ok(items);
+            List<StockGetDTO> stocks = db.GetStocks().ToList();
+            return Ok(stocks);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Item>> GetOnce(int id)
+        public async Task<ActionResult<StockGetDTO>> GetOnce(int id)
         {
-            Item itm = db.GetOnce(id);
-            if(itm.ItemID != 0)
+            StockGetDTO stk = db.GetOnce(id);
+            if (stk.StockID != 0)
             {
-                return Ok(itm); 
+                return Ok(stk);
             }
             else
             {
@@ -34,18 +34,18 @@ namespace POS_.NET_Core_React.js.Controllers
         }
 
         [HttpGet("Search/{text}")]
-        public async Task<ActionResult<Item>> SearchItem(string text)
+        public async Task<ActionResult<StockGetDTO>> SearchStock(string text)
         {
-            List<Item> items = db.SearchItems(text).ToList();
-            return Ok(items);
+            List<StockGetDTO> stocks = db.SearchStocks(text).ToList();
+            return Ok(stocks);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Item>> PostItem(ItemAddDTO obj)
+        public async Task<ActionResult<Stock>> PostItem(StockAddDTO obj)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                var isOK = db.PostItems(obj);
+                var isOK = db.PostStocks(obj);
                 return Ok(isOK);
             }
             else
@@ -56,11 +56,11 @@ namespace POS_.NET_Core_React.js.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<Item>> EditItem(Item obj)
+        public async Task<ActionResult<Stock>> EditItem(Stock obj)
         {
             if (ModelState.IsValid)
             {
-                var isOK = db.UpdateItems(obj);
+                var isOK = db.UpdateStocks(obj);
                 if (isOK)
                 {
                     return Ok(isOK);

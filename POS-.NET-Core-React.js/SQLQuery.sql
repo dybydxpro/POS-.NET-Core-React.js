@@ -31,7 +31,7 @@ CREATE TABLE Item
 CREATE TABLE Stock
 (
     StockID INTEGER IDENTITY PRIMARY KEY,
-    ItemID integer,
+    ItemID INTEGER,
     Qty DECIMAL(8,2),
     Price DECIMAL(8,2),
     FOREIGN KEY(ItemID) REFERENCES Item(ItemID)
@@ -279,7 +279,7 @@ END;
 
 EXEC sp_GetAllItems;
 
-CREATE PROCEDURE sp_GetOnce(
+CREATE PROCEDURE sp_GetItemOnce(
     @ItemID AS INTEGER
 )
 AS
@@ -289,7 +289,7 @@ BEGIN
     WHERE ItemID = @ItemID
 END;
 
-EXEC sp_GetOnce @ItemID = 1;
+EXEC sp_GetItemOnce @ItemID = 1;
 
 CREATE PROCEDURE sp_GetSearchItems(
     @Search AS VARCHAR(255))
@@ -313,3 +313,76 @@ BEGIN
 END;
 
 EXEC sp_CreateItem @ItemName = 'Rocell Water Closet - URBAN D', @Unit = "NOS";
+
+CREATE PROCEDURE sp_UpdateItems(
+    @ItemID AS INTEGER,
+    @ItemName AS VARCHAR(255),
+    @Unit AS VARCHAR(255))
+AS
+BEGIN
+    UPDATE Item SET ItemName = @ItemName, Unit = @Unit  WHERE ItemID = @ItemID
+END;
+
+EXEC sp_UpdateItems @ItemID = 1, @ItemName = 'Rocell Water Closet - Urban D', @Unit = 'NOS';
+
+---- Stocks SPs
+
+CREATE PROCEDURE sp_GetAllStocks
+AS
+BEGIN
+    SELECT s.StockID, s.ItemID, i.ItemName, i.Unit, s.Qty, s.Price
+    FROM Stock s, Item i
+    WHERE s.ItemID = i.ItemID
+END;
+
+EXEC sp_GetAllStocks;
+
+CREATE PROCEDURE sp_GetStockOnce(
+    @StockID AS INTEGER
+)
+AS
+BEGIN
+    SELECT s.StockID, s.ItemID, i.ItemName, i.Unit, s.Qty, s.Price
+    FROM Stock s, Item i
+    WHERE s.ItemID = i.ItemID AND s.StockID = @StockID
+END;
+
+EXEC sp_GetStockOnce @StockID = 1;
+
+CREATE PROCEDURE sp_GetSearchStocks(
+    @Search AS VARCHAR(255))
+AS
+BEGIN
+    SELECT s.StockID, s.ItemID, i.ItemName, i.Unit, s.Qty, s.Price
+    FROM Stock s, Item i
+    WHERE i.ItemID = s.ItemID AND (i.ItemName LIKE @Search OR i.Unit LIKE @Search OR s.Qty LIKE @Search OR s.Price LIKE @Search)
+END;
+
+EXEC sp_GetSearchStocks @Search = '%Ro%';
+
+CREATE PROCEDURE sp_CreateStock(
+    @ItemID AS VARCHAR(255),
+    @Qty AS DECIMAL(8,2),
+    @Price AS DECIMAL(8,2)
+)
+AS
+BEGIN
+    INSERT INTO Stock(ItemID, Qty, Price)
+    VALUES(@ItemID, @Qty, @Price)
+END;
+
+EXEC sp_CreateStock @ItemID = 1, @Qty = 1, @Price = 54000.00;
+
+CREATE PROCEDURE sp_UpdateStocks(
+    @StockID AS INTEGER,
+    @ItemID AS VARCHAR(255),
+    @Qty AS DECIMAL(8,2),
+    @Price AS DECIMAL(8,2))
+AS
+BEGIN
+    UPDATE Stock 
+    SET ItemID = @ItemID, Qty = @Qty, Price = @Price
+    WHERE StockID = @StockID
+END;
+
+EXEC sp_UpdateStocks @StockID = 1, @ItemID = 1, @Qty = 2, @Price = 54000.00;

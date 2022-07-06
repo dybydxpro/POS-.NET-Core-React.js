@@ -2,7 +2,7 @@
 
 namespace POS_.NET_Core_React.js.Models.DTO
 {
-    public class ItemAdd
+    public class ItemAddDTO
     {
         [Required]
         public string ItemName { get; set; }

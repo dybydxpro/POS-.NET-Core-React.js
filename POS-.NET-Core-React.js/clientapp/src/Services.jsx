@@ -34,8 +34,7 @@ class Services{
         return httpCommon.get(`/User/Search/${text}`)
     }
 
-    //User Functions
-
+    //Item Functions
     GetAllItems(){
         return httpCommon.get("/Item")
     }
@@ -54,6 +53,27 @@ class Services{
 
     EditItem(data){
         return httpCommon.put("/Item", data)
+    }
+
+    //Stack Functions
+    GetAllStocks(){
+        return httpCommon.get("/Stock")
+    }
+
+    GetOneStock(id){
+        return httpCommon.get(`/Stock/${id}`)
+    }
+
+    GetSearchStocks(text){
+        return httpCommon.get(`/Stock/Search/${text}`)
+    }
+
+    PostStock(data){
+        return httpCommon.post("/Stock", data)
+    }
+
+    EditStock(data){
+        return httpCommon.put("/Stock", data)
     }
 }
 

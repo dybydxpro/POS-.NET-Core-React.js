@@ -369,7 +369,7 @@ export default function User(){
                     
                     <div className="shadow-lg p-3 mb-5 bg-body rounded m-2" style={{minHeight: "87vh"}}>
                         <div className="text-center">
-                            <p className="h2 mb-4">List of Users</p>
+                            <p className="h2 mb-1">List of Users</p>
                         </div>
 
                         <div className="d-flex justify-content-end container">

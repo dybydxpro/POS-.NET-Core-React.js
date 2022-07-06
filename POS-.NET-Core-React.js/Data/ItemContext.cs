@@ -15,7 +15,6 @@ namespace POS_.NET_Core_React.js.Data
                 using(SqlCommand cmd = new SqlCommand("[dbo].[sp_GetAllItems]", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    //cmd.Parameters.AddWithValue("@", cmd);
                     if(con.State == ConnectionState.Closed)
                         con.Open();
                     SqlDataAdapter adp = new SqlDataAdapter(cmd);
@@ -40,7 +39,7 @@ namespace POS_.NET_Core_React.js.Data
             List<Item> items = new List<Item>();
             using (SqlConnection con = new SqlConnection(Connection))
             {
-                using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetOnce]", con))
+                using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetItemOnce]", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@ItemID", id);
@@ -105,7 +104,7 @@ namespace POS_.NET_Core_React.js.Data
             return items;
         }
 
-        public bool PostItems(ItemAdd obj)
+        public bool PostItems(ItemAddDTO obj)
         {
             List<Item> items = new List<Item>();
             using (SqlConnection con = new SqlConnection(Connection))

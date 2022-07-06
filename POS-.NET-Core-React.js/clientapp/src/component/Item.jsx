@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-//import { useNavigate } from 'react-router-dom';
 import Services from "../Services";
 import { Button, Modal } from 'react-bootstrap';
 
@@ -15,7 +14,6 @@ export default function Item(){
     useEffect(() => {
         if(!(Number(sessionStorage.getItem("userID")) > 0)){
             window.location.replace("/login");
-            //navigate("/login");
         }
 
         fetchData();
@@ -220,7 +218,7 @@ export default function Item(){
                     
                     <div className="shadow-lg p-3 mb-5 bg-body rounded m-2" style={{minHeight: "87vh"}}>
                         <div className="text-center">
-                            <p className="h2 mb-4">List of Items</p>
+                            <p className="h2 mb-1">List of Items</p>
                         </div>
 
                         <div className="d-flex justify-content-end container">

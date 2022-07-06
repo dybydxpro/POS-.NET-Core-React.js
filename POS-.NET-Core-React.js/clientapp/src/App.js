@@ -5,6 +5,7 @@ import Login from './component/Login';
 import Dashboard from './component/Dashboard';
 import Users from './component/User';
 import Items from './component/Item';
+import Stock from "./component/Stock";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard/>} />
           <Route path="/dashboard/user" element={<Users/>} />
           <Route path="/dashboard/item" element={<Items/>} />
+          <Route path="/dashboard/stock" element={<Stock/>} />
         </Routes>
       </Router>
     </div>
