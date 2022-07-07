@@ -75,6 +75,27 @@ class Services{
     EditStock(data){
         return httpCommon.put("/Stock", data)
     }
+
+    //Supplier Functions
+    GetAllSuppliers(){
+        return httpCommon.get("/Supplier")
+    }
+
+    GetOneSupplier(id){
+        return httpCommon.get(`/Supplier/${id}`)
+    }
+
+    GetSearchSuppliers(text){
+        return httpCommon.get(`/Supplier/Search/${text}`)
+    }
+
+    PostSupplier(data){
+        return httpCommon.post("/Supplier", data)
+    }
+
+    EditSupplier(data){
+        return httpCommon.put("/Supplier", data)
+    }
 }
 
 export default new Services();

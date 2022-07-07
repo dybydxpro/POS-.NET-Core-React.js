@@ -151,6 +151,7 @@ namespace POS_.NET_Core_React.js.Data
                 using (SqlCommand cmd = new SqlCommand("[dbo].[sp_UpdateStocks]", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@StockID", obj.StockID);
                     cmd.Parameters.AddWithValue("@ItemID", obj.ItemID);
                     cmd.Parameters.AddWithValue("@Qty", Math.Round(obj.Qty, 2));
                     cmd.Parameters.AddWithValue("@Price", Math.Round(obj.Price, 2));

@@ -59,7 +59,7 @@ export default function User(){
                     <td>{dataset.userName}</td>
                     <td>{dataset.type}</td>
                     <td>
-                        <button type="button" className="btn btn-warning mx-2" onClick={()=>{EditModelHandleShow(); GetOneUser(dataset.userID);}}>Edit</button>
+                        <button type="button" className="btn btn-warning mx-2" onClick={()=>{EditModelHandleShow(); GetOneUser(dataset.userID);}}><i className="bi bi-pencil"></i>&nbsp; Edit</button>
                         <Modal show={editModel} onHide={EditModelHandleClose}>
                             <Modal.Header closeButton>
                                 <Modal.Title>Edit User</Modal.Title>
@@ -98,7 +98,7 @@ export default function User(){
                             </Modal.Footer>
                         </Modal>
 
-                        <button type="button" className="btn btn-info mx-2" onClick={()=>{CpModelHandleShow(); setCp({"userID": dataset.userID});}}>Change Password</button>
+                        <button type="button" className="btn btn-info mx-2" onClick={()=>{CpModelHandleShow(); setCp({"userID": dataset.userID});}}><i className="bi bi-shield-lock"></i>&nbsp; Change Password</button>
                         <Modal show={cpModel} onHide={CpModelHandleClose}>
                             <Modal.Header closeButton>
                                 <Modal.Title>Change Password</Modal.Title>
@@ -124,7 +124,7 @@ export default function User(){
                                 </Button>
                             </Modal.Footer>
                         </Modal>
-                        <button type="button" className="btn btn-secondary mx-2" onClick={()=>ActiveDeactiveAccount(dataset.userID)}>{dataset.status===false? "Activate" : "Deactivate"}</button>
+                        <button type="button" className="btn btn-secondary mx-2" onClick={()=>ActiveDeactiveAccount(dataset.userID)}><i className={dataset.status===false? "bi bi-chevron-up" : "bi bi-chevron-down"}></i>&nbsp; {dataset.status===false? "Activate" : "Deactivate"}</button>
 
                     </td>
                 </tr>
@@ -375,7 +375,7 @@ export default function User(){
                         <div className="d-flex justify-content-end container">
                             <div className="form-floating mb-2">
                                 <input type="text" className="form-control" id="search" placeholder="Search" onChange={(e) => SearchText(e)}/>
-                                <label for="search">Search</label>
+                                <label for="search"><i className="bi bi-search"></i>&nbsp; Search</label>
                             </div>
                         </div>
 

@@ -4,11 +4,13 @@ import { Button, Modal } from 'react-bootstrap';
 
 import SlideBar from "./SlideBar";
 
-export default function Item(){
+
+export default function Supplier(){
     const [data, setData] = useState([{
-        "itemID": 0,
-        "itemName": "",
-        "unit": ""
+        "supplierID": 0,
+        "supplierName": "",
+        "address": "",
+        "contactNumber": ""
     }]);
 
     useEffect(() => {
@@ -20,7 +22,7 @@ export default function Item(){
     },[]);
 
     function fetchData(){
-        Services.GetAllItems().then(({data})=>{
+        Services.GetAllSuppliers().then(({data})=>{
             setData(data)
         })
     }
@@ -31,7 +33,7 @@ export default function Item(){
             fetchData();
         }
         else{
-            Services.GetSearchItems(search).then(({data})=>{
+            Services.GetSearchSuppliers(search).then(({data})=>{
                 setData(data)
             })
         }
@@ -40,38 +42,35 @@ export default function Item(){
     function printTable(){
         return(
             data.map(dataset =>
-                <tr key={dataset.itemID}>
-                    <td>{dataset.itemID}</td>
-                    <td>{dataset.itemName}</td>
-                    <td>{dataset.unit}</td>
+                <tr key={dataset.supplierID}>
+                    <td>{dataset.supplierID}</td>
+                    <td>{dataset.supplierName}</td>
+                    <td>{dataset.address}</td>
+                    <td>{dataset.contactNumber}</td>
                     <td>
-                        <button type="button" className="btn btn-warning mx-2" onClick={()=>{EditModelHandleShow(); GetOneItems(dataset.itemID);}}><i className="bi bi-pencil"></i>&nbsp; Edit</button>
+                        <button type="button" className="btn btn-warning mx-2" onClick={()=>{EditModelHandleShow(); GetOneSupplier(dataset.supplierID);}}><i className="bi bi-pencil"></i>&nbsp; Edit</button>
                         <Modal show={editModel} onHide={EditModelHandleClose}>
                             <Modal.Header closeButton>
-                                <Modal.Title>Edit Item</Modal.Title>
+                                <Modal.Title>Edit Supplier</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
                                 <div>
                                     <div className="form-floating mb-3">
-                                        <input type="text" className="form-control" id="itemName" value={editItem.itemName} onChange={(e) => handleEdit(e)} placeholder="Tile Addisive"/>
-                                        <label htmlFor="itemName" className="form-label">Item Name</label>
+                                        <input type="text" className="form-control" id="supplierName" value={editSupplier.supplierName} onChange={(e) => handleEdit(e)} placeholder="TS Company"/>
+                                        <label htmlFor="supplierName" className="form-label">Supplier Name</label>
                                     </div>
                                     <div className="form-floating mb-3">
-                                        <select className="form-select" id="unit" value={editItem.unit} onChange={(e) => handleEdit(e)}>
-                                            <option value="" selected>_</option>
-                                            <option value="NOS">NOS</option>
-                                            <option value="KG">KG</option>
-                                            <option value="BAG">BAG</option>
-                                            <option value="LITER">LITER</option>
-                                            <option value="MITER">MITER</option>
-                                            <option value="BOTTLE">BOTTLE</option>
-                                        </select>
-                                        <label htmlFor="unit" className="form-label">Unit</label>
+                                        <input type="text" className="form-control" id="address" value={editSupplier.address} onChange={(e) => handleEdit(e)} placeholder="Main Road, Gampaha."/>
+                                        <label htmlFor="address" className="form-label">Address</label>
+                                    </div>
+                                    <div className="form-floating mb-3">
+                                        <input type="text" className="form-control" id="contactNumber" value={editSupplier.contactNumber} onChange={(e) => handleEdit(e)} placeholder="+94#########"/>
+                                        <label htmlFor="contactNumber" className="form-label">Contact Number</label>
                                     </div>
                                 </div>
                             </Modal.Body>
                             <Modal.Footer>
-                                <Button variant="success" onClick={() => EditItem()}>
+                                <Button variant="success" onClick={() => EditSupplier()}>
                                     Save
                                 </Button>
                                 <Button variant="secondary" onClick={EditModelHandleClose}>
@@ -101,14 +100,18 @@ export default function Item(){
         console.log(newData);
     }
 
-    function AddItemValidate(){
+    function AddSupplierValidate(){
         const newData = {...addNew};
-        if(newData["itemName"] === "" || newData["itemName"] === undefined){
-            console.log("itemName");
+        if(newData["supplierName"] === "" || newData["supplierName"] === undefined){
+            console.log("supplierName");
             return false;
         }
-        else if(newData["unit"] === "" || newData["unit"] === undefined){
-            console.log("unit");
+        else if(newData["address"] === "" || newData["address"] === undefined){
+            console.log("address");
+            return false;
+        }
+        else if(newData["contactNumber"] === "" || newData["contactNumber"] === undefined){
+            console.log("contactNumber");
             return false;
         }
         else{
@@ -116,9 +119,9 @@ export default function Item(){
         }
     }
 
-    function AddItem(){
-        if(AddItemValidate()){
-            Services.PostItem(addNew)
+    function AddSupplier(){
+        if(AddSupplierValidate()){
+            Services.PostSupplier(addNew)
             .then(({data}) =>{
                 console.log(data);
                 fetchData();
@@ -142,38 +145,43 @@ export default function Item(){
     const EditModelHandleShow = () => setEditModel(true);
 
     //Edit User
-    const [editItem, setEditItem] = useState({
-        "itemID": 0,
-        "itemName": "",
-        "unit": ""
+    const [editSupplier, setEditSupplier] = useState({
+        "supplierID": 0,
+        "supplierName": "",
+        "address": "",
+        "contactNumber": ""
     });
 
     function handleEdit(e){
-        const newData = {...editItem};
+        const newData = {...editSupplier};
         newData[e.target.id] = e.target.value;
-        setEditItem(newData);
+        setEditSupplier(newData);
         console.log(newData);
     }
 
-    function GetOneItems(id){
-        Services.GetOneItem(id)
+    function GetOneSupplier(id){
+        Services.GetOneSupplier(id)
         .then(({data}) =>{
             console.log(data);
-            setEditItem(data);
+            setEditSupplier(data);
         }).catch(({response})=>{
             console.log(response);
             alert(response);
         })     
     }
 
-    function EditItemValidate(){
-        const newData = {...editItem};
-        if(newData["itemName"] === "" || newData["itemName"] === undefined){
-            console.log("itemName");
+    function EditSupplierValidate(){
+        const newData = {...editSupplier};
+        if(newData["supplierName"] === "" || newData["supplierName"] === undefined){
+            console.log("supplierName");
             return false;
         }
-        else if(newData["unit"] === "" || newData["unit"] === undefined){
-            console.log("unit");
+        else if(newData["address"] === "" || newData["address"] === undefined){
+            console.log("address");
+            return false;
+        }
+        else if(newData["contactNumber"] === "" || newData["contactNumber"] === undefined){
+            console.log("contactNumber");
             return false;
         }
         else{
@@ -181,12 +189,12 @@ export default function Item(){
         }
     }
 
-    function EditItem(){
-        if(EditItemValidate()){
-            Services.EditItem(editItem)
+    function EditSupplier(){
+        if(EditSupplierValidate()){
+            Services.EditSupplier(editSupplier)
             .then(({data}) =>{
                 console.log(data);
-                EditItem({"userID": 0, "itemName": "", "unit": ""});
+                setEditSupplier({"supplierID": 0, "supplierName": "", "address": "", "contactNumber": ""});
                 fetchData();
                 EditModelHandleClose();
             }).catch(({response})=>{
@@ -211,14 +219,14 @@ export default function Item(){
                         <nav>
                             <ol className="breadcrumb p-3">
                                 <li className="breadcrumb-item" aria-current="page"><a href="/dashboard">Dashboard</a></li>
-                                <li className="breadcrumb-item active" aria-current="page">Item</li>
+                                <li className="breadcrumb-item active" aria-current="page">Supplier</li>
                             </ol>
                         </nav>
                     </div>
                     
                     <div className="shadow-lg p-3 mb-5 bg-body rounded m-2" style={{minHeight: "87vh"}}>
                         <div className="text-center">
-                            <p className="h2 mb-1">List of Items</p>
+                            <p className="h2 mb-1">List of Suppliers</p>
                         </div>
 
                         <div className="d-flex justify-content-end container">
@@ -233,8 +241,9 @@ export default function Item(){
                                 <thead>
                                     <tr className="table-dark">
                                         <th scope="col">#</th>
-                                        <th scope="col">Item Name</th>
-                                        <th scope="col">Unit</th>
+                                        <th scope="col">Supplier Name</th>
+                                        <th scope="col">Address</th>
+                                        <th scope="col">Contact Number</th>
                                         <th scope="col" style={{ width: "150px" }}>Options</th>
                                     </tr>
                                 </thead>
@@ -259,26 +268,22 @@ export default function Item(){
                     <Modal.Body>
                         <div>
                             <div className="form-floating mb-3">
-                                <input type="text" className="form-control" id="itemName" onChange={(e) => handleAdd(e)} placeholder="Tile Addisive"/>
-                                <label htmlFor="itemName" className="form-label">Item Name</label>
+                                <input type="text" className="form-control" id="supplierName" onChange={(e) => handleAdd(e)} placeholder="TS Company"/>
+                                <label htmlFor="supplierName" className="form-label">Supplier Name</label>
                             </div>
                             <div className="form-floating mb-3">
-                                <select className="form-select" id="unit" onChange={(e) => handleAdd(e)} placeholder="NOS">
-                                            <option value="" selected>_</option>
-                                            <option value="NOS">NOS</option>
-                                            <option value="KG">KG</option>
-                                            <option value="BAG">BAG</option>
-                                            <option value="LITER">LITER</option>
-                                            <option value="MITER">MITER</option>
-                                            <option value="BOTTLE">BOTTLE</option>
-                                        </select>
-                                <label htmlFor="unit" className="form-label">Unit</label>
+                                <input type="text" className="form-control" id="address" onChange={(e) => handleAdd(e)} placeholder="Main Road, Gampaha."/>
+                                <label htmlFor="address" className="form-label">Address</label>
+                            </div>
+                            <div className="form-floating mb-3">
+                                <input type="text" className="form-control" id="contactNumber" onChange={(e) => handleAdd(e)} placeholder="+94#########"/>
+                                <label htmlFor="contactNumber" className="form-label">Contact Number</label>
                             </div>
                         </div>
                         
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="success" onClick={() => AddItem()}>
+                        <Button variant="success" onClick={() => AddSupplier()}>
                             Save
                         </Button>
                         <Button variant="secondary" onClick={AddModelHandleClose}>

@@ -40,9 +40,9 @@ CREATE TABLE Stock
 CREATE TABLE Supplier
 (
     SupplierID INTEGER IDENTITY PRIMARY KEY,
-    SupplierName VARCHAR(255),
+    SupplierName VARCHAR(255) UNIQUE,
     Address VARCHAR(255),
-    ConatctNumber VARCHAR(255)
+    ContactNumber VARCHAR(255)
 )
 
 CREATE TABLE GRN
@@ -122,6 +122,10 @@ ALTER TABLE Users ADD CONSTRAINTS UQ_NIC UNIQUE(NIC);
 ALTER TABLE Users ALTER COLUMN Password TEXT;
 
 ALTER TABLE Item DROP COLUMN Address;
+
+DELETE FROM Supplier WHERE SupplierID = 4;
+
+ALTER TABLE Supplier ADD CONSTRAINT UniqueSuppName UNIQUE (SupplierName);
 
 
 --- Selection
@@ -386,3 +390,63 @@ BEGIN
 END;
 
 EXEC sp_UpdateStocks @StockID = 1, @ItemID = 1, @Qty = 2, @Price = 54000.00;
+
+---- Supplier SPs
+
+CREATE PROCEDURE sp_GetAllSuppliers
+AS
+BEGIN
+    SELECT SupplierID, SupplierName, Address, ContactNumber
+    FROM Supplier
+END;
+
+EXEC sp_GetAllSuppliers;
+
+CREATE PROCEDURE sp_GetSupplierOnce(
+    @SupplierID AS INTEGER)
+AS
+BEGIN
+    SELECT SupplierID, SupplierName, Address, ContactNumber
+    FROM Supplier
+    WHERE SupplierID = @SupplierID
+END;
+
+EXEC sp_GetSupplierOnce @SupplierID = 1;
+
+CREATE PROCEDURE sp_GetSearchSuppliers(
+    @Search AS VARCHAR(255))
+AS
+BEGIN
+    SELECT SupplierID, SupplierName, Address, ContactNumber
+    FROM Supplier
+    WHERE SupplierName LIKE @Search OR Address LIKE @Search OR ContactNumber LIKE @Search
+END;
+
+EXEC sp_GetSearchSuppliers @Search = '%Ro%';
+
+CREATE PROCEDURE sp_CreateSupplier(
+    @SupplierName AS VARCHAR(255),
+    @Address AS VARCHAR(255),
+    @ContactNumber AS VARCHAR(255))
+AS
+BEGIN
+    INSERT INTO Supplier(SupplierName, Address, ContactNumber)
+    VALUES(@SupplierName, @Address, @ContactNumber)
+END;
+
+EXEC sp_CreateSupplier @SupplierName = "Rocell Company (PVT) LTD.", @Address = "No. 20, RA De Mel Mawatha, Colombo 03.", @ContactNumber = "+94766223344";
+
+CREATE PROCEDURE sp_UpdateSupplier(
+    @SupplierID AS INTEGER,
+    @SupplierName AS VARCHAR(255),
+    @Address AS VARCHAR(255),
+    @ContactNumber AS VARCHAR(255))
+AS
+BEGIN
+    UPDATE Supplier 
+    SET SupplierName = @SupplierName, Address = @Address, ContactNumber = @ContactNumber
+    WHERE SupplierID = @SupplierID
+END;
+
+EXEC sp_UpdateSupplier @SupplierID = 1, @SupplierName = "Rocell Company (PVT) LTD.", @Address = "No. 20, RA De Mel Mawatha, Colombo 03.", @ContactNumber = "0766223344";
+

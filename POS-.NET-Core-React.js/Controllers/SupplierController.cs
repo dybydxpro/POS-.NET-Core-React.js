@@ -8,22 +8,22 @@ namespace POS_.NET_Core_React.js.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StockController : ControllerBase
+    public class SupplierController : ControllerBase
     {
-        StockContext db = new StockContext();
+        SupplierContext db = new SupplierContext();
 
         [HttpGet]
-        public async Task<ActionResult<List<StockGetDTO>>> GetAllStocks()
+        public async Task<ActionResult<List<Supplier>>> GetAllStocks()
         {
-            List<StockGetDTO> stocks = db.GetStocks().ToList();
+            List<Supplier> stocks = db.GetSuppliers().ToList();
             return Ok(stocks);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<StockGetDTO>> GetOnce(int id)
+        public async Task<ActionResult<Supplier>> GetOnce(int id)
         {
-            StockGetDTO stk = db.GetOnce(id);
-            if (stk.StockID != 0)
+            Supplier stk = db.GetSupplierOnce(id);
+            if (stk.SupplierID != 0)
             {
                 return Ok(stk);
             }
@@ -34,18 +34,18 @@ namespace POS_.NET_Core_React.js.Controllers
         }
 
         [HttpGet("Search/{text}")]
-        public async Task<ActionResult<StockGetDTO>> SearchStock(string text)
+        public async Task<ActionResult<Supplier>> SearchSupplier(string text)
         {
-            List<StockGetDTO> stocks = db.SearchStocks(text).ToList();
-            return Ok(stocks);
+            List<Supplier> suppliers = db.SearchSuppliers(text).ToList();
+            return Ok(suppliers);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Stock>> PostStock(StockAddDTO obj)
+        public async Task<ActionResult<Supplier>> PostSupplier(SupplierAddDTO obj)
         {
             if (ModelState.IsValid)
             {
-                var isOK = db.PostStocks(obj);
+                var isOK = db.PostSuppliers(obj);
                 return Ok(isOK);
             }
             else
@@ -56,11 +56,11 @@ namespace POS_.NET_Core_React.js.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<Stock>> EditStock(Stock obj)
+        public async Task<ActionResult<Supplier>> EditSupplier(Supplier obj)
         {
             if (ModelState.IsValid)
             {
-                var isOK = db.UpdateStocks(obj);
+                var isOK = db.UpdateSuppliers(obj);
                 if (isOK)
                 {
                     return Ok(isOK);

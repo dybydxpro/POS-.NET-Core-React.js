@@ -1,5 +1,6 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate } from 'react-router-dom';
+import { Offcanvas } from 'react-bootstrap';
 import dp1 from '../image/profile.png';
 
 export default function SlideBar(){
@@ -18,6 +19,12 @@ export default function SlideBar(){
         sessionStorage.setItem('type', "");
         navigate("/");
     }
+
+    //
+    const [showOffCanvas, setShowOffCanvas] = useState(false);
+
+    const handleClose = () => setShowOffCanvas(false);
+    const handleShow = () => setShowOffCanvas(true);
     
     return(
         <div>
@@ -56,7 +63,12 @@ export default function SlideBar(){
                     </li>
                     <li>
                         <a href="/dashboard/stock" className="nav-link link-dark text-light">
-                            <i className="bi bi-grid-1x2"></i> &nbsp; Stock
+                            <i className="bi bi-grid-1x2"></i> &nbsp; Stocks
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/dashboard/supplier" className="nav-link link-dark text-light">
+                            <i className="bi bi-people"></i> &nbsp; Suppliers
                         </a>
                     </li>
                 </ul>
@@ -67,11 +79,37 @@ export default function SlideBar(){
                         <strong>{sessionStorage.getItem('userName')}</strong>
                     </a>
                     <ul className="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
-                        <li><a className="dropdown-item" href="/">New project...</a></li>
-                        <li><a className="dropdown-item" href="/">Settings</a></li>
-                        <li><a className="dropdown-item" href="/">Profile</a></li>
+                        {/*<li><a className="dropdown-item" href="/">New project...</a></li>
+                        <li><a className="dropdown-item" href="/">Settings</a></li>*/}
+                        <li><span className="dropdown-item" onClick={handleShow}><i className="bi bi-person-badge"></i>&nbsp; Profile</span></li>
+                        <Offcanvas show={showOffCanvas} onHide={handleClose} placement="end">
+                            <Offcanvas.Header closeButton>
+                                <Offcanvas.Title>User Profile</Offcanvas.Title>
+                            </Offcanvas.Header>
+                            <Offcanvas.Body>
+                                <div>
+                                    <div className="d-flex justify-content-center">
+                                        <img src={dp1} alt="" width="250" height="250" className="rounded-circle me-2"/>
+                                    </div>
+                                    <div className="px-3 py-5">
+                                        <div className="row">
+                                            <div className="col-5"><p style={{fontSize: "20px"}}>User ID: </p></div>
+                                            <div className="col"><p style={{fontSize: "20px"}}>{sessionStorage.getItem('userID')}</p></div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-5"><p style={{fontSize: "20px"}}>User Name: </p></div>
+                                            <div className="col"><p style={{fontSize: "20px"}}>{sessionStorage.getItem('userName')}</p></div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-5"><p style={{fontSize: "20px"}}>User Type: </p></div>
+                                            <div className="col"><p style={{fontSize: "20px"}}>{sessionStorage.getItem('type')}</p></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Offcanvas.Body>
+                        </Offcanvas>
                         <li><hr className="dropdown-divider"/></li>
-                        <li><span className="dropdown-item" onClick={() => logout()}>Sign out</span></li>
+                        <li><span className="dropdown-item" onClick={() => logout()}><i className="bi bi-box-arrow-right"></i>&nbsp; Sign out</span></li>
                     </ul>
                 </div>
             </div>

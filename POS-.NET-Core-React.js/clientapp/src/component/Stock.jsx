@@ -143,7 +143,7 @@ export default function Stock(){
                         <div className="d-flex justify-content-end container">
                             <div className="form-floating mb-2">
                                 <input type="text" className="form-control" id="search" placeholder="Search" onChange={(e) => SearchText(e)}/>
-                                <label htmlFor="search">Search</label>
+                                <label htmlFor="search"><i className="bi bi-search"></i>&nbsp; Search</label>
                             </div>
                         </div>
 
