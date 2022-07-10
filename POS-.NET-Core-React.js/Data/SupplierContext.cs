@@ -35,6 +35,34 @@ namespace POS_.NET_Core_React.js.Data
             return suppliers;
         }
 
+        public List<Supplier> GetSuppliersASC()
+        {
+            List<Supplier> suppliers = new List<Supplier>();
+            using (SqlConnection con = new SqlConnection(Connection))
+            {
+                using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetAllSuppliersASC]", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    if (con.State == ConnectionState.Closed)
+                        con.Open();
+                    SqlDataAdapter adp = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adp.Fill(dt);
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        suppliers.Add(new Supplier
+                        {
+                            SupplierID = Convert.ToInt32(dr[0]),
+                            SupplierName = Convert.ToString(dr[1]),
+                            Address = Convert.ToString(dr[2]),
+                            ContactNumber = Convert.ToString(dr[3])
+                        });
+                    }
+                }
+            }
+            return suppliers;
+        }
+
         public Supplier GetSupplierOnce(int id)
         {
             List<Supplier> suppliers = new List<Supplier>();

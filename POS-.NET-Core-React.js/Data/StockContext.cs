@@ -37,6 +37,35 @@ namespace POS_.NET_Core_React.js.Data
             return stocks;
         }
 
+        public List<Stock> GetStocksASC(int id)
+        {
+            List<Stock> stocks = new List<Stock>();
+            using (SqlConnection con = new SqlConnection(Connection))
+            {
+                using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetAllStocksASC]", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@ItemID", id);
+                    if (con.State == ConnectionState.Closed)
+                        con.Open();
+                    SqlDataAdapter adp = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adp.Fill(dt);
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        stocks.Add(new Stock
+                        {
+                            StockID = Convert.ToInt32(dr[0]),
+                            ItemID = Convert.ToInt32(dr[1]),
+                            Qty = Convert.ToDouble(dr[2]),
+                            Price = Convert.ToDouble(dr[3])
+                        });
+                    }
+                }
+            }
+            return stocks;
+        }
+
         public StockGetDTO GetOnce(int id)
         {
             List<StockGetDTO> stocks = new List<StockGetDTO>();

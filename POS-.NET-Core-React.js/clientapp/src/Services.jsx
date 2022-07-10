@@ -39,6 +39,10 @@ class Services{
         return httpCommon.get("/Item")
     }
 
+    GetAllItemsASC(){
+        return httpCommon.get("/Item/ASC")
+    }
+
     GetOneItem(id){
         return httpCommon.get(`/Item/${id}`)
     }
@@ -58,6 +62,10 @@ class Services{
     //Stack Functions
     GetAllStocks(){
         return httpCommon.get("/Stock")
+    }
+
+    GetAllStocksASC(id){
+        return httpCommon.get(`/Stock/ASC/${id}`)
     }
 
     GetOneStock(id){
@@ -81,6 +89,10 @@ class Services{
         return httpCommon.get("/Supplier")
     }
 
+    GetAllSuppliersASC(){
+        return httpCommon.get("/Supplier/ASC")
+    }
+
     GetOneSupplier(id){
         return httpCommon.get(`/Supplier/${id}`)
     }
@@ -95,6 +107,40 @@ class Services{
 
     EditSupplier(data){
         return httpCommon.put("/Supplier", data)
+    }
+
+    //GRN Function
+    GetAllGRNs(){
+        return httpCommon.get("/GRN")
+    }
+
+    GetOneGRN(id){
+        return httpCommon.get(`/GRN/${id}`)
+    }
+
+    GetSearchGRNs(text){
+        return httpCommon.get(`/GRN/Search/${text}`)
+    }
+
+    PostGRNs(id){
+        return httpCommon.post(`/GRN/${id}`)
+    }
+
+    //GRN Cart Function
+    GetAllGRNCarts(id){
+        return httpCommon.get(`/GRNCart/GetByUser/${id}`)
+    }
+
+    PostGRNCart(data){
+        return httpCommon.post("/GRNCart", data)
+    }
+
+    EditGRNCart(data){
+        return httpCommon.get("/GRNCart", data)
+    }
+
+    DeleteGRNCart(id){
+        return httpCommon.delete(`/GRNCart/${id}`)
     }
 }
 

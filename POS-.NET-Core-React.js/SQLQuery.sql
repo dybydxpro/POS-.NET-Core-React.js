@@ -48,6 +48,7 @@ CREATE TABLE Supplier
 CREATE TABLE GRN
 (
     GRNID INTEGER IDENTITY PRIMARY KEY,
+    GRNNo INTEGER,
     GRNDate DATETIME,
     InvoiceNo VARCHAR(255),
     InvoiceDate DATETIME,
@@ -59,8 +60,28 @@ CREATE TABLE GRN
     BulckPrice DECIMAL(8,2),
     ActualBulkPrice DECIMAL(8,2),
     GRNRecorderID INTEGER,
-    DueDate DATETIME,
-    Remarks TEXT,
+    DueDate DATETIME NULL,
+    Remarks TEXT NULL,
+    FOREIGN KEY(SupplierID) REFERENCES Supplier(SupplierID),
+    FOREIGN KEY(ItemID) REFERENCES Item(ItemID),
+    FOREIGN KEY(StockID) REFERENCES Stock(StockID)
+)
+
+CREATE TABLE GRNCart
+(
+    GRNID INTEGER IDENTITY PRIMARY KEY,
+    InvoiceNo VARCHAR(255),
+    InvoiceDate DATETIME,
+    SupplierID INTEGER,
+    ItemID INTEGER,
+    StockID INTEGER,
+    GRNQty INTEGER,
+    PayType VARCHAR(255),
+    BulckPrice DECIMAL(8,2),
+    ActualBulkPrice DECIMAL(8,2),
+    GRNRecorderID INTEGER,
+    DueDate DATETIME NULL,
+    Remarks TEXT NULL,
     FOREIGN KEY(SupplierID) REFERENCES Supplier(SupplierID),
     FOREIGN KEY(ItemID) REFERENCES Item(ItemID),
     FOREIGN KEY(StockID) REFERENCES Stock(StockID)
@@ -105,14 +126,15 @@ CREATE TABLE ReturnItem
 
 --- Drop Table
 
-DROP TABLE Users
-DROP TABLE Item
-DROP TABLE Stock
-DROP TABLE Supplier
-DROP TABLE GRN
-DROP TABLE Cart
-DROP TABLE Sale
-DROP TABLE ReturnItem
+--DROP TABLE Users
+--DROP TABLE Item
+--DROP TABLE Stock
+--DROP TABLE Supplier
+--DROP TABLE GRN
+--DROP TABLE GRNCart
+--DROP TABLE Cart
+--DROP TABLE Sale
+--DROP TABLE ReturnItem
 
 
 --- Update Tables
@@ -127,24 +149,19 @@ DELETE FROM Supplier WHERE SupplierID = 4;
 
 ALTER TABLE Supplier ADD CONSTRAINT UniqueSuppName UNIQUE (SupplierName);
 
+UPDATE GRN SET GRNNo = 2 WHERE GRNID = 4
+
 
 --- Selection
-SELECT *
-FROM Users;
-SELECT *
-FROM Item;
-SELECT *
-FROM Stock;
-SELECT *
-FROM Supplier;
-SELECT *
-FROM GRN;
-SELECT *
-FROM Cart;
-SELECT *
-FROM Sale;
-SELECT *
-FROM ReturnItem;
+SELECT * FROM Users;
+SELECT * FROM Item;
+SELECT * FROM Stock;
+SELECT * FROM Supplier;
+SELECT * FROM GRN;
+SELECT * FROM GRNCart;
+SELECT * FROM Cart;
+SELECT * FROM Sale;
+SELECT * FROM ReturnItem;
 
 --- Stored Procidures
 ---- User SPs
@@ -283,6 +300,16 @@ END;
 
 EXEC sp_GetAllItems;
 
+CREATE PROCEDURE sp_GetAllItemsASC
+AS
+BEGIN
+    SELECT ItemID, ItemName, Unit
+    FROM Item
+    ORDER BY ItemName ASC
+END;
+
+EXEC sp_GetAllItemsASC;
+
 CREATE PROCEDURE sp_GetItemOnce(
     @ItemID AS INTEGER
 )
@@ -340,6 +367,19 @@ BEGIN
 END;
 
 EXEC sp_GetAllStocks;
+
+CREATE PROCEDURE sp_GetAllStocksASC(
+    @ItemID AS INTEGER
+)
+AS
+BEGIN
+    SELECT StockID, ItemID,  Qty, Price
+    FROM Stock
+    WHERE ItemID =  @ItemID
+    ORDER BY Price ASC
+END;
+
+EXEC sp_GetAllStocksASC @ItemID = 1;
 
 CREATE PROCEDURE sp_GetStockOnce(
     @StockID AS INTEGER
@@ -402,6 +442,16 @@ END;
 
 EXEC sp_GetAllSuppliers;
 
+CREATE PROCEDURE sp_GetAllSuppliersASC
+AS
+BEGIN
+    SELECT SupplierID, SupplierName, Address, ContactNumber
+    FROM Supplier
+    ORDER BY SupplierName ASC
+END;
+
+EXEC sp_GetAllSuppliersASC;
+
 CREATE PROCEDURE sp_GetSupplierOnce(
     @SupplierID AS INTEGER)
 AS
@@ -449,4 +499,218 @@ BEGIN
 END;
 
 EXEC sp_UpdateSupplier @SupplierID = 1, @SupplierName = "Rocell Company (PVT) LTD.", @Address = "No. 20, RA De Mel Mawatha, Colombo 03.", @ContactNumber = "0766223344";
+
+---- GRN SPs
+
+CREATE PROCEDURE sp_GetAllGRNs
+AS
+BEGIN
+    SELECT g.GRNNo, g.GRNDate, g.InvoiceNo, s.SupplierName, COUNT(g.StockID) AS 'ItemCount', SUM(g.BulckPrice) AS 'BillPrice'
+    FROM GRN g, Supplier s
+    WHERE g.SupplierID = s.SupplierID
+    GROUP BY g.GRNNo, g.GRNDate, g.InvoiceNo, s.SupplierName
+    ORDER BY g.GRNDate
+END;
+
+EXEC sp_GetAllGRNs;
+
+CREATE PROCEDURE sp_GetGRNOnce(
+    @GRNNo AS INTEGER)
+AS
+BEGIN
+    SELECT g.GRNID, g.GRNNo, g.GRNDate, g.InvoiceNo, g.InvoiceDate, g.SupplierID, sp.SupplierName, sp.Address, 
+    sp.ContactNumber, g.ItemID, i.ItemName, g.StockID, s.Price, i.Unit, g.GRNQty, g.PayType , g.BulckPrice, g.ActualBulkPrice,
+    u.UserName, g.DueDate, g.Remarks
+    FROM GRN g, Supplier sp, Item i, Stock s, Users u
+    WHERE g.SupplierID = sp.SupplierID AND g.ItemID = i.ItemID AND g.StockID = s.StockID AND g.GRNRecorderID = u.UserID AND GRNNo = @GRNNo
+END;
+
+EXEC sp_GetGRNOnce @GRNNo = 1;
+
+CREATE PROCEDURE sp_GetSearchGRNs(
+    @Search AS VARCHAR(255))
+AS
+BEGIN
+    SELECT g.GRNNo, g.GRNDate, g.InvoiceNo, s.SupplierName, COUNT(g.StockID) AS 'ItemCount', SUM(g.BulckPrice) AS 'BillPrice'
+    FROM GRN g, Supplier s
+    WHERE g.SupplierID = s.SupplierID AND (g.GRNNo LIKE @Search OR g.GRNDate LIKE @Search OR g.InvoiceNo LIKE @Search OR s.SupplierName LIKE @Search)
+    GROUP BY g.GRNNo, g.GRNDate, g.InvoiceNo, s.SupplierName
+    ORDER BY g.GRNDate
+END;
+
+EXEC sp_GetSearchGRNs @Search = '%Ro%';
+
+CREATE PROCEDURE sp_CreateGRN(
+    @GRNNo AS VARCHAR(255),
+    @GRNDate AS DATETIME,
+    @InvoiceNo AS VARCHAR(255),
+    @InvoiceDate AS DATETIME,
+    @SupplierID AS INTEGER,
+    @ItemID AS INTEGER,
+    @StockID AS INTEGER,
+    @GRNQty AS INTEGER,
+    @PayType AS VARCHAR(255),
+    @BulckPrice AS DECIMAL(8,2),
+    @ActualBulkPrice AS DECIMAL(8,2),
+    @GRNRecorderID AS INTEGER,
+    @DueDate AS DATETIME,
+    @Remarks AS TEXT
+    )
+AS
+BEGIN
+    INSERT INTO GRN(GRNNo, GRNDate, InvoiceNo, InvoiceDate, SupplierID, ItemID, StockID, GRNQty, PayType, BulckPrice, ActualBulkPrice, GRNRecorderID, DueDate, Remarks)
+    VALUES(@GRNNo, @GRNDate, @InvoiceNo, @InvoiceDate, @SupplierID, @ItemID, @StockID, @GRNQty, @PayType, @BulckPrice, @ActualBulkPrice, @GRNRecorderID, @DueDate, @Remarks)
+
+    DECLARE @AvailableStock DECIMAL(8,2);
+    DECLARE @TotalStock DECIMAL(8,2);
+    SET @AvailableStock = (SELECT Qty FROM Stock WHERE StockID = @StockID);
+    SET @TotalStock = @AvailableStock + @GRNQty
+
+    UPDATE Stock SET Qty = @TotalStock WHERE StockID = @StockID
+END;
+
+EXEC sp_CreateGRN @GRNNo = 1, @GRNDate = '2002-07-08', @InvoiceNo = 'CSV0025', @InvoiceDate = '2002-07-07', @SupplierID = 1, @ItemID = 1, @StockID = 1, @GRNQty = 4, 
+@PayType = "Cash", @BulckPrice = 108000.00, @ActualBulkPrice = 108000.00, @GRNRecorderID = 1, @DueDate = '', @Remarks= '';
+
+CREATE PROCEDURE sp_CreateMaxGRN
+AS
+BEGIN
+    SELECT MAX(GRNNo) AS 'MaxGRN' FROM GRN;
+END;
+
+EXEC sp_CreateMaxGRN;
+
+CREATE PROCEDURE sp_UpdateGRN(
+    @GRNID AS INTEGER,
+    @InvoiceNo AS VARCHAR(255),
+    @InvoiceDate AS DATETIME,
+    @SupplierID AS INTEGER,
+    @ItemID AS INTEGER,
+    @StockID AS INTEGER,
+    @GRNQty AS INTEGER,
+    @PayType AS VARCHAR(255),
+    @BulckPrice AS DECIMAL(8,2),
+    @ActualBulkPrice AS DECIMAL(8,2),
+    @GRNRecorderID AS INTEGER,
+    @DueDate AS DATETIME,
+    @Remarks AS TEXT
+    )
+AS
+BEGIN
+    DECLARE @GRNAvailableQty DECIMAL(8,2);
+    DECLARE @AvStock DECIMAL(8,2);
+    DECLARE @Total DECIMAL(8,2);
+    SET @GRNAvailableQty = (SELECT GRNQty FROM GRN WHERE GRNID = @GRNID);
+    SET @AvStock = (SELECT Qty FROM Stock WHERE StockID = @StockID);
+
+    UPDATE GRN 
+    SET InvoiceNo = @InvoiceNo, InvoiceDate = @InvoiceDate, SupplierID = @SupplierID, ItemID = @ItemID, StockID = @StockID, GRNQty = @GRNQty, PayType = @PayType, 
+    BulckPrice = @BulckPrice, ActualBulkPrice = @ActualBulkPrice, GRNRecorderID = @GRNRecorderID, DueDate = @DueDate, Remarks = @Remarks
+    WHERE GRNID = @GRNID
+
+    IF @GRNAvailableQty < @GRNQty
+    BEGIN
+        SET @Total = @AvStock + (@GRNQty - @GRNAvailableQty)
+        UPDATE Stock SET Qty = @Total WHERE StockID = @StockID
+    END
+    ELSE
+    BEGIN
+        SET @Total = @AvStock - (@GRNAvailableQty - @GRNQty)
+        UPDATE Stock SET Qty = @Total WHERE StockID = @StockID
+    END
+END;
+
+EXEC sp_UpdateGRN @GRNID = 1, @InvoiceNo = 'CSV0025', @InvoiceDate = '2002-07-07', @SupplierID = 1, @ItemID = 1, @StockID = 1, @GRNQty = 5, 
+@PayType = "Cash", @BulckPrice = 108000.00, @ActualBulkPrice = 108000.00, @GRNRecorderID = 1, @DueDate = '', @Remarks= 'Yes';
+
+
+---GRN Cart SPs
+
+CREATE PROCEDURE sp_GetGRNCart(
+    @GRNRecorderID AS INTEGER
+    )
+AS
+BEGIN
+    SELECT g.GRNID, g.InvoiceNo, g.InvoiceDate, g.SupplierID, sp.SupplierName, sp.Address, 
+    sp.ContactNumber, g.ItemID, i.ItemName, g.StockID, s.Price, i.Unit, g.GRNQty, g.PayType , g.BulckPrice, g.ActualBulkPrice,
+    u.UserName, g.DueDate, g.Remarks
+    FROM GRNCart g, Supplier sp, Item i, Stock s, Users u
+    WHERE g.SupplierID = sp.SupplierID AND g.ItemID = i.ItemID AND g.StockID = s.StockID AND g.GRNRecorderID = u.UserID AND GRNRecorderID = @GRNRecorderID
+END;
+
+EXEC sp_GetGRNCart @GRNRecorderID = 1;
+
+CREATE PROCEDURE sp_GetGRNCartOnce(
+    @GRNID AS INTEGER
+    )
+AS
+BEGIN
+    SELECT *
+    FROM GRNCart
+    WHERE GRNID = @GRNID
+END;
+
+EXEC sp_GetGRNCartOnce @GRNID = 1;
+
+CREATE PROCEDURE sp_CreateGRNCart(
+    @InvoiceNo AS VARCHAR(255),
+    @InvoiceDate AS DATETIME,
+    @SupplierID AS INTEGER,
+    @ItemID AS INTEGER,
+    @StockID AS INTEGER,
+    @GRNQty AS INTEGER,
+    @PayType AS VARCHAR(255),
+    @BulckPrice AS DECIMAL(8,2),
+    @ActualBulkPrice AS DECIMAL(8,2),
+    @GRNRecorderID AS INTEGER,
+    @DueDate AS DATETIME,
+    @Remarks AS TEXT
+    )
+AS
+BEGIN
+    INSERT INTO GRNCart(InvoiceNo, InvoiceDate, SupplierID, ItemID, StockID, GRNQty, PayType, BulckPrice, ActualBulkPrice, GRNRecorderID, DueDate, Remarks)
+    VALUES(@InvoiceNo, @InvoiceDate, @SupplierID, @ItemID, @StockID, @GRNQty, @PayType, @BulckPrice, @ActualBulkPrice, @GRNRecorderID, @DueDate, @Remarks)
+END;
+
+EXEC sp_CreateGRNCart @InvoiceNo = 'CSV0026', @InvoiceDate = '2002-07-07', @SupplierID = 1, @ItemID = 1, @StockID = 2, @GRNQty = 4, 
+@PayType = "Cash", @BulckPrice = 20000.00, @ActualBulkPrice = 20000.00, @GRNRecorderID = 1, @DueDate = '', @Remarks= '';
+
+CREATE PROCEDURE sp_UpdateGRNCart(
+    @GRNID AS INTEGER,
+    @InvoiceNo AS VARCHAR(255),
+    @InvoiceDate AS DATETIME,
+    @SupplierID AS INTEGER,
+    @ItemID AS INTEGER,
+    @StockID AS INTEGER,
+    @GRNQty AS INTEGER,
+    @PayType AS VARCHAR(255),
+    @BulckPrice AS DECIMAL(8,2),
+    @ActualBulkPrice AS DECIMAL(8,2),
+    @GRNRecorderID AS INTEGER,
+    @DueDate AS DATETIME,
+    @Remarks AS TEXT
+    )
+AS
+BEGIN
+    UPDATE GRNCart
+    SET InvoiceNo = @InvoiceNo, InvoiceDate = @InvoiceDate, SupplierID = @SupplierID, ItemID = @ItemID, StockID = @StockID, GRNQty = @GRNQty, PayType = @PayType, 
+    BulckPrice = @BulckPrice, ActualBulkPrice = @ActualBulkPrice, GRNRecorderID = @GRNRecorderID, DueDate = @DueDate, Remarks = @Remarks
+    WHERE GRNID = @GRNID
+END;
+
+EXEC sp_UpdateGRNCart @GRNID = 1, @InvoiceNo = 'CSV0026', @InvoiceDate = '2022-07-07', @SupplierID = 1, @ItemID = 1, @StockID = 2, @GRNQty = 5, 
+@PayType = "Cash", @BulckPrice = 20000.00, @ActualBulkPrice = 20000.00, @GRNRecorderID = 1, @DueDate = '', @Remarks= '';
+
+CREATE PROCEDURE sp_DropGRNCart(
+    @GRNID AS INTEGER
+)
+AS
+BEGIN
+    DELETE FROM GRNCart WHERE GRNID = @GRNID
+END;
+
+EXEC sp_DropGRNCart @GRNID = 1;
+
+
+
 

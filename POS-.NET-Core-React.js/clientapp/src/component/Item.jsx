@@ -264,14 +264,14 @@ export default function Item(){
                             </div>
                             <div className="form-floating mb-3">
                                 <select className="form-select" id="unit" onChange={(e) => handleAdd(e)} placeholder="NOS">
-                                            <option value="" selected>_</option>
-                                            <option value="NOS">NOS</option>
-                                            <option value="KG">KG</option>
-                                            <option value="BAG">BAG</option>
-                                            <option value="LITER">LITER</option>
-                                            <option value="MITER">MITER</option>
-                                            <option value="BOTTLE">BOTTLE</option>
-                                        </select>
+                                    <option value="" selected>_</option>
+                                    <option value="NOS">NOS</option>
+                                    <option value="KG">KG</option>
+                                    <option value="BAG">BAG</option>
+                                    <option value="LITER">LITER</option>
+                                    <option value="MITER">MITER</option>
+                                    <option value="BOTTLE">BOTTLE</option>
+                                </select>
                                 <label htmlFor="unit" className="form-label">Unit</label>
                             </div>
                         </div>

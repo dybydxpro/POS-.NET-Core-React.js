@@ -19,6 +19,13 @@ namespace POS_.NET_Core_React.js.Controllers
             return Ok(stocks);
         }
 
+        [HttpGet("ASC")]
+        public async Task<ActionResult<List<Supplier>>> GetSuppliersASC()
+        {
+            List<Supplier> stocks = db.GetSuppliersASC().ToList();
+            return Ok(stocks);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Supplier>> GetOnce(int id)
         {

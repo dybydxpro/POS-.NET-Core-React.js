@@ -34,6 +34,33 @@ namespace POS_.NET_Core_React.js.Data
             return items;
         }
 
+        public List<Item> GetItemsASC()
+        {
+            List<Item> items = new List<Item>();
+            using (SqlConnection con = new SqlConnection(Connection))
+            {
+                using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetAllItemsASC]", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    if (con.State == ConnectionState.Closed)
+                        con.Open();
+                    SqlDataAdapter adp = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adp.Fill(dt);
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        items.Add(new Item
+                        {
+                            ItemID = Convert.ToInt32(dr[0]),
+                            ItemName = Convert.ToString(dr[1]),
+                            Unit = Convert.ToString(dr[2])
+                        });
+                    }
+                }
+            }
+            return items;
+        }
+
         public Item GetOnce(int id)
         {
             List<Item> items = new List<Item>();

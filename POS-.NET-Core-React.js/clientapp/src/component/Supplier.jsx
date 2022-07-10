@@ -4,7 +4,6 @@ import { Button, Modal } from 'react-bootstrap';
 
 import SlideBar from "./SlideBar";
 
-
 export default function Supplier(){
     const [data, setData] = useState([{
         "supplierID": 0,
