@@ -113,6 +113,57 @@ namespace POS_.NET_Core_React.js.Data
             return grns;
         }
 
+        public GRNEditDTO GetOneByIDGRNs(int id)
+        {
+            List<GRNEditDTO> grns = new List<GRNEditDTO>();
+            using (SqlConnection con = new SqlConnection(Connection))
+            {
+                using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetOneByIDGRNs]", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@GRNID", id);
+                    if (con.State == ConnectionState.Closed)
+                        con.Open();
+                    SqlDataAdapter adp = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adp.Fill(dt);
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        grns.Add(new GRNEditDTO
+                        {
+                            GRNID = Convert.ToInt32(dr[0]),
+                            ItemID = Convert.ToInt32(dr[1]),
+                            StockID = Convert.ToInt32(dr[2]),
+                            GRNQty = Convert.ToInt32(dr[3]),
+                            BulckPrice = Convert.ToInt32(dr[4]),
+                            Remarks = Convert.ToString(dr[2]),
+                        });
+                    }
+
+                    GRNEditDTO grn = new GRNEditDTO();
+                    if (grns.Count >= 1)
+                    {
+                        grn.GRNID = Convert.ToInt32(grns[0].GRNID);
+                        grn.ItemID = Convert.ToInt32(grns[0].ItemID);
+                        grn.StockID = Convert.ToInt32(grns[0].StockID);
+                        grn.GRNQty = Convert.ToInt32(grns[0].GRNQty);
+                        grn.BulckPrice = Convert.ToInt32(grns[0].BulckPrice);
+                        grn.Remarks = Convert.ToString(grns[0].Remarks);
+                    }
+                    else
+                    {
+                        grn.GRNID = 0;
+                        grn.ItemID = 0;
+                        grn.StockID = 0;
+                        grn.GRNQty = 0;
+                        grn.BulckPrice = 0;
+                        grn.Remarks = "";
+                    }
+                    return grn;
+                }
+            }
+        }
+
         public int GetMaxIDGRNs()
         {
             using (SqlConnection con = new SqlConnection(Connection))
@@ -159,6 +210,34 @@ namespace POS_.NET_Core_React.js.Data
                     cmd.Parameters.AddWithValue("@ActualBulkPrice", obj.ActualBulkPrice);
                     cmd.Parameters.AddWithValue("@GRNRecorderID", obj.GRNRecorderID);
                     cmd.Parameters.AddWithValue("@DueDate", obj.DueDate);
+                    cmd.Parameters.AddWithValue("@Remarks", obj.Remarks);
+                    if (con.State == ConnectionState.Closed)
+                        con.Open();
+                    int i = cmd.ExecuteNonQuery();
+                    if (i >= 1)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public bool EditGRNs(GRNEditDTO obj)
+        {
+            using (SqlConnection con = new SqlConnection(Connection))
+            {
+                using (SqlCommand cmd = new SqlCommand("[dbo].[sp_UpdateGRN]", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@GRNID", obj.GRNID);
+                    cmd.Parameters.AddWithValue("@ItemID", obj.ItemID);
+                    cmd.Parameters.AddWithValue("@StockID", obj.StockID);
+                    cmd.Parameters.AddWithValue("@GRNQty", obj.GRNQty);
+                    cmd.Parameters.AddWithValue("@BulckPrice", obj.BulckPrice);
                     cmd.Parameters.AddWithValue("@Remarks", obj.Remarks);
                     if (con.State == ConnectionState.Closed)
                         con.Open();

@@ -527,6 +527,31 @@ END;
 
 EXEC sp_GetGRNOnce @GRNNo = 1;
 
+CREATE PROCEDURE sp_GetOneByIDGRNs(
+    @GRNID AS INTEGER
+)
+AS
+BEGIN
+    SELECT GRNID, ItemID, StockID, GRNQty, BulckPrice, Remarks
+    FROM GRN
+    WHERE GRNID = @GRNID
+END;
+
+EXEC sp_GetOneByIDGRNs @GRNID = 2;
+
+CREATE PROCEDURE sp_GetGRNOnce(
+    @GRNNo AS INTEGER)
+AS
+BEGIN
+    SELECT g.GRNID, g.GRNNo, g.GRNDate, g.InvoiceNo, g.InvoiceDate, g.SupplierID, sp.SupplierName, sp.Address, 
+    sp.ContactNumber, g.ItemID, i.ItemName, g.StockID, s.Price, i.Unit, g.GRNQty, g.PayType , g.BulckPrice, g.ActualBulkPrice,
+    u.UserName, g.DueDate, g.Remarks
+    FROM GRN g, Supplier sp, Item i, Stock s, Users u
+    WHERE g.SupplierID = sp.SupplierID AND g.ItemID = i.ItemID AND g.StockID = s.StockID AND g.GRNRecorderID = u.UserID AND GRNNo = @GRNNo
+END;
+
+EXEC sp_GetGRNOnce @GRNNo = 1;
+
 CREATE PROCEDURE sp_GetSearchGRNs(
     @Search AS VARCHAR(255))
 AS
@@ -582,17 +607,10 @@ EXEC sp_CreateMaxGRN;
 
 CREATE PROCEDURE sp_UpdateGRN(
     @GRNID AS INTEGER,
-    @InvoiceNo AS VARCHAR(255),
-    @InvoiceDate AS DATETIME,
-    @SupplierID AS INTEGER,
     @ItemID AS INTEGER,
     @StockID AS INTEGER,
     @GRNQty AS INTEGER,
-    @PayType AS VARCHAR(255),
     @BulckPrice AS DECIMAL(8,2),
-    @ActualBulkPrice AS DECIMAL(8,2),
-    @GRNRecorderID AS INTEGER,
-    @DueDate AS DATETIME,
     @Remarks AS TEXT
     )
 AS
@@ -604,8 +622,7 @@ BEGIN
     SET @AvStock = (SELECT Qty FROM Stock WHERE StockID = @StockID);
 
     UPDATE GRN 
-    SET InvoiceNo = @InvoiceNo, InvoiceDate = @InvoiceDate, SupplierID = @SupplierID, ItemID = @ItemID, StockID = @StockID, GRNQty = @GRNQty, PayType = @PayType, 
-    BulckPrice = @BulckPrice, ActualBulkPrice = @ActualBulkPrice, GRNRecorderID = @GRNRecorderID, DueDate = @DueDate, Remarks = @Remarks
+    SET ItemID = @ItemID, StockID = @StockID, GRNQty = @GRNQty, BulckPrice = @BulckPrice, Remarks = @Remarks
     WHERE GRNID = @GRNID
 
     IF @GRNAvailableQty < @GRNQty
@@ -620,8 +637,7 @@ BEGIN
     END
 END;
 
-EXEC sp_UpdateGRN @GRNID = 1, @InvoiceNo = 'CSV0025', @InvoiceDate = '2002-07-07', @SupplierID = 1, @ItemID = 1, @StockID = 1, @GRNQty = 5, 
-@PayType = "Cash", @BulckPrice = 108000.00, @ActualBulkPrice = 108000.00, @GRNRecorderID = 1, @DueDate = '', @Remarks= 'Yes';
+EXEC sp_UpdateGRN @GRNID = 1, @ItemID = 1, @StockID = 1, @GRNQty = 5, @BulckPrice = 108000.00, @Remarks= 'Yes';
 
 
 ---GRN Cart SPs

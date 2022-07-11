@@ -26,6 +26,13 @@ namespace POS_.NET_Core_React.js.Controllers
             return Ok(stk);
         }
 
+        [HttpGet("GetSingle/{id}")]
+        public async Task<ActionResult<GRNEditDTO>> GetSingle(int id)
+        {
+            GRNEditDTO stk = db.GetOneByIDGRNs(id);
+            return Ok(stk);
+        }
+
         [HttpGet("Search/{text}")]
         public async Task<ActionResult<GRNAllDTO>> SearchGRN(string text)
         {
@@ -63,6 +70,27 @@ namespace POS_.NET_Core_React.js.Controllers
                 gdb.DeleteGRNCarts(ch.GRNID);
             }
             return Ok();
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<GRNEditDTO>> EditStock(GRNEditDTO obj)
+        {
+            if (ModelState.IsValid)
+            {
+                var isOK = db.EditGRNs(obj);
+                if (isOK)
+                {
+                    return Ok(isOK);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
     }
 }

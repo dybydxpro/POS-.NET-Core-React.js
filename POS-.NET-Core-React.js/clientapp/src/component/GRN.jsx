@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { jsPDF } from "jspdf";
+import autoTable from 'jspdf-autotable';
 import Services from "../Services";
 import { Button, Modal } from 'react-bootstrap';
+import canvasImg from '../image/grn.jpg';
 
 import SlideBar from "./SlideBar";
 
@@ -90,12 +93,79 @@ export default function GRN(){
         return dtv;
     }
 
+    function printGRN(){
+        const doc = new jsPDF('landscape', 'px', 'a4', 'false');
+        var width = doc.internal.pageSize.getWidth();
+        var height = doc.internal.pageSize.getHeight();
+        doc.addImage(canvasImg,'JPEG', 0,0,width,height);
+
+        var printDataTable = [];
+        viewGRN.map((data, index) =>{
+            var dataset = [
+                index+1,
+                data.itemID,
+                data.stockID,
+                data.itemName,
+                data.unit,
+                data.grnQty,
+                data.bulckPrice,
+                data.actualBulkPrice,
+                data.remarks
+            ]
+            printDataTable.push(dataset);
+        });
+        
+        doc.setFontSize(12);
+
+        doc.text(20, 100, "GRN #");
+        doc.text(70, 100, ": "+ viewGRN[0].grnNo);
+        doc.text((width/3), 100, "GRN Date");
+        doc.text((width/3)+50, 100, ": "+ (viewGRN[0].grnDate).substring(0, 10));
+        doc.text(2*(width/3), 100, "Invoice #");
+        doc.text(2*(width/3)+50, 100, ": "+ viewGRN[0].invoiceNo);
+
+        doc.text(20, 120, "Invoice Date");
+        doc.text(70, 120, ": "+ (viewGRN[0].invoiceDate).substring(0, 10));
+        doc.text((width/3), 120, "Supplier");
+        doc.text((width/3)+50, 120, ": "+ viewGRN[0].supplierName);
+        doc.text(2*(width/3), 120, "Supplier Add");
+        doc.text(2*(width/3)+50, 120, ": "+ viewGRN[0].address);
+
+        doc.text(20, 140, "Contact No");
+        doc.text(70, 140, ": "+ viewGRN[0].contactNumber);
+        doc.text((width/3), 140, "Pay Type");
+        doc.text((width/3)+50, 140, ": "+ viewGRN[0].payType);
+        doc.text(2*(width/3), 140, "Due Date");
+        doc.text(2*(width/3)+50, 140, ": "+ (viewGRN[0].dueDate === "2000-01-01T00:00:00" ? "": viewGRN[0].dueDate).substring(0, 10));
+
+        doc.text(20, 160, "GRN by");
+        doc.text(70, 160, ": "+ viewGRN[0].userName);
+
+        doc.text(width/2, 170, "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------", { align: 'center' });
+        
+        var options = {
+            theme: 'striped',
+	        startY: 180,
+	        pageBreak: 'avoid',
+            margin: {top: 1}
+        };
+
+        autoTable(doc, {
+            head: [['ID', 'Item ID', 'Stock ID', 'Item Details', 'Unit', 'Qty', 'Bulk Price', 'Act. Bulk Price', 'Remarks']],
+            body: printDataTable,
+            margin: { top: 180 },
+            options: options
+        });
+
+        doc.save("GRN"+viewGRN[0].grnNo+".pdf");
+    }
+
     function printTable(){
         return(
             data.map(dataset =>
                 <tr key={dataset.grnNo}>
                     <td>{dataset.grnNo}</td>
-                    <td>{dataset.grnDate}</td>
+                    <td>{(dataset.grnDate).substring(0, 10)}</td>
                     <td>{dataset.invoiceNo}</td>
                     <td>{dataset.supplierName}</td>
                     <td>{dataset.itemCount}</td>
@@ -109,12 +179,9 @@ export default function GRN(){
                             <Modal.Body className="bg-light">
                                 <div className="py-2">
 
-                                <button type="button" className="btn text-light" style={{position:"fixed", width:"60px", height:"60px", top:"80px", right:"50px", borderRadius: "50%", backgroundColor: "#2e856e", fontSize:"28px"}}>
-                                    <i className="bi bi-plus"></i>
-                                </button>
-                                <button type="button" className="btn text-light" style={{position:"fixed", width:"60px", height:"60px", top:"80px", right:"120px", borderRadius: "50%", backgroundColor: "#ffcc00", fontSize:"28px"}}>
-                                    <i className="bi bi-printer"></i>
-                                </button>
+                                    <button type="button" className="btn text-dark" onClick={() => printGRN()} style={{position:"fixed", width:"60px", height:"60px", top:"80px", right:"50px", borderRadius: "50%", backgroundColor: "#ffcc00", fontSize:"28px"}}>
+                                        <i className="bi bi-printer"></i>
+                                    </button>
 
                                     <div className="container bg-dark py-2">
                                         <div className="bg-white" style={{minHeight: "80vh"}}>
@@ -169,7 +236,7 @@ export default function GRN(){
                                                             <th scope="col">Bulk Price</th>
                                                             <th scope="col">Act. Bulk Price</th>
                                                             <th scope="col">Remarks</th>
-                                                            <th scope="col">Options</th>
+                                                            {/*<th scope="col">Options</th>*/}
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -185,7 +252,53 @@ export default function GRN(){
                                                             <td>{dts.bulckPrice}</td>
                                                             <td>{dts.actualBulkPrice}</td>
                                                             <td>{dts.remarks}</td>
-                                                            <td></td>
+                                                            {/*<td>
+                                                                <button type="button" className="btn btn-warning" onClick={() => {EditGRNModelHandleShow(); fetchGRNData(dts.grnid);}}>
+                                                                    <i className="bi bi-pencil"></i>&nbsp; Edit
+                                                                </button>
+                                                                <Modal show={editGRNModel} onHide={EditGRNModelHandleClose}>
+                                                                    <Modal.Header closeButton className="bg-light">
+                                                                        <Modal.Title>GRN</Modal.Title>
+                                                                    </Modal.Header>
+                                                                    <Modal.Body className="bg-light">
+                                                                        <div className="py-2">
+                                                                            <div className="form-floating mb-3">
+                                                                                <input type="text" className="form-control" id="name" onChange={(e) => handleAdd(e)} placeholder="John Smidth"/>
+                                                                                <label htmlFor="name" className="form-label">Name</label>
+                                                                            </div>
+                                                                            <div className="form-floating mb-3">
+                                                                                <input type="text" className="form-control" id="nic" onChange={(e) => handleAdd(e)} placeholder="75XXXXXXXXV"/>
+                                                                                <label htmlFor="nic" className="form-label">NIC</label>
+                                                                            </div>
+                                                                            <div className="form-floating mb-3">
+                                                                                <input type="text" className="form-control" id="address" onChange={(e) => handleAdd(e)} placeholder="No 15, Temple Road, Malabe."/>
+                                                                                <label htmlFor="address" className="form-label">Address</label>
+                                                                            </div>
+                                                                            <div className="form-floating mb-3">
+                                                                                <input type="text" className="form-control" id="userName" onChange={(e) => handleAdd(e)} placeholder="JohnS"/>
+                                                                                <label htmlFor="userName" className="form-label">UserName</label>
+                                                                            </div>
+                                                                            <div className="form-floating mb-3">
+                                                                                <input type="password" className="form-control" id="password" onChange={(e) => handleAdd(e)} placeholder="John Smidth"/>
+                                                                                <label htmlFor="password" className="form-label">Password</label>
+                                                                            </div>
+                                                                            <div className="form-floating mb-3">
+                                                                                <select className="form-select" id="type" onChange={(e) => handleAdd(e)}>
+                                                                                    <option value="" selected>_</option>
+                                                                                    <option value="Cashier">Cashier</option>
+                                                                                    <option value="Admin">Admin</option>
+                                                                                </select>
+                                                                                <label htmlFor="type" className="form-label">Type</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </Modal.Body>
+                                                                    <Modal.Footer className="bg-light">
+                                                                        <Button variant="secondary" onClick={EditGRNModelHandleClose}>
+                                                                            Close
+                                                                        </Button>
+                                                                    </Modal.Footer>
+                                                                </Modal>
+                                                            </td>*/}
                                                         </tr>)}
                                                     </tbody>
                                                 </table>
@@ -433,6 +546,32 @@ export default function GRN(){
         })
     }
 
+    //Edit GRN Model
+    const [editGRNModel, setEditGRNModel] = useState(false);
+
+    const EditGRNModelHandleClose = () => setEditGRNModel(false);
+    const EditGRNModelHandleShow = () => setEditGRNModel(true);
+
+    //Edit GRN
+    const [editGRN, setEditGRN] = useState({
+        "grnid": 0,
+        "itemID": 0,
+        "stockID": 0,
+        "grnQty": 0,
+        "bulckPrice": 0,
+        "remarks": ""
+    });
+
+    function fetchGRNData(id){
+        Services.PostGRNs(id)
+        .then(({data}) =>{
+            console.log(data);
+  
+        }).catch(({response})=>{
+            console.log(response);
+            alert(response);
+        })
+    }
 
     return(
         <div className="container-fluid">
