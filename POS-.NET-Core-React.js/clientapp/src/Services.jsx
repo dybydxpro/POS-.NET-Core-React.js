@@ -142,6 +142,19 @@ class Services{
     DeleteGRNCart(id){
         return httpCommon.delete(`/GRNCart/${id}`)
     }
+
+    //Sale Cart Function
+    GetAllCart(id){
+        return httpCommon.get(`/Cart/${id}`)
+    }
+
+    PostCart(data){
+        return httpCommon.post("/Cart", data)
+    }
+
+    DeleteCart(id){
+        return httpCommon.delete(`/Cart/${id}`)
+    }
 }
 
 export default new Services();

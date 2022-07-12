@@ -731,26 +731,26 @@ EXEC sp_DropGRNCart @GRNID = 1;
 
 ---Sale Cart SPs
 
-CREATE PROCEDURE sp_GetCart(
-    @SellerID AS INTEGER
+CREATE PROCEDURE sp_GetCartById(
+    @CartID AS INTEGER
 )
 AS
 BEGIN
-    SELECT CartID, ItemID, StockID, CartQty, Price, SellerID
-    FROM Cart
-    WHERE SellerID = @SellerID
+    SELECT c.CartID, c.ItemID, c.StockID, i.ItemName, i.Unit, s.Price, c.CartQty, c.Price AS TotalPrice, c.SellerID
+    FROM Cart c, Item i, Stock s
+    WHERE c.ItemID = i.ItemID AND c.StockID = s.StockID AND CartID = @CartID
 END;
 
-EXEC sp_GetCart @SellerID = 1;
+EXEC sp_GetCartById @CartID = 1;
 
 CREATE PROCEDURE sp_GetCartById(
     @CartID AS INTEGER
 )
 AS
 BEGIN
-    SELECT CartID, ItemID, StockID, CartQty, Price, SellerID
-    FROM Cart
-    WHERE CartID = @CartID
+    SELECT c.CartID, c.ItemID, c.StockID, i.ItemName, i.Unit, s.Price, c.CartQty, c.Price AS TotalPrice, c.SellerID
+    FROM Cart c, Item i, Stock s
+    WHERE c.ItemID = i.ItemID AND c.StockID = s.StockID AND CartID = @CartID
 END;
 
 EXEC sp_GetCartById @CartID = 1;
@@ -764,6 +764,9 @@ CREATE PROCEDURE sp_CreateCart(
 )
 AS
 BEGIN
+    DECLARE @t1 INTEGER;
+    SET @t1 = (SELECT Price FROM Stock WHERE StockID = @StockID);
+    SET @Price = @t1 * @CartQty;
     INSERT INTO Cart(ItemID, StockID, CartQty, Price, SellerID)
     VALUES(@ItemID, @StockID, @CartQty, @Price, @SellerID)
 END;
@@ -780,6 +783,10 @@ CREATE PROCEDURE sp_UpdateCart(
 )
 AS
 BEGIN
+    DECLARE @t1 INTEGER;
+    SET @t1 = (SELECT Price FROM Stock WHERE StockID = @StockID);
+    SET @Price = @t1 * @CartQty;
+
     UPDATE Cart
     SET ItemID = @ItemID, StockID = @StockID, CartQty = @CartQty, Price = @Price, SellerID = @SellerID 
     WHERE CartID = @CartID

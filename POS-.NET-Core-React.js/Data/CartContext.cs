@@ -7,9 +7,9 @@ namespace POS_.NET_Core_React.js.Data
 {
     public class CartContext:DatabaseConfig
     {
-        public List<Cart> GetCarts(int id)
+        public List<CartGetDTO> GetCarts(int id)
         {
-            List<Cart> carts = new List<Cart>();
+            List<CartGetDTO> carts = new List<CartGetDTO>();
             using (SqlConnection con = new SqlConnection(Connection))
             {
                 using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetCart]", con))
@@ -23,14 +23,17 @@ namespace POS_.NET_Core_React.js.Data
                     adp.Fill(dt);
                     foreach (DataRow dr in dt.Rows)
                     {
-                        carts.Add(new Cart
+                        carts.Add(new CartGetDTO
                         {
                             CartID = Convert.ToInt32(dr[0]),
                             ItemID = Convert.ToInt32(dr[1]),
                             StockID = Convert.ToInt32(dr[2]),
-                            CartQty = Convert.ToDouble(dr[3]),
-                            Price = Convert.ToDouble(dr[4]),
-                            SellerID = Convert.ToInt32(dr[5])
+                            ItemName = Convert.ToString(dr[3]),
+                            Unit = Convert.ToString(dr[4]),
+                            Price = Convert.ToDouble(dr[5]),
+                            CartQty = Convert.ToDouble(dr[6]),
+                            NetPrice = Convert.ToDouble(dr[7]),
+                            SellerID = Convert.ToInt32(dr[8])
                         });
                     }
                 }
@@ -38,9 +41,9 @@ namespace POS_.NET_Core_React.js.Data
             return carts;
         }
 
-        public Cart GetCartOnce(int id)
+        public CartGetDTO GetCartOnce(int id)
         {
-            List<Cart> carts = new List<Cart>();
+            List<CartGetDTO> carts = new List<CartGetDTO>();
             using (SqlConnection con = new SqlConnection(Connection))
             {
                 using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetCartById]", con))
@@ -54,25 +57,31 @@ namespace POS_.NET_Core_React.js.Data
                     adp.Fill(dt);
                     foreach (DataRow dr in dt.Rows)
                     {
-                        carts.Add(new Cart
+                        carts.Add(new CartGetDTO
                         {
                             CartID = Convert.ToInt32(dr[0]),
                             ItemID = Convert.ToInt32(dr[1]),
                             StockID = Convert.ToInt32(dr[2]),
-                            CartQty = Convert.ToDouble(dr[3]),
-                            Price = Convert.ToDouble(dr[4]),
-                            SellerID = Convert.ToInt32(dr[5])
+                            ItemName = Convert.ToString(dr[3]),
+                            Unit = Convert.ToString(dr[4]),
+                            Price = Convert.ToDouble(dr[5]),
+                            CartQty = Convert.ToDouble(dr[6]),
+                            NetPrice = Convert.ToDouble(dr[7]),
+                            SellerID = Convert.ToInt32(dr[8])
                         });
                     }
 
-                    Cart cart = new Cart();
+                    CartGetDTO cart = new CartGetDTO();
                     if (carts.Count >= 1)
                     {
                         cart.CartID = Convert.ToInt32(carts[0].CartID);
                         cart.ItemID = Convert.ToInt32(carts[0].ItemID);
                         cart.StockID = Convert.ToInt32(carts[0].StockID);
-                        cart.CartQty = Convert.ToDouble(carts[0].CartQty);
+                        cart.ItemName = Convert.ToString(carts[0].ItemName);
+                        cart.Unit = Convert.ToString(carts[0].Unit);
                         cart.Price = Convert.ToDouble(carts[0].Price);
+                        cart.CartQty = Convert.ToDouble(carts[0].CartQty);
+                        cart.NetPrice = Convert.ToDouble(carts[0].NetPrice);
                         cart.SellerID = Convert.ToInt32(carts[0].SellerID);
                     }
                     else
@@ -80,8 +89,11 @@ namespace POS_.NET_Core_React.js.Data
                         cart.CartID = 0;
                         cart.ItemID = 0;
                         cart.StockID = 0;
-                        cart.CartQty = 0;
-                        cart.Price = 0;
+                        cart.ItemName = "";
+                        cart.Unit = "";
+                        cart.Price = 0.00;
+                        cart.CartQty = 0.00;
+                        cart.NetPrice = 0.00;
                         cart.SellerID = 0;
                     }
                     return cart;

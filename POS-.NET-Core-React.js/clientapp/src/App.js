@@ -8,6 +8,7 @@ import Items from './component/Item';
 import Stock from './component/Stock';
 import Supplier from './component/Supplier';
 import GRN from './component/GRN';
+import Bill from './component/Bill';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/dashboard/stock" element={<Stock/>} />
           <Route path="/dashboard/supplier" element={<Supplier/>} />
           <Route path="/dashboard/grn" element={<GRN/>} />
+          <Route path="/dashboard/bill" element={<Bill/>} />
         </Routes>
       </Router>
     </div>

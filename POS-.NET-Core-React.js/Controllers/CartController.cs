@@ -15,14 +15,14 @@ namespace POS_.NET_Core_React.js.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<List<Cart>>> GetAllCarts(int id)
         {
-            List<Cart> grn = db.GetCarts(id).ToList();
+            List<CartGetDTO> grn = db.GetCarts(id).ToList();
             return Ok(grn);
         }
 
         [HttpGet("GetSingle/{id}")]
         public async Task<ActionResult<Cart>> GetSingle(int id)
         {
-            Cart cart = db.GetCartOnce(id);
+            CartGetDTO cart = db.GetCartOnce(id);
             return Ok(cart);
         }
 
