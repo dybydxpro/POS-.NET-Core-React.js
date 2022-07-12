@@ -102,6 +102,7 @@ CREATE TABLE Cart
 CREATE TABLE Sale
 (
     SaleID INTEGER IDENTITY PRIMARY KEY,
+    BillNo INTEGER,
     ItemID INTEGER,
     StockID INTEGER,
     SoldQty DECIMAL(8,2),
@@ -728,5 +729,134 @@ END;
 EXEC sp_DropGRNCart @GRNID = 1;
 
 
+---Sale Cart SPs
 
+CREATE PROCEDURE sp_GetCart(
+    @SellerID AS INTEGER
+)
+AS
+BEGIN
+    SELECT CartID, ItemID, StockID, CartQty, Price, SellerID
+    FROM Cart
+    WHERE SellerID = @SellerID
+END;
+
+EXEC sp_GetCart @SellerID = 1;
+
+CREATE PROCEDURE sp_GetCartById(
+    @CartID AS INTEGER
+)
+AS
+BEGIN
+    SELECT CartID, ItemID, StockID, CartQty, Price, SellerID
+    FROM Cart
+    WHERE CartID = @CartID
+END;
+
+EXEC sp_GetCartById @CartID = 1;
+
+CREATE PROCEDURE sp_CreateCart(
+    @ItemID AS INTEGER,
+    @StockID AS INTEGER,
+    @CartQty AS INTEGER,
+    @Price AS INTEGER,
+    @SellerID AS INTEGER
+)
+AS
+BEGIN
+    INSERT INTO Cart(ItemID, StockID, CartQty, Price, SellerID)
+    VALUES(@ItemID, @StockID, @CartQty, @Price, @SellerID)
+END;
+
+EXEC sp_CreateCart @ItemID = 1, @StockID = 1, @CartQty = 1, @Price = 54000, @SellerID = 1;
+
+CREATE PROCEDURE sp_UpdateCart(
+    @CartID AS INTEGER,
+    @ItemID AS INTEGER,
+    @StockID AS INTEGER,
+    @CartQty AS INTEGER,
+    @Price AS INTEGER,
+    @SellerID AS INTEGER
+)
+AS
+BEGIN
+    UPDATE Cart
+    SET ItemID = @ItemID, StockID = @StockID, CartQty = @CartQty, Price = @Price, SellerID = @SellerID 
+    WHERE CartID = @CartID
+END;
+
+EXEC sp_UpdateCart @CartID = 1, @ItemID = 1, @StockID = 1, @CartQty = 1, @Price = 54000, @SellerID = 1;
+
+CREATE PROCEDURE sp_DropCart(
+    @CartID AS INTEGER
+)
+AS
+BEGIN
+    DELETE FROM Cart WHERE CartID = @CartID
+END;
+
+EXEC sp_DropCart @CartID = 1;
+
+
+---Sale SPs
+
+CREATE PROCEDURE sp_GetAllSale
+AS
+BEGIN
+    SELECT s.BillNo, s.Timescape, COUNT(s.ItemID) AS 'ItemCount', SUM(s.SoldPrice) AS 'BillPrice'
+    FROM Sale s, Item i, Stock sk 
+    WHERE s.ItemID = i.ItemID AND s.StockID = sk.StockID
+    GROUP BY s.BillNo, s.Timescape
+    ORDER BY s.Timescape DESC
+END;
+
+EXEC sp_GetAllSale;
+
+CREATE PROCEDURE sp_GetSaleByBill(
+    @BillNo AS INTEGER
+)
+AS
+BEGIN
+    SELECT s.SaleID, s.BillNo, s.ItemID, s.StockID, i.ItemName, i.Unit, sk.Price, s.SoldQty, s.SoldPrice, s.SellerID, u.UserName, s.Timescape
+    FROM Sale s, Item i, Stock sk, Users u
+    WHERE s.ItemID = i.ItemID AND s.StockID = sk.StockID AND s.SellerID = u.UserID AND s.BillNo = @BillNo
+END;
+
+EXEC sp_GetSaleByBill @BillNo = 1;
+
+CREATE PROCEDURE sp_GetSaleByOne(
+    @SaleID AS INTEGER
+)
+AS
+BEGIN
+    SELECT s.SaleID, s.BillNo, s.ItemID, s.StockID, i.ItemName, i.Unit, sk.Price, s.SoldQty, s.SoldPrice, s.SellerID, u.UserName, s.Timescape
+    FROM Sale s, Item i, Stock sk, Users u
+    WHERE s.ItemID = i.ItemID AND s.StockID = sk.StockID AND s.SellerID = u.UserID AND s.SaleID = @SaleID
+END;
+
+EXEC sp_GetSaleByOne @SaleID = 1;
+
+CREATE PROCEDURE sp_CreateSale(
+    @BillNo AS INTEGER,
+    @ItemID AS INTEGER,
+    @StockID AS INTEGER,
+    @SoldQty AS INTEGER,
+    @SoldPrice AS INTEGER,
+    @SellerID AS INTEGER,
+    @Timescape AS DATETIME
+)
+AS
+BEGIN
+    INSERT INTO Sale(BillNo, ItemID, StockID, SoldQty, SoldPrice, SellerID, Timescape)
+    VALUES(@BillNo, @ItemID, @StockID, @SoldQty, @SoldPrice, @SellerID, @Timescape)
+
+    DECLARE @AvailableStock DECIMAL(8,2);
+    DECLARE @TotalStock DECIMAL(8,2);
+    SET @AvailableStock = (SELECT Qty FROM Stock WHERE StockID = @StockID);
+    SET @TotalStock = @AvailableStock - @SoldQty;
+
+    UPDATE Stock SET Qty = @TotalStock WHERE StockID = @StockID;
+END;
+
+EXEC sp_CreateSale @BillNo = 1, @ItemID = 2, @StockID = 3, @SoldQty = 1, @SoldPrice = 54000, @SellerID = 1, @Timescape = '2000-01-01T00:00:00';
 

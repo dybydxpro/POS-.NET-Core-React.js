@@ -59,7 +59,6 @@ namespace POS_.NET_Core_React.js.Controllers
             {
                 return BadRequest();
             }
-
         }
 
         [HttpPut]
