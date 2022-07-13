@@ -24,6 +24,7 @@ export default function Bill(){
         "qty": 0,
         "price": 0
     }]);
+    const [bill, setBill] = useState([{ }]);
 
     useEffect(() => {
         if(!(Number(sessionStorage.getItem("userID")) > 0)){
@@ -65,6 +66,19 @@ export default function Bill(){
         })
     }
 
+    //Process Bill
+    function ProcessBill(){
+        var id = sessionStorage.getItem("userID");
+        Services.ProcessBill(id).then(({data})=>{
+            console.log(data);
+            fetchData();
+        })
+        .catch(({response})=>{
+            console.log(response);
+            fetchData();
+        })
+    }
+
     function printTable(){
         return(
             data.map((dt, index) => 
@@ -75,8 +89,8 @@ export default function Bill(){
                     <td>{dt.itemName}</td>
                     <td>{dt.unit}</td>
                     <td>{dt.cartQty}</td>
-                    <td>{dt.price}</td>
-                    <td>{dt.netPrice}</td>
+                    <td className="text-end">{parseFloat(dt.price).toFixed(2)}</td>
+                    <td className="text-end">{parseFloat(dt.netPrice).toFixed(2)}</td>
                     <td>
                         {/*<button type="button" className="btn btn-warning mx-2"><i className="bi bi-pencil"></i>&nbsp;Edit</button>*/}
                         <button type="button" className="btn btn-danger mx-2" onClick={() => deleteItem(dt.cartID)}><i className="bi bi-trash"></i>&nbsp;Delete</button>
@@ -131,11 +145,21 @@ export default function Bill(){
             "price": 20,
             "sellerID": sessionStorage.getItem("userID")
         };
+        setAddNew({
+            "itemID": 0,
+            "stockID": 0,
+            "cartQty": 0
+        });
         if(AddNewValidate() == true){
             Services.PostCart(data)
             .then(({data}) =>{
                 console.log(data);
                 fetchData();
+                setAddNew({
+                    "itemID": 0,
+                    "stockID": 0,
+                    "cartQty": 0
+                });
             }).catch(({response})=>{
                 console.log(response);
                 setAddNew({
@@ -146,6 +170,7 @@ export default function Bill(){
                 alert(response);
             })
         }
+        console.log(data);
     }
 
     function deleteItem(id){
@@ -181,11 +206,17 @@ export default function Bill(){
                             <p className="h2 mb-3">Bill System</p>
                         </div>
 
+                        <div>
+                            <button type="button" className="btn text-light" style={{position:"fixed", width:"60px", height:"60px", top:"90px", right:"40px", borderRadius: "50%", backgroundColor: "#2e856e", fontSize:"28px"}}>
+                                <i className="bi bi-clipboard2-pulse"></i>
+                            </button>
+                        </div>
+
                         <div className="container">
                             <div className="row">
                                 <div className="col">
                                     <div className="form-floating mb-4 shadow">
-                                        <select className="form-select" id="itemID" onChange={(e) => {handle(e); fetchStock(e);}} placeholder="TXT">
+                                        <select className="form-select" id="itemID" value={addNew.itemID} onChange={(e) => {handle(e); fetchStock(e);}} placeholder="TXT">
                                             <option value="0" selected> </option>
                                             {item.map((items) =>
                                                 <option key={items.itemID} value={items.itemID}>{items.itemName}</option>
@@ -196,18 +227,18 @@ export default function Bill(){
                                 </div>
                                 <div className="col">
                                     <div className="form-floating mb-4 shadow">
-                                        <select className="form-select" id="stockID" onChange={(e) => handle(e)} placeholder="TXT">
+                                        <select className="form-select" id="stockID" value={addNew.stockID} onChange={(e) => handle(e)} placeholder="TXT">
                                             <option value="0" selected> </option>
                                             {stock.map((stocks) =>
-                                                <option key={stocks.stockID} value={stocks.stockID}>{stocks.price}</option>
+                                                <option key={stocks.stockID} value={stocks.stockID}>{parseFloat(stocks.price).toFixed(2)}</option>
                                             )}
                                         </select>
-                                        <label className="form-label" htmlFor="stockID">Stock</label>
+                                        <label className="form-label" htmlFor="stockID">Stock (LKR.)</label>
                                     </div>
                                 </div>
                                 <div className="col">
                                     <div className="form-floating mb-4 shadow">
-                                        <input type="number" id="cartQty" className="form-control" onChange={(e) => handle(e)} placeholder="TXT"/>
+                                        <input type="number" id="cartQty" className="form-control" value={addNew.cartQty} onChange={(e) => handle(e)} placeholder="TXT"/>
                                         <label className="form-label" htmlFor="cartQty">Qty</label>
                                     </div>
                                 </div>
@@ -246,14 +277,18 @@ export default function Bill(){
                                             <th scope="col"></th>
                                             <th scope="col"></th>
                                             <th scope="col"></th>
-                                            <th scope="col">Total (Rs.):</th>
+                                            <th scope="col">Total (LKR.) :</th>
                                             <th scope="col"></th>
                                             <th scope="col"></th>
-                                            <th scope="col">{ parseFloat(totalOfPaybleBill()).toFixed(2) }</th>
+                                            <th scope="col" className="text-end">{ parseFloat(totalOfPaybleBill()).toFixed(2) }</th>
                                             <th scope="col"></th>
                                         </tr>
                                     </tfoot>
                                 </table>
+                            </div>
+
+                            <div className="d-flex justify-content-end mx-2">
+                                <button className="btn py-3 px-4" onClick={() => ProcessBill()} style={{ backgroundColor: "#337AB7", color: "white", fontSize: "20px" }}><i className="bi bi-receipt"></i>&nbsp;Print</button>
                             </div>
                         </div>
                     </div>

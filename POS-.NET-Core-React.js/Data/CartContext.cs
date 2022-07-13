@@ -105,7 +105,7 @@ namespace POS_.NET_Core_React.js.Data
         {
             using (SqlConnection con = new SqlConnection(Connection))
             {
-                using (SqlCommand cmd = new SqlCommand("[dbo].[sp_CreateCart]", con))
+                using (SqlCommand cmd = new SqlCommand("[dbo].[sp_CreateNewCart]", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@ItemID", obj.ItemID);
@@ -115,6 +115,10 @@ namespace POS_.NET_Core_React.js.Data
                     cmd.Parameters.AddWithValue("@SellerID", obj.SellerID);
                     if (con.State == ConnectionState.Closed)
                         con.Open();
+                    SqlDataAdapter adp = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adp.Fill(dt);
+
                     int i = cmd.ExecuteNonQuery();
                     if (i >= 1)
                     {

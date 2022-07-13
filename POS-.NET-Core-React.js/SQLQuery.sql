@@ -146,7 +146,7 @@ ALTER TABLE Users ALTER COLUMN Password TEXT;
 
 ALTER TABLE Item DROP COLUMN Address;
 
-DELETE FROM Supplier WHERE SupplierID = 4;
+DELETE FROM Sale WHERE BillNo = 1;
 
 ALTER TABLE Supplier ADD CONSTRAINT UniqueSuppName UNIQUE (SupplierName);
 
@@ -755,7 +755,7 @@ END;
 
 EXEC sp_GetCartById @CartID = 1;
 
-CREATE PROCEDURE sp_CreateCart(
+Create PROCEDURE sp_CreateNewCart(
     @ItemID AS INTEGER,
     @StockID AS INTEGER,
     @CartQty AS INTEGER,
@@ -765,13 +765,19 @@ CREATE PROCEDURE sp_CreateCart(
 AS
 BEGIN
     DECLARE @t1 INTEGER;
+    DECLARE @stkValue INTEGER;
     SET @t1 = (SELECT Price FROM Stock WHERE StockID = @StockID);
+    SET @stkValue = (SELECT Qty FROM Stock WHERE StockID = @StockID);
     SET @Price = @t1 * @CartQty;
-    INSERT INTO Cart(ItemID, StockID, CartQty, Price, SellerID)
-    VALUES(@ItemID, @StockID, @CartQty, @Price, @SellerID)
+
+    IF @stkValue >= @CartQty
+    BEGIN
+        INSERT INTO Cart(ItemID, StockID, CartQty, Price, SellerID)
+        VALUES(@ItemID, @StockID, @CartQty, @Price, @SellerID);
+    END
 END;
 
-EXEC sp_CreateCart @ItemID = 1, @StockID = 1, @CartQty = 1, @Price = 54000, @SellerID = 1;
+EXEC sp_CreateNewCart @ItemID = 1, @StockID = 1, @CartQty = 1, @Price = 54000, @SellerID = 1;
 
 CREATE PROCEDURE sp_UpdateCart(
     @CartID AS INTEGER,
@@ -866,4 +872,12 @@ BEGIN
 END;
 
 EXEC sp_CreateSale @BillNo = 1, @ItemID = 2, @StockID = 3, @SoldQty = 1, @SoldPrice = 54000, @SellerID = 1, @Timescape = '2000-01-01T00:00:00';
+
+CREATE PROCEDURE sp_CreateMaxBill
+AS
+BEGIN
+    SELECT MAX(SaleID) AS 'MaxBill' FROM Sale;
+END;
+
+EXEC sp_CreateMaxBill;
 

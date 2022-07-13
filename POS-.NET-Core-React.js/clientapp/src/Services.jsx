@@ -155,6 +155,11 @@ class Services{
     DeleteCart(id){
         return httpCommon.delete(`/Cart/${id}`)
     }
+
+    //Sale Function
+    ProcessBill(id){
+        return httpCommon.post(`/Sale/${id}`)
+    }
 }
 
 export default new Services();
