@@ -35,6 +35,35 @@ namespace POS_.NET_Core_React.js.Data
             return sales;
         }
 
+        public List<SaleGetDTO> GetSearchSales(string text)
+        {
+            List<SaleGetDTO> sales = new List<SaleGetDTO>();
+            using (SqlConnection con = new SqlConnection(Connection))
+            {
+                using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetSearchBills]", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Search", text);
+                    if (con.State == ConnectionState.Closed)
+                        con.Open();
+                    SqlDataAdapter adp = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adp.Fill(dt);
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        sales.Add(new SaleGetDTO
+                        {
+                            BillNo = Convert.ToInt32(dr[0]),
+                            Timescape = Convert.ToDateTime(dr[1]),
+                            ItemCount = Convert.ToInt32(dr[2]),
+                            BillPrice = Convert.ToInt32(dr[3])
+                        });
+                    }
+                }
+            }
+            return sales;
+        }
+
         public List<SaleGetOneDTO> GetBill(int billid)
         {
             List<SaleGetOneDTO> sales = new List<SaleGetOneDTO>();

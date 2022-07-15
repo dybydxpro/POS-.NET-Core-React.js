@@ -20,6 +20,13 @@ namespace POS_.NET_Core_React.js.Controllers
             return Ok(sale);
         }
 
+        [HttpGet("Search/{text}")]
+        public async Task<ActionResult<List<Sale>>> GetSearchSales(string text)
+        {
+            List<SaleGetDTO> sale = db.GetSearchSales(text).ToList();
+            return Ok(sale);
+        }
+
         [HttpGet("Bill/{billid}")]
         public async Task<ActionResult<Sale>> GetBill(int billid)
         {

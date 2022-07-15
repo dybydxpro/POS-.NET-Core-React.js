@@ -170,7 +170,7 @@ class Services{
     }
 
     FetchSearchBills(text){
-        return httpCommon.get("/Sale")
+        return httpCommon.get(`/Sale/Search/${text}`)
     }
 }
 

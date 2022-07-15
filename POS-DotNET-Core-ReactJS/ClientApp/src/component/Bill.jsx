@@ -47,7 +47,7 @@ export default function Bill(){
         "timescape": "2000-01-01T00:00:00.000",
         "itemCount": 0,
         "billPrice": 0
-    }])
+    }]);
 
     useEffect(() => {
         if(!(Number(sessionStorage.getItem("userID")) > 0)){
@@ -82,12 +82,16 @@ export default function Bill(){
 
     function SearchText(e){
         const search = e.target.value;
+        console.log(search);
         if(search === ""){
-            fetchData();
+            fetchAllBill();
         }
         else{
             Services.FetchSearchBills(search).then(({data})=>{
-                setData(data)
+                setAllBillData(data)
+            })
+            .catch(({response})=>{
+                console.log(response);
             })
         }
     }
@@ -333,13 +337,6 @@ export default function Bill(){
                             <p className="h2 mb-3">Bill System</p>
                         </div>
 
-                        <div className="d-flex justify-content-end container">
-                            <div className="form-floating mb-2">
-                                <input type="text" className="form-control" id="search" placeholder="Search" onChange={(e) => SearchText(e)}/>
-                                <label htmlFor="search"><i className="bi bi-search"></i>&nbsp; Search</label>
-                            </div>
-                        </div>
-
                         <div>
                             <button type="button" className="btn text-light" onClick={() => AllBillModelHandleShow()} style={{position:"fixed", width:"60px", height:"60px", top:"90px", right:"40px", borderRadius: "50%", backgroundColor: "#2e856e", fontSize:"28px"}}>
                                 <i className="bi bi-clipboard2-pulse"></i>
@@ -352,6 +349,13 @@ export default function Bill(){
                                     <div>
                                         <div className="d-flex justify-content-center">
                                             <p className="text-secondary" style={{fontSize: "36px"}}><strong>List Of Bill</strong></p>
+                                        </div>
+              
+                                        <div className="d-flex justify-content-end container">
+                                            <div className="form-floating mb-2">
+                                                <input type="text" className="form-control" id="search" placeholder="Search" onChange={(e) => SearchText(e)}/>
+                                                <label htmlFor="search"><i className="bi bi-search"></i>&nbsp; Search</label>
+                                            </div>
                                         </div>
 
                                         <div className="px-5">
