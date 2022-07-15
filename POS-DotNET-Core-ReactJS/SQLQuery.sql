@@ -153,6 +153,8 @@ ALTER TABLE Supplier ADD CONSTRAINT UniqueSuppName UNIQUE (SupplierName);
 
 UPDATE GRN SET GRNNo = 2 WHERE GRNID = 4
 
+UPDATE ReturnItem SET ReturnerID = 1 WHERE ReturnID = 1
+
 
 --- Selection
 SELECT * FROM Users;
@@ -980,6 +982,18 @@ END;
 
 EXEC sp_GetOneReturn @ReturnID = 1;
 
+CREATE PROCEDURE sp_GetSearchReturns(
+    @Search AS VARCHAR(255)
+)
+AS
+BEGIN
+    SELECT r.ReturnID, r.BillID, r.ItemID, i.ItemName, i.Unit, r.StockID, r.Qty, r.Price, r.ReturnerID , u.UserName
+    FROM ReturnItem r, Item i, Users u
+    WHERE r.ItemID = i.ItemID AND r.ReturnerID = u.UserID AND (r.ReturnID LIKE @Search OR r.BillID LIKE @Search OR i.ItemName LIKE @Search OR i.Unit LIKE @Search OR r.Qty LIKE @Search OR r.Price LIKE @Search OR u.UserName LIKE @Search)
+END;
+
+EXEC sp_GetSearchReturns @Search = '%Ro%';
+
 CREATE PROCEDURE sp_SetReturn(
     @BillID AS INTEGER,
     @ItemID AS INTEGER,
@@ -1037,3 +1051,25 @@ END;
 
 EXEC sp_UpdateReturn @ReturnID = 1, @BillID = 1, @ItemID = 1, @StockID = 1, @Qty = 1, @Price = 54000, @ReturnerID = 1;
 
+CREATE PROCEDURE sp_DeleteReturns(
+    @ReturnID AS INTEGER
+)
+AS
+BEGIN
+    DECLARE @StkID AS INTEGER;
+    DECLARE @StkQty AS INTEGER;
+    DECLARE @RiQty AS INTEGER;
+    DECLARE @TotalQty AS INTEGER;
+
+    SET @StkID = (SELECT StockID FROM ReturnItem WHERE ReturnID = @ReturnID);
+    SET @StkQty = (SELECT Qty FROM Stock WHERE StockID = @StkID);
+    SET @RiQty = (SELECT Qty FROM ReturnItem WHERE ReturnID = @ReturnID);
+
+    SET @TotalQty = @StkQty - @RiQty;
+
+    DELETE FROM ReturnItem WHERE ReturnID = @ReturnID;
+
+    UPDATE Stock SET Qty = @TotalQty WHERE StockID = @StkID;
+END;
+
+EXEC sp_DeleteReturns @ReturnID = 1;

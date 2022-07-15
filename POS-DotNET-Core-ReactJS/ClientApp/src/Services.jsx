@@ -172,6 +172,31 @@ class Services{
     FetchSearchBills(text){
         return httpCommon.get(`/Sale/Search/${text}`)
     }
+
+    //Return Function
+    GetAllReturns(){
+        return httpCommon.get("/Return")
+    }
+
+    GetOneReturn(id){
+        return httpCommon.get(`/Return/${id}`)
+    }
+
+    GetSearchReturn(text){
+        return httpCommon.get(`/Return/Search/${text}`)
+    }
+
+    PostReturn(data){
+        return httpCommon.post("/Return", data)
+    }
+
+    EditReturn(data){
+        return httpCommon.put("/Return", data)
+    }
+
+    DeleteReturn(id){
+        return httpCommon.delete(`/Return/${id}`)
+    }
 }
 
 export default new Services();

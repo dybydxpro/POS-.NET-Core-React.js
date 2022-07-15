@@ -82,6 +82,11 @@ export default function SlideBar(){
                             <i className="bi bi-receipt-cutoff"></i> &nbsp; Billing
                         </a>
                     </li>
+                    <li>
+                        <a href="/dashboard/return" className="nav-link link-dark text-light">
+                            <i className="bi bi-bootstrap-reboot"></i> &nbsp; Returns
+                        </a>
+                    </li>
                 </ul>
                 <hr/>
                 <div className="dropdown">

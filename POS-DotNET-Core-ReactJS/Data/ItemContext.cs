@@ -3,7 +3,7 @@ using POS_DotNET_Core_ReactJS.Models.DTO;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace PPOS_DotNET_Core_ReactJS.Data
+namespace POS_DotNET_Core_ReactJS.Data
 {
     public class ItemContext:DatabaseConfig
     {
