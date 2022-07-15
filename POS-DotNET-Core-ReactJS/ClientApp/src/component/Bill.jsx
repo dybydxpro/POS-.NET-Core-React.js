@@ -80,6 +80,18 @@ export default function Bill(){
         })
     }
 
+    function SearchText(e){
+        const search = e.target.value;
+        if(search === ""){
+            fetchData();
+        }
+        else{
+            Services.FetchSearchBills(search).then(({data})=>{
+                setData(data)
+            })
+        }
+    }
+
     function fetchItem(){
         Services.GetAllItemsASC().then(({data})=>{
             setItem(data)
@@ -286,6 +298,20 @@ export default function Bill(){
     const AllBillModelHandleClose = () => setAllBill(false);
     const AllBillModelHandleShow = () => setAllBill(true);
 
+    //View One Bill
+    const [oneBill, setOneBill] = useState(false);
+
+    const OneBillModelHandleClose = () => setOneBill(false);
+    const OneBillModelHandleShow = () => setOneBill(true);
+
+    function totalOfPaidBill(){
+        var total = 0;
+        for(var a = 0; a < bill.length; ++a){
+            total = total + Number(bill[a].soldPrice);
+        }
+        return total;
+    }
+
     return(
         <div className="container-fluid">
             <div className="row">
@@ -307,6 +333,13 @@ export default function Bill(){
                             <p className="h2 mb-3">Bill System</p>
                         </div>
 
+                        <div className="d-flex justify-content-end container">
+                            <div className="form-floating mb-2">
+                                <input type="text" className="form-control" id="search" placeholder="Search" onChange={(e) => SearchText(e)}/>
+                                <label htmlFor="search"><i className="bi bi-search"></i>&nbsp; Search</label>
+                            </div>
+                        </div>
+
                         <div>
                             <button type="button" className="btn text-light" onClick={() => AllBillModelHandleShow()} style={{position:"fixed", width:"60px", height:"60px", top:"90px", right:"40px", borderRadius: "50%", backgroundColor: "#2e856e", fontSize:"28px"}}>
                                 <i className="bi bi-clipboard2-pulse"></i>
@@ -324,23 +357,115 @@ export default function Bill(){
                                         <div className="px-5">
                                                 <table className="table">
                                                     <thead>
-                                                        <tr className="bg-warning">
+                                                        <tr className="bg-info">
                                                             <th scope="col" className="text-center">#</th>
                                                             <th scope="col" className="text-center">Bill #</th>
                                                             <th scope="col" className="text-center">Timescape</th>
                                                             <th scope="col" className="text-center">Item Count</th>
                                                             <th scope="col" className="text-center">Total Bill</th>
-                                                            {/*<th scope="col">Options</th>*/}
+                                                            <th scope="col" className="text-center">Options</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                     {allBillData.map((dts, index) =>
-                                                        <tr className="table-warning" key={index + 1}>
+                                                        <tr className="table-info" key={index + 1}>
                                                             <td className="text-center">{index + 1}</td>
                                                             <td className="text-center">{dts.billNo}</td>
-                                                            <td className="text-center">{dts.timescape}</td>
+                                                            <td className="text-center">{(dts.timescape).substring(0, 10)+ " " +(dts.timescape).substring(11, 19)}</td>
                                                             <td className="text-center">{dts.itemCount}</td>
-                                                            <td className="text-end">{dts.billPrice}</td>
+                                                            <td className="text-end">{parseFloat(dts.billPrice).toFixed(2)}</td>
+                                                            <td className="text-center">
+                                                                <button className="btn btn-info mx-2" onClick={() => {OneBillModelHandleShow(); fetchBillData(Number(dts.billNo));}}>
+                                                                    <i className="bi bi-clipboard2-data"></i>&nbsp; View
+                                                                </button>
+                                                                <Modal show={oneBill} onHide={OneBillModelHandleClose}  fullscreen={true}>
+                                                                    <Modal.Header closeButton>
+                                                                        <Modal.Title>View All Bills</Modal.Title>
+                                                                    </Modal.Header>
+                                                                    <Modal.Body className="bg-light">
+                                                                        <div className="py-2">
+
+                                                                            <button type="button" className="btn text-dark" onClick={() => printBill()} style={{position:"fixed", width:"60px", height:"60px", top:"80px", right:"50px", borderRadius: "50%", backgroundColor: "#ffcc00", fontSize:"28px"}}>
+                                                                                <i className="bi bi-printer"></i>
+                                                                            </button>
+
+                                                                            <div className="container bg-dark py-2">
+                                                                                <div className="bg-white" style={{minHeight: "80vh"}}>
+                                                                                    <div className="d-flex justify-content-center">
+                                                                                        <p className="text-primary" style={{fontSize: "36px"}}><strong>Invoice</strong></p>
+                                                                                    </div>
+
+                                                                                    <div className="mb-4" style={{paddingLeft: "250px", paddingRight: "250px"}}>
+                                                                                        <div className="row mx-4">
+                                                                                            <div className="col-2"><p><strong>Bill #</strong></p></div>
+                                                                                            <div className="col-4"><p>: {bill[0].billNo}</p></div>
+                                                                                            <div className="col-2"><p><strong>Bill Date</strong></p></div>
+                                                                                            <div className="col-4"><p>: {(bill[0].timescape).substring(0, 10) + " " + (bill[0].timescape).substring(11, 19)}</p></div>
+                                                                                        </div>
+                                                                                        <div className="row mx-4">
+                                                                                            <div className="col-2"><p><strong>Saller </strong></p></div>
+                                                                                            <div className="col-4"><p>: {bill[0].userName}</p></div>
+                                                                                            <div className="col-2"><p><strong></strong></p></div>
+                                                                                            <div className="col-4"><p></p></div>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <div className="px-5">
+                                                                                        <table className="table">
+                                                                                            <thead className="bg-dark text-light">
+                                                                                                <tr>
+                                                                                                    <th className="text-center">#</th>
+                                                                                                    <th className="text-center">Item ID</th>
+                                                                                                    <th className="text-center">Stock ID</th>
+                                                                                                    <th className="text-center">Item Details</th>
+                                                                                                    <th className="text-center">Unit</th>
+                                                                                                    <th className="text-center">Qty</th>
+                                                                                                    <th className="text-center">Unit Price</th>
+                                                                                                    <th className="text-center">Total Price</th>
+                                                                                                </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+                                                                                                {
+                                                                                                    bill.map((data, index) =>
+                                                                                                        <tr>
+                                                                                                        <td className="text-center">{index+1}</td>
+                                                                                                        <td className="text-center">{data.itemID}</td>
+                                                                                                        <td className="text-center">{data.stockID}</td>
+                                                                                                        <td className="text-start">{data.itemName}</td>
+                                                                                                        <td className="text-center">{data.unit}</td>
+                                                                                                        <td className="text-end">{data.soldQty}</td>
+                                                                                                        <td className="text-end">{data.price}</td>
+                                                                                                        <td className="text-end">{data.soldPrice}</td>
+                                                                                                    </tr>
+                                                                                                    )
+                                                                                                }
+                                                                                                
+                                                                                            </tbody>
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td className="text-center"></td>
+                                                                                                    <td className="text-center"></td>
+                                                                                                    <td className="text-center"></td>
+                                                                                                    <td className="text-start"></td>
+                                                                                                    <td className="text-center"><strong>Total (LKR.) </strong></td>
+                                                                                                    <td className="text-end"></td>
+                                                                                                    <td className="text-end"></td>
+                                                                                                    <td className="text-end"><strong>{parseFloat(totalOfPaidBill()).toFixed(2)}</strong></td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </Modal.Body>
+                                                                    <Modal.Footer>
+                                                                        <Button variant="secondary" onClick={OneBillModelHandleClose}>
+                                                                            Close
+                                                                        </Button>
+                                                                    </Modal.Footer>
+                                                                </Modal>
+                                                            </td>
                                                         </tr>)}
                                                     </tbody>
                                                 </table>

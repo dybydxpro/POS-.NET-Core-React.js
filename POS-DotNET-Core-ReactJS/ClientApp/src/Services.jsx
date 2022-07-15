@@ -168,6 +168,10 @@ class Services{
     FetchAllBills(){
         return httpCommon.get("/Sale")
     }
+
+    FetchSearchBills(text){
+        return httpCommon.get("/Sale")
+    }
 }
 
 export default new Services();

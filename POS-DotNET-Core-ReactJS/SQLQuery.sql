@@ -941,3 +941,19 @@ END;
 
 EXEC sp_CreateMaxBill;
 
+CREATE PROCEDURE sp_GetSearchBills(
+    @Search AS VARCHAR(255))
+AS
+BEGIN
+    SELECT s.BillNo, s.Timescape, COUNT(s.ItemID) AS 'ItemCount', SUM(s.SoldPrice) AS 'BillPrice'
+    FROM Sale s, Item i, Stock sk 
+    WHERE s.ItemID = i.ItemID AND s.StockID = sk.StockID AND (s.BillNo LIKE @Search)
+    GROUP BY s.BillNo, s.Timescape
+    ORDER BY s.Timescape DESC
+END;
+
+EXEC sp_GetSearchBills @Search = '%Ro%';
+
+
+
+
