@@ -116,11 +116,12 @@ CREATE TABLE Sale
 CREATE TABLE ReturnItem
 (
     ReturnID INTEGER IDENTITY PRIMARY KEY,
+    BillID INTEGER,
     ItemID INTEGER,
     StockID INTEGER,
     Qty DECIMAL(8,2),
     Price DECIMAL(8,2),
-    SellerID INTEGER,
+    ReturnerID INTEGER,
     FOREIGN KEY(ItemID) REFERENCES Item(ItemID),
     FOREIGN KEY(StockID) REFERENCES Stock(StockID)
 )
@@ -955,5 +956,84 @@ END;
 EXEC sp_GetSearchBills @Search = '%Ro%';
 
 
+--Return Item 
 
+CREATE PROCEDURE sp_GetAllReturns
+AS
+BEGIN
+    SELECT r.ReturnID, r.BillID, r.ItemID, i.ItemName, i.Unit, r.StockID, r.Qty, r.Price, r.ReturnerID , u.UserName
+    FROM ReturnItem r, Item i, Users u
+    WHERE r.ItemID = i.ItemID AND r.ReturnerID = u.UserID
+END;
+
+EXEC sp_GetAllReturns;
+
+CREATE PROCEDURE sp_GetOneReturn(
+    @ReturnID AS INTEGER
+)
+AS
+BEGIN
+    SELECT r.ReturnID, r.BillID, r.ItemID, i.ItemName, i.Unit, r.StockID, r.Qty, r.Price, r.ReturnerID , u.UserName
+    FROM ReturnItem r, Item i, Users u
+    WHERE r.ItemID = i.ItemID AND r.ReturnerID = u.UserID AND r.ReturnID = @ReturnID
+END;
+
+EXEC sp_GetOneReturn @ReturnID = 1;
+
+CREATE PROCEDURE sp_SetReturn(
+    @BillID AS INTEGER,
+    @ItemID AS INTEGER,
+    @StockID AS INTEGER,
+    @Qty AS DECIMAL(8,2),
+    @Price AS DECIMAL(8,2),
+    @ReturnerID AS INTEGER
+)
+AS
+BEGIN
+    INSERT INTO ReturnItem(BillID, ItemID, StockID, Qty, Price, ReturnerID)
+    VALUES (@BillID, @ItemID, @StockID, @Qty, @Price, @ReturnerID);
+
+    DECLARE @StkQty AS INTEGER;
+    DECLARE @TotalQty AS INTEGER;
+    SET @StkQty = (SELECT Qty FROM Stock WHERE StockID = @StockID);
+    SET @TotalQty = @StkQty + @Qty;
+
+    UPDATE Stock SET Qty = @TotalQty WHERE StockID = @StockID;
+END;
+
+EXEC sp_SetReturn @BillID = 1, @ItemID = 1, @StockID = 1, @Qty = 1, @Price = 54000, @ReturnerID = 1;
+
+CREATE PROCEDURE sp_UpdateReturn(
+    @ReturnID AS INTEGER,
+    @BillID AS INTEGER,
+    @ItemID AS INTEGER,
+    @StockID AS INTEGER,
+    @Qty AS DECIMAL(8,2),
+    @Price AS DECIMAL(8,2),
+    @ReturnerID AS INTEGER
+)
+AS
+BEGIN
+    DECLARE @ReturnAvailableQty DECIMAL(8,2);
+    DECLARE @AvStock DECIMAL(8,2);
+    DECLARE @Total DECIMAL(8,2);
+    SET @ReturnAvailableQty = (SELECT Qty FROM ReturnItem WHERE ReturnID = @ReturnID);
+    SET @AvStock = (SELECT Qty FROM Stock WHERE StockID = @StockID);
+
+    INSERT INTO ReturnItem(BillID, ItemID, StockID, Qty, Price, ReturnerID)
+    VALUES (@BillID, @ItemID, @StockID, @Qty, @Price, @ReturnerID);
+
+    IF @ReturnAvailableQty < @Qty
+    BEGIN
+        SET @Total = @AvStock - (@Qty - @ReturnAvailableQty)
+        UPDATE Stock SET Qty = @Total WHERE StockID = @StockID
+    END
+    ELSE
+    BEGIN
+        SET @Total = @AvStock + (@ReturnAvailableQty - @Qty)
+        UPDATE Stock SET Qty = @Total WHERE StockID = @StockID
+    END
+END;
+
+EXEC sp_UpdateReturn @ReturnID = 1, @BillID = 1, @ItemID = 1, @StockID = 1, @Qty = 1, @Price = 54000, @ReturnerID = 1;
 

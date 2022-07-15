@@ -1,9 +1,9 @@
-﻿using POS_.NET_Core_React.js.Models.DTO;
-using POS_.NET_Core_React.js.Models;
+﻿using POS_DotNET_Core_ReactJS.Models.DTO;
+using POS_DotNET_Core_ReactJS.Models;
 using System.Data.SqlClient;
 using System.Data;
 
-namespace POS_.NET_Core_React.js.Data
+namespace POS_DotNET_Core_ReactJS.Data
 {
     public class SaleContext:DatabaseConfig
     {

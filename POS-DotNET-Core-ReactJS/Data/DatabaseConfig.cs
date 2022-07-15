@@ -1,4 +1,4 @@
-﻿namespace POS_.NET_Core_React.js.Data
+﻿namespace POS_DotNET_Core_ReactJS.Data
 {
     public class DatabaseConfig
     {

@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using POS_.NET_Core_React.js.Data;
-using POS_.NET_Core_React.js.Models;
-using POS_.NET_Core_React.js.Models.DTO;
+using POS_DotNET_Core_ReactJS.Data;
+using POS_DotNET_Core_ReactJS.Models;
+using POS_DotNET_Core_ReactJS.Models.DTO;
 
-namespace POS_.NET_Core_React.js.Controllers
+namespace POS_DotNET_Core_ReactJS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

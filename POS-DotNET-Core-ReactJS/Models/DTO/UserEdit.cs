@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace POS_.NET_Core_React.js.Models.DTO
+namespace POS_DotNET_Core_ReactJS.Models.DTO
 {
     public class UserEdit
     {

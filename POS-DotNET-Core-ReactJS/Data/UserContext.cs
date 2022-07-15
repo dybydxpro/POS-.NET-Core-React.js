@@ -2,10 +2,10 @@
 using System.Data.SqlClient;
 using System.Security.Cryptography;
 using System.Text;
-using POS_.NET_Core_React.js.Models;
-using POS_.NET_Core_React.js.Models.DTO;
+using POS_DotNET_Core_ReactJS.Models;
+using POS_DotNET_Core_ReactJS.Models.DTO;
 
-namespace POS_.NET_Core_React.js.Data
+namespace POS_DotNET_Core_ReactJS.Data
 {
     public class UserContext:DatabaseConfig
     {
