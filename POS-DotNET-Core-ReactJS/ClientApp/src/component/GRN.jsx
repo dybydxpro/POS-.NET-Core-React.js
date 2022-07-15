@@ -51,11 +51,17 @@ export default function GRN(){
         Services.GetAllGRNs().then(({data})=>{
             setData(data)
         })
+        .catch(({response})=>{
+            console.log(response);
+        })
     }
 
     function fetchItem(){
         Services.GetAllItemsASC().then(({data})=>{
             setItem(data)
+        })
+        .catch(({response})=>{
+            console.log(response);
         })
     }
 

@@ -40,7 +40,14 @@ export default function Bill(){
         "sellerID": 0,
         "userName": "",
         "timescape": ""
-      }]);
+    }]);
+    const [ppbtn, setPpbtn] = useState(0);
+    const [allBillData, setAllBillData] = useState([{
+        "billNo": 0,
+        "timescape": "2000-01-01T00:00:00.000",
+        "itemCount": 0,
+        "billPrice": 0
+    }])
 
     useEffect(() => {
         if(!(Number(sessionStorage.getItem("userID")) > 0)){
@@ -49,7 +56,17 @@ export default function Bill(){
 
         fetchData();
         fetchItem();
+        fetchAllBill();
     },[]);
+
+    function fetchAllBill(){
+        Services.FetchAllBills().then(({data})=>{
+            setAllBillData(data)
+        })
+        .catch(({response})=>{
+            console.log(response);
+        })
+    }
 
     function fetchData(){
         var id = sessionStorage.getItem("userID");
@@ -88,7 +105,7 @@ export default function Bill(){
         Services.ProcessBill(id).then(({data})=>{
             console.log(data);
             fetchData();
-            printBill(Number(data))
+            fetchBillData(Number(data));
         })
         .catch(({response})=>{
             console.log(response);
@@ -202,62 +219,72 @@ export default function Bill(){
         .then(({data}) =>{
             console.log(data);
             setBill(data);
-            waitForElement();
         }).catch(({response})=>{
             console.log(response);
             alert(response);
         })
     }
 
-    function waitForElement(){
-        if(Number(bill[0].billNo) > 0){
-            printBill(2);
-        }
-        else{
-            waitForElement();
-        }
-    }
-
-    function printBill(id){
-        /*Services.PrintBill(id)
-        .then(({data}) =>{
-            console.log(data);
-            setBill(data);
-        }).catch(({response})=>{
-            console.log(response);
-            alert(response);
-        })*/
-
+    function printBill(){
         const doc = new jsPDF('portrait', 'px', 'a4', 'false');
         var width = doc.internal.pageSize.getWidth();
         var height = doc.internal.pageSize.getHeight();
         doc.addImage(canvasImg,'JPEG', 0,0,width,height);
 
         var printDataTable = [];
-        /*bill.map((data, index) =>{
+        bill.map((data, index) =>{
             var dataset = [
                 index+1,
                 data.itemID,
                 data.stockID,
                 data.itemName,
                 data.unit,
-                data.grnQty,
-                data.bulckPrice,
-                data.actualBulkPrice,
-                data.remarks
+                data.soldQty,
+                data.price,
+                data.soldPrice
             ]
             printDataTable.push(dataset);
-        });*/
+        });
+
+        var total = 0;
+        for(var a = 0; a < bill.length; ++a){
+            total = total + Number(bill[a].soldPrice);
+        }
 
         doc.setFontSize(12);
 
         doc.text(20, 100, "Bill #");
         doc.text(70, 100, ": "+ bill[0].billNo);
         doc.text((width/2), 100, "Bill Date");
-        doc.text((width/2)+50, 100, ": "+ (bill[0].timescape).substring(0, 10));
+        doc.text((width/2)+50, 100, ": "+ (bill[0].timescape).substring(0, 10) + " " + (bill[0].timescape).substring(11, 19));
+
+        doc.text(20, 120, "Seller ");
+        doc.text(70, 120, ": "+ bill[0].userName);
+        doc.text((width/2), 120, "Total Bill");
+        doc.text((width/2)+50, 120, ": "+ ("LKR. "+total));
+
+        var options = {
+            theme: 'striped',
+	        startY: 170,
+	        pageBreak: 'avoid',
+            margin: {top: 1}
+        };
+
+        autoTable(doc, {
+            head: [['ID', 'Item ID', 'Stock ID', 'Item Details', 'Unit', 'Qty', 'Unit Price', 'Total Price']],
+            body: printDataTable,
+            margin: { top: 150 },
+            options: options
+        });
 
         doc.save("Bill"+bill[0].billNo+".pdf");
     }
+
+    //View All bill
+    const [allBill, setAllBill] = useState(false);
+
+    const AllBillModelHandleClose = () => setAllBill(false);
+    const AllBillModelHandleShow = () => setAllBill(true);
 
     return(
         <div className="container-fluid">
@@ -281,9 +308,86 @@ export default function Bill(){
                         </div>
 
                         <div>
-                            <button type="button" className="btn text-light" style={{position:"fixed", width:"60px", height:"60px", top:"90px", right:"40px", borderRadius: "50%", backgroundColor: "#2e856e", fontSize:"28px"}}>
+                            <button type="button" className="btn text-light" onClick={() => AllBillModelHandleShow()} style={{position:"fixed", width:"60px", height:"60px", top:"90px", right:"40px", borderRadius: "50%", backgroundColor: "#2e856e", fontSize:"28px"}}>
                                 <i className="bi bi-clipboard2-pulse"></i>
                             </button>
+                            <Modal show={allBill} onHide={AllBillModelHandleClose} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+                                <Modal.Header closeButton>
+                                    <Modal.Title id="contained-modal-title-vcenter">View All Bills</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    <div>
+                                        <div className="d-flex justify-content-center">
+                                            <p className="text-secondary" style={{fontSize: "36px"}}><strong>List Of Bill</strong></p>
+                                        </div>
+
+                                        <div className="px-5">
+                                                <table className="table">
+                                                    <thead>
+                                                        <tr className="bg-warning">
+                                                            <th scope="col" className="text-center">#</th>
+                                                            <th scope="col" className="text-center">Bill #</th>
+                                                            <th scope="col" className="text-center">Timescape</th>
+                                                            <th scope="col" className="text-center">Item Count</th>
+                                                            <th scope="col" className="text-center">Total Bill</th>
+                                                            {/*<th scope="col">Options</th>*/}
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {allBillData.map((dts, index) =>
+                                                        <tr className="table-warning" key={index + 1}>
+                                                            <td className="text-center">{index + 1}</td>
+                                                            <td className="text-center">{dts.billNo}</td>
+                                                            <td className="text-center">{dts.timescape}</td>
+                                                            <td className="text-center">{dts.itemCount}</td>
+                                                            <td className="text-end">{dts.billPrice}</td>
+                                                        </tr>)}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                    </div>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="secondary" onClick={AllBillModelHandleClose}>Close</Button>
+                                </Modal.Footer>
+                            </Modal>
+                            {/*<Modal show={allBill} onHide={AllBillModelHandleClose}  fullscreen={true}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>View All Bills</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body className="bg-light">
+                                    <div className="py-2">
+
+                                        <button type="button" className="btn text-dark" style={{position:"fixed", width:"60px", height:"60px", top:"80px", right:"50px", borderRadius: "50%", backgroundColor: "#ffcc00", fontSize:"28px"}}>
+                                            <i className="bi bi-printer"></i>
+                                        </button>
+
+                                        <div className="container bg-dark py-2">
+                                            <div className="bg-white" style={{minHeight: "80vh"}}>
+                                                <div className="d-flex justify-content-center">
+                                                    <p className="text-primary" style={{fontSize: "36px"}}><strong>Good Receiving Note</strong></p>
+                                                </div>
+
+                                                <div className="px-5">
+                                                    <table className="table">
+                                                        <thead>
+
+                                                        </thead>
+                                                        <tbody>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="secondary" onClick={AllBillModelHandleClose}>
+                                        Close
+                                    </Button>
+                                </Modal.Footer>
+                            </Modal>*/}
                         </div>
 
                         <div className="container">
@@ -318,7 +422,7 @@ export default function Bill(){
                                 </div>
                                 <div className="col">
                                     <div className="align-middle">
-                                        <button className="btn btn-primary btn-lg shadow" onClick={() => addnewItem()} style={{height: "57px"}}><i className="bi bi-save"></i>&nbsp; Save</button>
+                                        <button className="btn btn-primary btn-lg shadow" onClick={() => addnewItem()} style={{height: "57px"}}><i className="bi bi-save"></i>&nbsp; Add to Bill</button>
                                     </div>
                                 </div>
                             </div>                            
@@ -362,7 +466,12 @@ export default function Bill(){
                             </div>
 
                             <div className="d-flex justify-content-end mx-2">
-                                <button className="btn py-3 px-4" onClick={() => /*ProcessBill()*/ fetchBillData(2)} style={{ backgroundColor: "#337AB7", color: "white", fontSize: "20px" }}><i className="bi bi-receipt"></i>&nbsp;Print</button>
+                                {ppbtn===0 &&
+                                    <button className="btn py-3 px-4" onClick={() => {ProcessBill(); setTimeout(() => {setPpbtn(1);}, 5000);}} style={{ backgroundColor: "#337AB7", color: "white", fontSize: "20px" }}><i className="bi bi-arrow-repeat"></i>&nbsp;Process Bill</button>
+                                }
+                                {ppbtn===1 &&
+                                    <button className="btn py-3 px-4" onClick={() => printBill()} style={{ backgroundColor: "#337AB7", color: "white", fontSize: "20px" }}><i className="bi bi-receipt"></i>&nbsp;Print</button>
+                                }
                             </div>
                         </div>
                     </div>

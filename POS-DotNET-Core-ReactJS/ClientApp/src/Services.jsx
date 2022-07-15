@@ -164,6 +164,10 @@ class Services{
     PrintBill(billid){
         return httpCommon.get(`/Sale/Bill/${billid}`)
     }
+
+    FetchAllBills(){
+        return httpCommon.get("/Sale")
+    }
 }
 
 export default new Services();
