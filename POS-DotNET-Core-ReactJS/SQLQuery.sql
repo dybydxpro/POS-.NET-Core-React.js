@@ -1080,7 +1080,13 @@ EXEC sp_DeleteReturns @ReturnID = 1;
 CREATE PROCEDURE sp_dailySales
 AS
 BEGIN
-	SELECT CAST(Timescape AS DATE) as Date, SUM(SoldPrice) AS TotalSales FROM Sale GROUP BY CAST(Timescape AS DATE);
+	DECLARE @TempDate AS DATETIME;
+	SET @TempDate = (SELECT CAST((DATEADD(dd, 0, DATEDIFF(dd, 10, GETDATE()))) AS DATE ) AS Date);
+
+	SELECT CAST(Timescape AS DATE) AS Date, SUM(SoldPrice) AS TotalSales
+	FROM Sale 
+	WHERE CAST(Timescape AS DATE) >= @TempDate
+	GROUP BY CAST(Timescape AS DATE);
 END;
 
 EXEC sp_dailySales;
@@ -1088,7 +1094,78 @@ EXEC sp_dailySales;
 CREATE PROCEDURE sp_MonthlySales
 AS
 BEGIN
-	SELECT DATENAME(month, CAST(Timescape AS DATE)) AS Month, SUM(SoldPrice) AS TotalSales FROM Sale GROUP BY DATENAME(month, CAST(Timescape AS DATE));
+	DECLARE @TempDate AS DATETIME;
+	SET @TempDate = (SELECT CAST((DATEADD(dd, 0, DATEDIFF(dd, 365, GETDATE()))) AS DATE ) AS Date);
+
+	SELECT DATENAME(month, CAST(Timescape AS DATE)) AS Month, SUM(SoldPrice) AS TotalSales 
+	FROM Sale 
+	WHERE CAST(Timescape AS DATE) >= @TempDate
+	GROUP BY DATENAME(month, CAST(Timescape AS DATE));
 END;
 
 EXEC sp_MonthlySales;
+
+CREATE PROCEDURE sp_UsersCount
+AS
+BEGIN
+	SELECT Type, COUNT(UserID) AS NoOfUsers
+	FROM Users
+	GROUP BY Type;
+END;
+
+EXEC sp_UsersCount;
+
+CREATE PROCEDURE sp_ItemsCount
+AS
+BEGIN
+	SELECT COUNT(ItemID) AS NoOfItems
+	FROM Item;
+END;
+
+EXEC sp_ItemsCount;
+
+CREATE PROCEDURE sp_SuppliersCount
+AS
+BEGIN
+	SELECT COUNT(SupplierID) AS NoOfSuppliers
+	FROM Supplier;
+END;
+
+EXEC sp_SuppliersCount;
+
+CREATE PROCEDURE sp_GRNsCount
+AS
+BEGIN
+	SELECT COUNT(GRNID) AS NoOfGRNs
+	FROM GRN;
+END;
+
+EXEC sp_GRNsCount;
+
+CREATE PROCEDURE sp_dailyBillCounts
+AS
+BEGIN
+	DECLARE @TempDate AS DATETIME;
+	SET @TempDate = (SELECT CAST((DATEADD(dd, 0, DATEDIFF(dd, 10, GETDATE()))) AS DATE ) AS Date);
+
+	SELECT CAST(Timescape AS DATE) AS Date, COUNT(BillNo)AS TotalSales 
+	FROM Sale 
+	WHERE CAST(Timescape AS DATE) >= @TempDate
+	GROUP BY CAST(Timescape AS DATE);
+END;
+
+EXEC sp_dailyBillCounts;
+
+CREATE PROCEDURE sp_MonthlyBillCounts
+AS
+BEGIN
+	DECLARE @TempDate AS DATETIME;
+	SET @TempDate = (SELECT CAST((DATEADD(dd, 0, DATEDIFF(dd, 365, GETDATE()))) AS DATE ) AS Date);
+
+	SELECT DATENAME(month, CAST(Timescape AS DATE)) AS Month, COUNT(BillNo) AS TotalSales 
+	FROM Sale 
+	WHERE CAST(Timescape AS DATE) >= @TempDate
+	GROUP BY DATENAME(month, CAST(Timescape AS DATE));
+END;
+
+EXEC sp_MonthlyBillCounts;

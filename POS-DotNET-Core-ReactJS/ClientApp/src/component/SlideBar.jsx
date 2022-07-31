@@ -27,7 +27,7 @@ export default function SlideBar(){
     const handleShow = () => setShowOffCanvas(true);
     
     return(
-        <div>
+        <div style={{position: "relative"}}>
             <div className="d-flex flex-column flex-shrink-0 p-3 text-light" style={{minHeight: "100vh", backgroundColor: "#4d646f"}}>
                 <a href="/dashboard" className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none  text-center">
                     <span className="fs-4 text-light">POS System</span>

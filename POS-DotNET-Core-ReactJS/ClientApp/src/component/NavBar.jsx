@@ -14,7 +14,7 @@ export default function NavBar(){
     });
     
     return(
-        <div>
+        <div className="">
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Eighth navbar example">
                 <div className="container-fluid">
                     <a className="navbar-brand" href="/">POS System</a>

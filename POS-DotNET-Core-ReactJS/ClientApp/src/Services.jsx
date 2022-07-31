@@ -206,6 +206,30 @@ class Services{
     MonthlySales(){
         return httpCommon.get("/Dashboard/MonthlySales")
     }
+
+    UserCounts(){
+        return httpCommon.get("/Dashboard/UserCounts")
+    }
+
+    ItemCounts(){
+        return httpCommon.get("/Dashboard/ItemCounts")
+    }
+
+    SupplierCounts(){
+        return httpCommon.get("/Dashboard/SupplierCounts")
+    }
+
+    GRNCounts(){
+        return httpCommon.get("/Dashboard/GRNCounts")
+    }
+
+    DailyBillCounts(){
+        return httpCommon.get("/Dashboard/DailyBillCounts")
+    }
+
+    MonthlyBillCounts(){
+        return httpCommon.get("/Dashboard/MonthlyBillCounts")
+    }
 }
 
 export default new Services();
