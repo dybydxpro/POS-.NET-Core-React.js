@@ -1073,3 +1073,22 @@ BEGIN
 END;
 
 EXEC sp_DeleteReturns @ReturnID = 1;
+
+
+-- Dash Board
+
+CREATE PROCEDURE sp_dailySales
+AS
+BEGIN
+	SELECT CAST(Timescape AS DATE) as Date, SUM(SoldPrice) AS TotalSales FROM Sale GROUP BY CAST(Timescape AS DATE);
+END;
+
+EXEC sp_dailySales;
+
+CREATE PROCEDURE sp_MonthlySales
+AS
+BEGIN
+	SELECT DATENAME(month, CAST(Timescape AS DATE)) AS Month, SUM(SoldPrice) AS TotalSales FROM Sale GROUP BY DATENAME(month, CAST(Timescape AS DATE));
+END;
+
+EXEC sp_MonthlySales;

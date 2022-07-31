@@ -197,6 +197,15 @@ class Services{
     DeleteReturn(id){
         return httpCommon.delete(`/Return/${id}`)
     }
+
+    //Dashboard Functions
+    DailySales(){
+        return httpCommon.get("/Dashboard/DailySales")
+    }
+
+    MonthlySales(){
+        return httpCommon.get("/Dashboard/MonthlySales")
+    }
 }
 
 export default new Services();
