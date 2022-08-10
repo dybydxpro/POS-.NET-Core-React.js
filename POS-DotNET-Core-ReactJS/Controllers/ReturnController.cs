@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using POS_DotNET_Core_ReactJS.Data;
 using POS_DotNET_Core_ReactJS.Models;
 using POS_DotNET_Core_ReactJS.Models.DTO;
+using POS_DotNET_Core_ReactJS.Repository.Interfaces;
 
 namespace POS_DotNET_Core_ReactJS.Controllers
 {
@@ -10,19 +11,24 @@ namespace POS_DotNET_Core_ReactJS.Controllers
     [ApiController]
     public class ReturnController : ControllerBase
     {
-        ReturnContext db = new ReturnContext();
+        private readonly IReturnRepository _returnRepository;
+
+        public ReturnController(IReturnRepository returnRepository)
+        {
+            _returnRepository = returnRepository;
+        }   
 
         [HttpGet]
         public async Task<ActionResult<List<ReturnItem>>> GetAllItems()
         {
-            List<ReturnItemGetDTO> ri = db.GetReturn().ToList();
+            List<ReturnItemGetDTO> ri = _returnRepository.GetReturn().ToList();
             return Ok(ri);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<ReturnItem>> GetOnce(int id)
         {
-            ReturnItemGetDTO ri = db.GetOnce(id);
+            ReturnItemGetDTO ri = _returnRepository.GetOnce(id);
             if (ri.ReturnID != 0)
             {
                 return Ok(ri);
@@ -36,7 +42,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         [HttpGet("Search/{text}")]
         public async Task<ActionResult<ReturnItem>> SearchReturn(string text)
         {
-            List<ReturnItemGetDTO> ri = db.GetReturn(text).ToList();
+            List<ReturnItemGetDTO> ri = _returnRepository.GetReturn(text).ToList();
             return Ok(ri);
         }
 
@@ -45,7 +51,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var isOK = db.PostReturn(obj);
+                var isOK = _returnRepository.PostReturn(obj);
                 return Ok(isOK);
             }
             else
@@ -59,7 +65,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var isOK = db.UpdateReturn(obj);
+                var isOK = _returnRepository.UpdateReturn(obj);
                 if (isOK)
                 {
                     return Ok(isOK);
@@ -80,7 +86,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var isOK = db.DeleteReturn(id);
+                var isOK = _returnRepository.DeleteReturn(id);
                 if (isOK)
                 {
                     return Ok(isOK);

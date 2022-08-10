@@ -16,7 +16,14 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 
 //DI
-
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+builder.Services.AddScoped<IGRNCartRepository, GRNCartRepository>();
+builder.Services.AddScoped<IGRNRepository, GRNRepository>();
+builder.Services.AddScoped<IItemRepository, ItemRepository>();
+builder.Services.AddScoped<IReturnRepository, ReturnRepository>();
+builder.Services.AddScoped<ISaleRepository, SaleRepository>();
+builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 

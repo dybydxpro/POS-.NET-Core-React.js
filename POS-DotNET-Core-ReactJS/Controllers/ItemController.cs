@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using POS_DotNET_Core_ReactJS.Data;
 using POS_DotNET_Core_ReactJS.Models;
 using POS_DotNET_Core_ReactJS.Models.DTO;
+using POS_DotNET_Core_ReactJS.Repository.Interfaces;
 
 namespace POS_DotNET_Core_ReactJS.Controllers
 {
@@ -10,26 +11,31 @@ namespace POS_DotNET_Core_ReactJS.Controllers
     [ApiController]
     public class ItemController : ControllerBase
     {
-        ItemContext db = new ItemContext();
+        private readonly IItemRepository _itemRepository;
+
+        public ItemController(IItemRepository itemRepository)
+        {
+            _itemRepository = itemRepository;
+        }
 
         [HttpGet]
         public async Task<ActionResult<List<Item>>> GetAllItems()
         {
-            List<Item> items = db.GetItems().ToList();
+            List<Item> items = _itemRepository.GetItems().ToList();
             return Ok(items);
         }
 
         [HttpGet("ASC")]
         public async Task<ActionResult<List<Item>>> GetAllItemsASC()
         {
-            List<Item> items = db.GetItemsASC().ToList();
+            List<Item> items = _itemRepository.GetItemsASC().ToList();
             return Ok(items);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Item>> GetOnce(int id)
         {
-            Item itm = db.GetOnce(id);
+            Item itm = _itemRepository.GetOnce(id);
             if(itm.ItemID != 0)
             {
                 return Ok(itm); 
@@ -43,7 +49,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         [HttpGet("Search/{text}")]
         public async Task<ActionResult<Item>> SearchItem(string text)
         {
-            List<Item> items = db.SearchItems(text).ToList();
+            List<Item> items = _itemRepository.SearchItems(text).ToList();
             return Ok(items);
         }
 
@@ -52,7 +58,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         {
             if(ModelState.IsValid)
             {
-                var isOK = db.PostItems(obj);
+                var isOK = _itemRepository.PostItems(obj);
                 return Ok(isOK);
             }
             else
@@ -66,7 +72,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var isOK = db.UpdateItems(obj);
+                var isOK = _itemRepository.UpdateItems(obj);
                 if (isOK)
                 {
                     return Ok(isOK);

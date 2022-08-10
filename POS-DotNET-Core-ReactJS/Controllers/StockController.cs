@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using POS_DotNET_Core_ReactJS.Data;
 using POS_DotNET_Core_ReactJS.Models;
 using POS_DotNET_Core_ReactJS.Models.DTO;
+using POS_DotNET_Core_ReactJS.Repository.Interfaces;
 
 namespace POS_DotNET_Core_ReactJS.Controllers
 {
@@ -10,26 +11,31 @@ namespace POS_DotNET_Core_ReactJS.Controllers
     [ApiController]
     public class StockController : ControllerBase
     {
-        StockContext db = new StockContext();
+        private readonly IStockRepository _stockRepository;
+
+        public StockController(IStockRepository stockRepository)
+        {
+            _stockRepository = stockRepository;
+        }
 
         [HttpGet]
         public async Task<ActionResult<List<StockGetDTO>>> GetAllStocks()
         {
-            List<StockGetDTO> stocks = db.GetStocks().ToList();
+            List<StockGetDTO> stocks = _stockRepository.GetStocks().ToList();
             return Ok(stocks);
         }
 
         [HttpGet("ASC/{id}")]
         public async Task<ActionResult<List<Stock>>> GetStocksASC(int id)
         {
-            List<Stock> stocks = db.GetStocksASC(id).ToList();
+            List<Stock> stocks = _stockRepository.GetStocksASC(id).ToList();
             return Ok(stocks);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<StockGetDTO>> GetOnce(int id)
         {
-            StockGetDTO stk = db.GetOnce(id);
+            StockGetDTO stk = _stockRepository.GetOnce(id);
             if (stk.StockID != 0)
             {
                 return Ok(stk);
@@ -43,7 +49,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         [HttpGet("Search/{text}")]
         public async Task<ActionResult<StockGetDTO>> SearchStock(string text)
         {
-            List<StockGetDTO> stocks = db.SearchStocks(text).ToList();
+            List<StockGetDTO> stocks = _stockRepository.SearchStocks(text).ToList();
             return Ok(stocks);
         }
 
@@ -52,7 +58,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var isOK = db.PostStocks(obj);
+                var isOK = _stockRepository.PostStocks(obj);
                 return Ok(isOK);
             }
             else
@@ -67,7 +73,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var isOK = db.UpdateStocks(obj);
+                var isOK = _stockRepository.UpdateStocks(obj);
                 if (isOK)
                 {
                     return Ok(isOK);

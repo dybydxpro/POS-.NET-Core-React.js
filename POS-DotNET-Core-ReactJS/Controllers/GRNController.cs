@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using POS_DotNET_Core_ReactJS.Data;
 using POS_DotNET_Core_ReactJS.Models.DTO;
+using POS_DotNET_Core_ReactJS.Repository.Interfaces;
 
 namespace POS_DotNET_Core_ReactJS.Controllers
 {
@@ -9,43 +10,49 @@ namespace POS_DotNET_Core_ReactJS.Controllers
     [ApiController]
     public class GRNController : ControllerBase
     {
-        GRNContext db = new GRNContext();
-        GRNCartContext gdb = new GRNCartContext();
+        private readonly IGRNRepository _GRNRepository;
+        private readonly IGRNCartRepository _GRNCartRepository;
+
+        public GRNController(IGRNRepository gRNRepository, IGRNCartRepository gRNCartRepository)
+        {
+            _GRNRepository = gRNRepository;
+            _GRNCartRepository = gRNCartRepository;
+        }
 
         [HttpGet]
         public async Task<ActionResult<List<GRNAllDTO>>> GetAllStocks()
         {
-            List<GRNAllDTO> grn = db.GetGRNs().ToList();
+            List<GRNAllDTO> grn = _GRNRepository.GetGRNs().ToList();
             return Ok(grn);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<GRNGetOneDTO>> GetOnce(int id)
         {
-            List<GRNGetOneDTO> stk = db.GetGRNOnce(id).ToList();
+            List<GRNGetOneDTO> stk = _GRNRepository.GetGRNOnce(id).ToList();
             return Ok(stk);
         }
 
         [HttpGet("GetSingle/{id}")]
         public async Task<ActionResult<GRNEditDTO>> GetSingle(int id)
         {
-            GRNEditDTO stk = db.GetOneByIDGRNs(id);
+            GRNEditDTO stk = _GRNRepository.GetOneByIDGRNs(id);
             return Ok(stk);
         }
 
         [HttpGet("Search/{text}")]
         public async Task<ActionResult<GRNAllDTO>> SearchGRN(string text)
         {
-            List<GRNAllDTO> grns = db.SearchGRNs(text).ToList();
+            List<GRNAllDTO> grns = _GRNRepository.SearchGRNs(text).ToList();
             return Ok(grns);
         }
 
         [HttpPost("{id}")]
         public async Task<ActionResult<GRNAllDTO>> PostGRN(int id)
         {
-            List<GRNCartGetDTO> grns = gdb.GetGRNCarts(id).ToList();
+            List<GRNCartGetDTO> grns = _GRNCartRepository.GetGRNCarts(id).ToList();
 
-            int maxID = db.GetMaxIDGRNs() + 1;
+            int maxID = _GRNRepository.GetMaxIDGRNs() + 1;
             DateTime dtm = DateTime.Now;
 
             foreach (GRNCartGetDTO ch in grns)
@@ -66,8 +73,8 @@ namespace POS_DotNET_Core_ReactJS.Controllers
                 gadto.DueDate = ch.DueDate;
                 gadto.Remarks = ch.Remarks;
 
-                db.PostGRNs(gadto);
-                gdb.DeleteGRNCarts(ch.GRNID);
+                _GRNRepository.PostGRNs(gadto);
+                _GRNCartRepository.DeleteGRNCarts(ch.GRNID);
             }
             return Ok();
         }
@@ -77,7 +84,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var isOK = db.EditGRNs(obj);
+                var isOK = _GRNRepository.EditGRNs(obj);
                 if (isOK)
                 {
                     return Ok(isOK);

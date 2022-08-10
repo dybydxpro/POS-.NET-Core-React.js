@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using POS_DotNET_Core_ReactJS.Data;
 using POS_DotNET_Core_ReactJS.Models;
 using POS_DotNET_Core_ReactJS.Models.DTO;
+using POS_DotNET_Core_ReactJS.Repository.Interfaces;
 
 namespace POS_DotNET_Core_ReactJS.Controllers
 {
@@ -10,19 +11,24 @@ namespace POS_DotNET_Core_ReactJS.Controllers
     [ApiController]
     public class CartController : ControllerBase
     {
-        CartContext db = new CartContext();
+        private readonly ICartRepository _cartRepository;
+
+        public CartController(ICartRepository cartRepository)
+        {
+            _cartRepository = cartRepository;
+        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<List<Cart>>> GetAllCarts(int id)
         {
-            List<CartGetDTO> grn = db.GetCarts(id).ToList();
+            List<CartGetDTO> grn = _cartRepository.GetCarts(id).ToList();
             return Ok(grn);
         }
 
         [HttpGet("GetSingle/{id}")]
         public async Task<ActionResult<Cart>> GetSingle(int id)
         {
-            CartGetDTO cart = db.GetCartOnce(id);
+            CartGetDTO cart = _cartRepository.GetCartOnce(id);
             if(cart.CartID == 0)
             {
                 return NotFound();
@@ -38,7 +44,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var isOK = db.PostCarts(obj);
+                var isOK = _cartRepository.PostCarts(obj);
                 return Ok(isOK);
             }
             else
@@ -52,7 +58,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var isOK = db.EditCarts(obj);
+                var isOK = _cartRepository.EditCarts(obj);
                 if (isOK)
                 {
                     return Ok(isOK);
@@ -73,7 +79,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var isOK = db.DeleteCarts(id);
+                var isOK = _cartRepository.DeleteCarts(id);
                 if (isOK)
                 {
                     return Ok(isOK);
