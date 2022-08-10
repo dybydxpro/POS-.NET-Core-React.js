@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using POS_DotNET_Core_ReactJS.Data;
 using POS_DotNET_Core_ReactJS.Models;
 using POS_DotNET_Core_ReactJS.Models.DTO;
+using POS_DotNET_Core_ReactJS.Repository.Interfaces;
 
 namespace POS_DotNET_Core_ReactJS.Controllers
 {
@@ -10,25 +11,30 @@ namespace POS_DotNET_Core_ReactJS.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        UserContext db = new UserContext();
+        private readonly IUserRepository _userRepository;
+
+        public UserController(IUserRepository userRepository)
+        {
+            _userRepository = userRepository;
+        }
 
         [HttpGet]
         public async Task<ActionResult<List<User>>> GetAllUsers(){
-            List<User> users = db.GetUser().ToList();
+            List<User> users = _userRepository.GetUser().ToList();
             return Ok(users);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<List<User>>> GetAllUsers(int id)
         {
-            UserEdit users = db.GetUserOnce(id);
+            UserEdit users = _userRepository.GetUserOnce(id);
             return Ok(users);
         }
 
         [HttpGet("Search/{text}")]
         public async Task<ActionResult<List<User>>> SearchUsers(string text)
         {
-            List<User> users = db.SearchUser(text).ToList();
+            List<User> users = _userRepository.SearchUser(text).ToList();
             return Ok(users);
         }
 
@@ -37,7 +43,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var isOK = db.AddUsers(user);
+                var isOK = _userRepository.AddUsers(user);
                 return Ok(isOK);
             }
             else
@@ -51,7 +57,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var isOK = db.ActiveDeactiveUser(id);
+                var isOK = _userRepository.ActiveDeactiveUser(id);
                 return Ok(isOK);
             }
             else
@@ -65,7 +71,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (db.EditUser(obj))
+                if (_userRepository.EditUser(obj))
                 {
                     return Ok();
                 }
@@ -85,7 +91,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var data = db.Login(obj.UserName, obj.Password);
+                var data = _userRepository.Login(obj.UserName, obj.Password);
                 if(data.UserID == 0)
                 {
                     return NotFound();
@@ -106,7 +112,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var data = db.ChangePassword(obj.UserID, obj.Password);
+                var data = _userRepository.ChangePassword(obj.UserID, obj.Password);
                 return Ok(data);
             }
             else

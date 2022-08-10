@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using POS_DotNET_Core_ReactJS.Data;
 using POS_DotNET_Core_ReactJS.Models;
 using POS_DotNET_Core_ReactJS.Models.DTO;
+using POS_DotNET_Core_ReactJS.Repository.Interfaces;
 
 namespace POS_DotNET_Core_ReactJS.Controllers
 {
@@ -10,26 +11,31 @@ namespace POS_DotNET_Core_ReactJS.Controllers
     [ApiController]
     public class SupplierController : ControllerBase
     {
-        SupplierContext db = new SupplierContext();
+        private readonly ISupplierRepository _supplierRepository;
+
+        public SupplierController(ISupplierRepository supplierRepository)
+        {
+            _supplierRepository = supplierRepository;
+        }
 
         [HttpGet]
         public async Task<ActionResult<List<Supplier>>> GetAllStocks()
         {
-            List<Supplier> stocks = db.GetSuppliers().ToList();
+            List<Supplier> stocks = _supplierRepository.GetSuppliers().ToList();
             return Ok(stocks);
         }
 
         [HttpGet("ASC")]
         public async Task<ActionResult<List<Supplier>>> GetSuppliersASC()
         {
-            List<Supplier> stocks = db.GetSuppliersASC().ToList();
+            List<Supplier> stocks = _supplierRepository.GetSuppliersASC().ToList();
             return Ok(stocks);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Supplier>> GetOnce(int id)
         {
-            Supplier stk = db.GetSupplierOnce(id);
+            Supplier stk = _supplierRepository.GetSupplierOnce(id);
             if (stk.SupplierID != 0)
             {
                 return Ok(stk);
@@ -43,7 +49,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         [HttpGet("Search/{text}")]
         public async Task<ActionResult<Supplier>> SearchSupplier(string text)
         {
-            List<Supplier> suppliers = db.SearchSuppliers(text).ToList();
+            List<Supplier> suppliers = _supplierRepository.SearchSuppliers(text).ToList();
             return Ok(suppliers);
         }
 
@@ -52,7 +58,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var isOK = db.PostSuppliers(obj);
+                var isOK = _supplierRepository.PostSuppliers(obj);
                 return Ok(isOK);
             }
             else
@@ -67,7 +73,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var isOK = db.UpdateSuppliers(obj);
+                var isOK = _supplierRepository.UpdateSuppliers(obj);
                 if (isOK)
                 {
                     return Ok(isOK);
