@@ -129,8 +129,8 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
 
         public bool PostCarts(CartAddDTO obj)
         {
-            try
-            {
+            //try
+            //{
                 using (SqlConnection con = new SqlConnection(Connection))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_CreateNewCart]", con))
@@ -141,12 +141,8 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
                         cmd.Parameters.AddWithValue("@CartQty", obj.CartQty);
                         cmd.Parameters.AddWithValue("@Price", obj.Price);
                         cmd.Parameters.AddWithValue("@SellerID", obj.SellerID);
-                        if (con.State == ConnectionState.Closed)
+                        if(con.State == ConnectionState.Closed)
                             con.Open();
-                        SqlDataAdapter adp = new SqlDataAdapter(cmd);
-                        DataTable dt = new DataTable();
-                        adp.Fill(dt);
-
                         int i = cmd.ExecuteNonQuery();
                         if (i >= 1)
                         {
@@ -158,11 +154,11 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
                         }
                     }
                 }
-            }
-            catch(Exception ex)
-            {
-                return false;
-            }
+            //}
+            //catch(Exception ex)
+            //{
+            //    return false;
+            //}
         }
 
         public bool EditCarts(Cart obj)

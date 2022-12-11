@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "sKhAxaQg04Z9IiHO8JQXcyp5Sw+p4dtnEKuxDybzujNUUh1MfD7pgEU1l0p9/VFQtxOxwYq9JXYnWOFRqqZIdQ==",
+  "dgSpecHash": "sZQkENk/gQ4WI77UnwgPN5pEubyRmb35BBMcR2sDatO5amwv1QybTEKjb4akX2rOnCN8kKWLRdCYdKGR1kXnMQ==",
   "success": true,
-  "projectFilePath": "D:\\Coding\\VisualStudio\\POS\\POS-.NET-Core-React.js\\POS-DotNET-Core-ReactJS\\POS-DotNET-Core-ReactJS.csproj",
+  "projectFilePath": "D:\\Coding\\VisualStudio\\POS-.NET-Core-React.js\\POS-DotNET-Core-ReactJS\\POS-DotNET-Core-ReactJS.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\thari\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\thari\\.nuget\\packages\\microsoft.data.sqlclient\\2.1.4\\microsoft.data.sqlclient.2.1.4.nupkg.sha512",

@@ -2,6 +2,6 @@
 {
     public class DatabaseConfig
     {
-        public string Connection { get; } = "Data Source=THARINDUD\\SQLEXPRESS;Database=POSSystem;Trusted_Connection=True;MultipleActiveResultSets=True";
+        public string Connection { get; } = "Data Source=THARINDUD\\SQLEXPRESS;Database=POSSystem_v1;Trusted_Connection=True;MultipleActiveResultSets=True;Integrated Security=True;";
     }
 }
