@@ -1,5 +1,5 @@
 ﻿using POS_DotNET_Core_ReactJS.Data;
-using POS_DotNET_Core_ReactJS.Models.DTO;
+using POS_DotNET_Core_ReactJS.Models;
 using POS_DotNET_Core_ReactJS.Repository.Interfaces;
 using System.Data;
 using System.Data.SqlClient;
@@ -13,7 +13,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<GRNAllDTO> grn = new List<GRNAllDTO>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetAllGRNs]", con))
                     {
@@ -50,7 +50,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<GRNGetOneDTO> grns = new List<GRNGetOneDTO>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetGRNOnce]", con))
                     {
@@ -103,7 +103,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<GRNAllDTO> grns = new List<GRNAllDTO>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetSearchGRNs]", con))
                     {
@@ -141,7 +141,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<GRNEditDTO> grns = new List<GRNEditDTO>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetOneByIDGRNs]", con))
                     {
@@ -205,7 +205,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_CreateMaxGRN]", con))
                     {
@@ -238,7 +238,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_CreateGRN]", con))
                     {
@@ -281,7 +281,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_UpdateGRN]", con))
                     {

@@ -1,6 +1,5 @@
 ﻿using POS_DotNET_Core_ReactJS.Data;
 using POS_DotNET_Core_ReactJS.Models;
-using POS_DotNET_Core_ReactJS.Models.DTO;
 using POS_DotNET_Core_ReactJS.Repository.Interfaces;
 using System.Data;
 using System.Data.SqlClient;
@@ -14,7 +13,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<Item> items = new List<Item>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetAllItems]", con))
                     {
@@ -48,7 +47,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<Item> items = new List<Item>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetAllItemsASC]", con))
                     {
@@ -82,7 +81,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<Item> items = new List<Item>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetItemOnce]", con))
                     {
@@ -135,7 +134,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<Item> items = new List<Item>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetSearchItems]", con))
                     {
@@ -170,7 +169,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<Item> items = new List<Item>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_CreateItem]", con))
                     {
@@ -202,7 +201,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<Item> items = new List<Item>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_UpdateItems]", con))
                     {
