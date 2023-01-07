@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Services from "../Services";
+import Common from "../services/common";
 import { Button, Modal } from 'react-bootstrap';
 
 import SlideBar from "./SlideBar";
@@ -23,6 +24,10 @@ export default function Item(){
         Services.GetAllItems().then(({data})=>{
             setData(data)
         })
+        .catch(({response})=>{
+            Common.responseManage(response);
+            console.log(response);
+        })
     }
 
     function SearchText(e){
@@ -33,6 +38,10 @@ export default function Item(){
         else{
             Services.GetSearchItems(search).then(({data})=>{
                 setData(data)
+            })
+            .catch(({response})=>{
+                Common.responseManage(response);
+                console.log(response);
             })
         }
     }
@@ -125,6 +134,7 @@ export default function Item(){
                 AddModelHandleClose();
                 setAddNew({});
             }).catch(({response})=>{
+                Common.responseManage(response);
                 console.log(response);
                 alert(response);
             })
@@ -161,6 +171,7 @@ export default function Item(){
             console.log(data);
             setEditItem(data);
         }).catch(({response})=>{
+            Common.responseManage(response);
             console.log(response);
             alert(response);
         })     
@@ -190,6 +201,7 @@ export default function Item(){
                 fetchData();
                 EditModelHandleClose();
             }).catch(({response})=>{
+                Common.responseManage(response);
                 console.log(response);
                 alert(response);
             })     

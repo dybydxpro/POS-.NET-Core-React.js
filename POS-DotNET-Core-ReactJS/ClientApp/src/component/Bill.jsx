@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { jsPDF } from "jspdf";
 import autoTable from 'jspdf-autotable';
 import Services from "../Services";
+import Common from "../services/common";
 import { Button, Modal } from 'react-bootstrap';
 import canvasImg from '../image/bill.jpg';
 
@@ -64,6 +65,7 @@ export default function Bill(){
             setAllBillData(data)
         })
         .catch(({response})=>{
+            Common.responseManage(response);
             console.log(response);
         })
     }
@@ -75,6 +77,7 @@ export default function Bill(){
             setData(data)
         })
         .catch(({response})=>{
+            Common.responseManage(response);
             console.log(response);
             setData([]);
         })
@@ -91,6 +94,7 @@ export default function Bill(){
                 setAllBillData(data)
             })
             .catch(({response})=>{
+                Common.responseManage(response);
                 console.log(response);
             })
         }
@@ -101,6 +105,7 @@ export default function Bill(){
             setItem(data)
         })
         .catch(({response})=>{
+            Common.responseManage(response);
             console.log(response);
         })
     }
@@ -111,6 +116,7 @@ export default function Bill(){
             console.log(data);
         })
         .catch(({response})=>{
+            Common.responseManage(response);
             console.log(response);
         })
     }
@@ -124,6 +130,7 @@ export default function Bill(){
             fetchBillData(Number(data));
         })
         .catch(({response})=>{
+            Common.responseManage(response);
             console.log(response);
             fetchData();
         })
@@ -236,6 +243,7 @@ export default function Bill(){
             console.log(data);
             setBill(data);
         }).catch(({response})=>{
+            Common.responseManage(response);
             console.log(response);
             alert(response);
         })

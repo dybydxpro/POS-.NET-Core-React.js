@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using POS_DotNET_Core_ReactJS.Data;
 using POS_DotNET_Core_ReactJS.Models;
 using POS_DotNET_Core_ReactJS.Repository.Interfaces;
@@ -20,21 +21,28 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
 
         public string GenarateToken(UserAccountDTO userAccountDTO)
         {
-            List<Claim> claims = new List<Claim>()
+            Jwt jwt = _configuration.GetSection("Jwt").Get<Jwt>();
+            var claims = new[]
             {
-                new Claim(ClaimTypes.Name, Convert.ToString(userAccountDTO.UserID))
+                new Claim(JwtRegisteredClaimNames.Sub, jwt.Subject),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                new Claim("Id", userAccountDTO.UserID.ToString()),
+                new Claim("UserName", userAccountDTO.UserName),
+                new Claim("Type", userAccountDTO.Type)
             };
-
-            string text = "DataSet-" + Md5(Convert.ToString(DateTime.Now)) + "-" + userAccountDTO.UserID;
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(text));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key));
+            var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(
-                    claims: claims,
-                    expires: DateTime.Now.AddHours(6),
-                    signingCredentials: creds
-                );
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-            return jwt;
+                jwt.Issuer,
+                jwt.Audience,
+                claims,
+                expires: DateTime.Now.AddMinutes(120),
+                signingCredentials: signIn
+            );
+
+            return Convert.ToString(new JwtSecurityTokenHandler().WriteToken(token));
         }
 
         private string EncryptString(string text)

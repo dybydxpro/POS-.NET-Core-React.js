@@ -16,6 +16,8 @@ namespace POS_DotNET_Core_ReactJS.Repository.Interfaces
 
         bool PostGRNs(GRNAddDTO obj);
 
+        bool PostAllGRNs(int id);
+
         bool EditGRNs(GRNEditDTO obj);
     }
 }
