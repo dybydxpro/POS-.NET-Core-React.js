@@ -1,0 +1,153 @@
+import React, {useEffect, useState} from "react";
+import { useNavigate } from 'react-router-dom';
+import { Offcanvas } from 'react-bootstrap';
+
+import * as images from '../assets/image/images';
+import Dashboard from "./Dashboard";
+
+export default function Common(){
+    const navigate = useNavigate();
+    const [shift, setShift] = useState(0);
+    const [dateState, setDateState] = useState(new Date());
+
+    useEffect(() => {
+        if(!(Number(sessionStorage.getItem("userID")) > 0)){
+            alert("Please login to the system!");
+            navigate("/login");
+        };
+        setInterval(() => setDateState(new Date()), 1000);
+    }, [sessionStorage.getItem("token")]);
+
+    function logout(){
+        sessionStorage.setItem('userID', String(0));
+        sessionStorage.setItem('userName', "");
+        sessionStorage.setItem('type', "");
+        sessionStorage.setItem('token', "");
+        navigate("/");
+    }
+
+    //
+    const [showOffCanvas, setShowOffCanvas] = useState(false);
+
+    const handleClose = () => setShowOffCanvas(false);
+    const handleShow = () => setShowOffCanvas(true);
+
+    return(
+        <>
+            <div className="container-fluid">
+                <div className="row">
+                    <div className="col-2" style={{backgroundColor: "#4d646f", height: "100vh"}}>
+                        <div className="d-flex flex-column flex-shrink-0 p-3 text-light" style={{minHeight: "100vh", backgroundColor: "#4d646f"}}>
+                            <a href="/system" className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none  text-center">
+                                <span className="fs-4 text-light">POS System</span>
+                            </a>
+                            <hr/>
+                            <ul className="nav nav-pills flex-column mb-auto mx-3">
+                                <li>
+                                    <div onClick={() => setShift(0)} className="nav-link link-dark text-light">
+                                        <i className="bi bi-grid"></i> &nbsp; Dashboard
+                                    </div>
+                                </li>
+                                <li>
+                                    <div onClick={() => setShift(1)} className="nav-link link-dark text-light">
+                                        <i className="bi bi-person"></i> &nbsp; Users
+                                    </div>
+                                </li>
+                                <li>
+                                    <div onClick={() => setShift(1)} className="nav-link link-dark text-light">
+                                        <i className="bi bi-box"></i> &nbsp; Items
+                                    </div>
+                                </li>
+                                <li>
+                                    <div onClick={() => setShift(1)} className="nav-link link-dark text-light">
+                                        <i className="bi bi-grid-1x2"></i> &nbsp; Stocks
+                                    </div>
+                                </li>
+                                <li>
+                                    <div onClick={() => setShift(1)} className="nav-link link-dark text-light">
+                                        <i className="bi bi-people"></i> &nbsp; Suppliers
+                                    </div>
+                                </li>
+                                <li>
+                                    <div onClick={() => setShift(1)} className="nav-link link-dark text-light">
+                                        <i className="bi bi-box-arrow-in-left"></i> &nbsp; GRNs
+                                    </div>
+                                </li>
+                                <hr/>
+                                <li>
+                                    <div onClick={() => setShift(1)} className="nav-link link-dark text-light">
+                                        <i className="bi bi-receipt-cutoff"></i> &nbsp; Billing
+                                    </div>
+                                </li>
+                                <li>
+                                    <div onClick={() => setShift(1)} className="nav-link link-dark text-light">
+                                        <i className="bi bi-bootstrap-reboot"></i> &nbsp; Returns
+                                    </div>
+                                </li>
+                            </ul>
+                            <hr/>
+                            <div className="dropdown">
+                                <a href="/" className="d-flex align-items-center link-light text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src={images.profile} alt="" width="32" height="32" className="rounded-circle me-2"/>
+                                    <strong>{sessionStorage.getItem('userName')}</strong>
+                                </a>
+                                <ul className="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
+                                    <li><span className="dropdown-item" onClick={handleShow}><i className="bi bi-person-badge"></i>&nbsp; Profile</span></li>
+                                    <Offcanvas show={showOffCanvas} onHide={handleClose} placement="end">
+                                        <Offcanvas.Header closeButton>
+                                            <Offcanvas.Title>User Profile</Offcanvas.Title>
+                                        </Offcanvas.Header>
+                                        <Offcanvas.Body>
+                                            <div>
+                                                <div className="d-flex justify-content-center">
+                                                    <img src={images.profile} alt="" width="250" height="250" className="rounded-circle me-2"/>
+                                                </div>
+                                                <div className="px-3 py-5">
+                                                    <div className="row">
+                                                        <div className="col-5"><p style={{fontSize: "20px"}}>User ID: </p></div>
+                                                        <div className="col"><p style={{fontSize: "20px"}}>{sessionStorage.getItem('userID')}</p></div>
+                                                    </div>
+                                                    <div className="row">
+                                                        <div className="col-5"><p style={{fontSize: "20px"}}>User Name: </p></div>
+                                                        <div className="col"><p style={{fontSize: "20px"}}>{sessionStorage.getItem('userName')}</p></div>
+                                                    </div>
+                                                    <div className="row">
+                                                        <div className="col-5"><p style={{fontSize: "20px"}}>User Type: </p></div>
+                                                        <div className="col"><p style={{fontSize: "20px"}}>{sessionStorage.getItem('type')}</p></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </Offcanvas.Body>
+                                    </Offcanvas>
+                                    <li><hr className="dropdown-divider"/></li>
+                                    <li><span className="dropdown-item" onClick={() => logout()}><i className="bi bi-box-arrow-right"></i>&nbsp; Sign out</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col" style={{ backgroundColor: "#f5f5f5" }}>
+                        <div className="row" style={{ backgroundColor: "#4d646f" }}>
+                            <div className="d-flex justify-content-end p-3">
+                                <div style={{ minWidth: "250px", color: "white", fontSize: "18px"}}>
+                                    <div className="d-flex">
+                                        <i className="bi bi-calendar2-week"></i> &nbsp; { dateState.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric',})} &nbsp;
+                                        <i className="bi bi-alarm"></i> &nbsp; { dateState.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true, })} &nbsp;
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div className="shadow bg-white rounded mx-2 my-3 p-2" style={{ minHeight: "90vh", overflow: "auto" }}>
+                                <div>
+                                    {
+                                        shift == 0 && <Dashboard/>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+}

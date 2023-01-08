@@ -155,3 +155,7 @@ D:\Coding\VisualStudio\POS-.NET-Core-React.js\POS-DotNET-Core-ReactJS\bin\Debug\
 D:\Coding\VisualStudio\POS-.NET-Core-React.js\POS-DotNET-Core-ReactJS\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
 D:\Coding\VisualStudio\POS-.NET-Core-React.js\POS-DotNET-Core-ReactJS\bin\Debug\net6.0\Microsoft.SqlServer.Server.dll
 D:\Coding\VisualStudio\POS-.NET-Core-React.js\POS-DotNET-Core-ReactJS\bin\Debug\net6.0\System.Memory.Data.dll
+D:\Coding\VisualStudio\POS-.NET-Core-React.js\POS-DotNET-Core-ReactJS\bin\Debug\net6.0\clientside\package-lock.json
+D:\Coding\VisualStudio\POS-.NET-Core-React.js\POS-DotNET-Core-ReactJS\bin\Debug\net6.0\clientside\package.json
+D:\Coding\VisualStudio\POS-.NET-Core-React.js\POS-DotNET-Core-ReactJS\bin\Debug\net6.0\clientside\public\manifest.json
+D:\Coding\VisualStudio\POS-.NET-Core-React.js\POS-DotNET-Core-ReactJS\bin\Debug\net6.0\clientside\tsconfig.json

@@ -2,7 +2,7 @@ import {BrowserRouter as Router, Routes, Route} from "react-router-dom"
 
 import Home from './components/Home';
 import Login from './components/Login';
-// import Dashboard from './component/Dashboard';
+import Common from './components/Common';
 // import Users from './component/User';
 // import Items from './component/Item';
 // import Stock from './component/Stock';
@@ -18,6 +18,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home/>} />
           <Route path="/login" element={<Login/>} />
+          <Route path="/system" element={<Common/>} />
           {/* <Route path="/dashboard" element={<Dashboard/>} />
           <Route path="/dashboard/user" element={<Users/>} />
           <Route path="/dashboard/item" element={<Items/>} />
