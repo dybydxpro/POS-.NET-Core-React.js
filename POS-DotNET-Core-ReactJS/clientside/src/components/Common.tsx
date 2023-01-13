@@ -4,6 +4,7 @@ import { Offcanvas } from 'react-bootstrap';
 
 import * as images from '../assets/image/images';
 import Dashboard from "./Dashboard";
+import User from "./User";
 
 export default function Common(){
     const navigate = useNavigate();
@@ -34,7 +35,7 @@ export default function Common(){
 
     return(
         <>
-            <div className="container-fluid">
+            <div className="container-fluid" style={{ overflow: "hidden" }}>
                 <div className="row">
                     <div className="col-2" style={{backgroundColor: "#4d646f", height: "100vh"}}>
                         <div className="d-flex flex-column flex-shrink-0 p-3 text-light" style={{minHeight: "100vh", backgroundColor: "#4d646f"}}>
@@ -54,33 +55,33 @@ export default function Common(){
                                     </div>
                                 </li>
                                 <li>
-                                    <div onClick={() => setShift(1)} className="nav-link link-dark text-light">
+                                    <div onClick={() => setShift(2)} className="nav-link link-dark text-light">
                                         <i className="bi bi-box"></i> &nbsp; Items
                                     </div>
                                 </li>
                                 <li>
-                                    <div onClick={() => setShift(1)} className="nav-link link-dark text-light">
+                                    <div onClick={() => setShift(3)} className="nav-link link-dark text-light">
                                         <i className="bi bi-grid-1x2"></i> &nbsp; Stocks
                                     </div>
                                 </li>
                                 <li>
-                                    <div onClick={() => setShift(1)} className="nav-link link-dark text-light">
+                                    <div onClick={() => setShift(4)} className="nav-link link-dark text-light">
                                         <i className="bi bi-people"></i> &nbsp; Suppliers
                                     </div>
                                 </li>
                                 <li>
-                                    <div onClick={() => setShift(1)} className="nav-link link-dark text-light">
+                                    <div onClick={() => setShift(5)} className="nav-link link-dark text-light">
                                         <i className="bi bi-box-arrow-in-left"></i> &nbsp; GRNs
                                     </div>
                                 </li>
                                 <hr/>
                                 <li>
-                                    <div onClick={() => setShift(1)} className="nav-link link-dark text-light">
+                                    <div onClick={() => setShift(6)} className="nav-link link-dark text-light">
                                         <i className="bi bi-receipt-cutoff"></i> &nbsp; Billing
                                     </div>
                                 </li>
                                 <li>
-                                    <div onClick={() => setShift(1)} className="nav-link link-dark text-light">
+                                    <div onClick={() => setShift(7)} className="nav-link link-dark text-light">
                                         <i className="bi bi-bootstrap-reboot"></i> &nbsp; Returns
                                     </div>
                                 </li>
@@ -137,10 +138,13 @@ export default function Common(){
                             </div>
                         </div>
                         <div>
-                            <div className="shadow bg-white rounded mx-2 my-3 p-2" style={{ minHeight: "90vh", overflow: "auto" }}>
-                                <div>
+                            <div className="shadow bg-white rounded mx-2 my-3 p-2" style={{ maxHeight: "89vh", minHeight: "89vh", overflowY: "auto" }}>
+                                <div style={{ margin: "10px"}}>
                                     {
                                         shift == 0 && <Dashboard/>
+                                    }
+                                    {
+                                        shift == 1 && <User/>
                                     }
                                 </div>
                             </div>
