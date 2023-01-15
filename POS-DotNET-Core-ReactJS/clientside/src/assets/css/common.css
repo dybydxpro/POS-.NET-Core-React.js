@@ -1,0 +1,26 @@
+/* Slide Bar */
+.navSelect {
+    border-radius: 25px;
+    background: rgb(100,143,164);
+    background: linear-gradient(90deg, rgba(100,143,164,1) 0%, rgba(77,100,111,1) 90%, rgba(77,100,111,1) 100%);
+}
+
+/* Table */
+.theadStyle {
+    background-color: #4D646F;
+}
+
+/* Buttons */
+.btnPrimary, .btnPrimary:hover, .btnPrimary::after {
+    background-color: rgb(100,143,164);
+    border-radius: 10px;
+    padding: 12px 20px;
+    color: white;
+}
+
+.btnPrimaryS, .btnPrimaryS:hover, .btnPrimaryS::after {
+    background-color: rgb(100,143,164);
+    border-radius: 10px;
+    /* padding: 12px 20px; */
+    color: white;
+}

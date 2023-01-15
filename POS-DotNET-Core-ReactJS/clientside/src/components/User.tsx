@@ -1,6 +1,375 @@
-
+import React, {useEffect, useState} from "react";
+import { useNavigate } from 'react-router-dom';
+import { Button, Modal } from 'react-bootstrap';
+import Services from "../Services";
+import { responseManage } from "../controllers/CommonController";
 
 export default function User(){
+    const [count, setCount] = useState(10);
+    const [data, setData] = useState([{
+        "userID": 0,
+        "name": "",
+        "nic": "",
+        "address": "",
+        "userName": "",
+        "type": "",
+        "status": ""
+    }]);
+
+    useEffect(() => {
+        if(!(Number(sessionStorage.getItem("userID")) > 0)){
+            window.location.replace("/login");
+            //navigate("/login");
+        }
+
+        if(sessionStorage.getItem("type") !== "Admin"){
+            window.location.replace("/dashboard");
+        }
+
+        fetchData();
+    },[]);
+
+    function fetchData(){
+        Services.getAllUser().then(({data})=>{
+            setData(data)
+        })
+        .catch(({response})=>{
+            responseManage(response);
+            console.log(response);
+        })
+    }
+
+    function SearchText(search: string){
+        if(search === ""){
+            fetchData();
+        }
+        else{
+            Services.SearchUser(search).then(({data})=>{
+                setData(data)
+            })
+            .catch(({response})=>{
+                responseManage(response);
+                console.log(response);
+            })
+        }
+    }
+
+    function printTable(){
+        return(
+            data.map(dataset =>
+                <tr key={dataset.userID} className={ Boolean(dataset.status)===false? "table-secondary" : ""}>
+                    <td>{dataset.userID}</td>
+                    <td>{dataset.name}</td>
+                    <td>{dataset.nic}</td>
+                    <td>{dataset.address}</td>
+                    <td>{dataset.userName}</td>
+                    <td>{dataset.type}</td>
+                    <td>
+                        {/* <button type="button" className="btn btn-warning mx-2" onClick={()=>{EditModelHandleShow(); GetOneUser(dataset.userID);}}><i className="bi bi-pencil"></i>&nbsp; Edit</button> */}
+                        <Modal show={editModel} onHide={EditModelHandleClose}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Edit User</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <div>
+                                    <div className="form-floating mb-3">
+                                        <input type="text" className="form-control" id="name" value={editUser.name} onChange={(e) => handleEdit(e.target.id, e.target.value)} placeholder="John Smidth"/>
+                                        <label htmlFor="name" className="form-label">Name</label>
+                                    </div>
+                                    <div className="form-floating mb-3">
+                                        <input type="text" className="form-control" id="nic" value={editUser.nic} onChange={(e) => handleEdit(e.target.id, e.target.value)} placeholder="75XXXXXXXXV"/>
+                                        <label htmlFor="nic" className="form-label">NIC</label>
+                                    </div>
+                                    <div className="form-floating mb-3">
+                                        <input type="text" className="form-control" id="address" value={editUser.address} onChange={(e) => handleEdit(e.target.id, e.target.value)} placeholder="No 15, Temple Road, Malabe."/>
+                                        <label htmlFor="address" className="form-label">Address</label>
+                                    </div>
+                                    <div className="form-floating mb-3">
+                                        <select className="form-select" id="type" value={editUser.type} onChange={(e) => handleEdit(e.target.id, e.target.value)}>
+                                            <option value="" selected>_</option>
+                                            <option value="Cashier">Cashier</option>
+                                            <option value="Admin">Admin</option>
+                                        </select>
+                                        <label htmlFor="type" className="form-label">Type</label>
+                                    </div>
+                                </div>
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="success" onClick={() => EditUser()}>
+                                    Save
+                                </Button>
+                                <Button variant="secondary" onClick={EditModelHandleClose}>
+                                    Close
+                                </Button>
+                            </Modal.Footer>
+                        </Modal>
+
+                        {/* <button type="button" className="btn btn-info mx-2" onClick={()=>{ CpModelHandleShow(); handleCP("userID", String(dataset.userID)); }}><i className="bi bi-shield-lock"></i>&nbsp; Change Password</button> */}
+                        <Modal show={cpModel} onHide={CpModelHandleClose}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Change Password</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <div>
+                                    <div className="form-floating mb-3">
+                                        <input type="password" className="form-control" id="pw" onChange={(e) => handleCP(e.target.id, e.target.value)} placeholder="John Smidth"/>
+                                        <label htmlFor="pw" className="form-label">Password</label>
+                                    </div>
+                                    <div className="form-floating mb-3">
+                                        <input type="password" className="form-control" id="cpw" onChange={(e) => handleCP(e.target.id, e.target.value)} placeholder="75XXXXXXXXV"/>
+                                        <label htmlFor="cpw" className="form-label">Confirm Password</label>
+                                    </div>
+                                </div>
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="success" onClick={() => changePassword()}>
+                                    Save
+                                </Button>
+                                <Button variant="secondary" onClick={CpModelHandleClose}>
+                                    Close
+                                </Button>
+                            </Modal.Footer>
+                        </Modal>
+                        {/* <button type="button" className="btn btn-secondary mx-2" onClick={()=>ActiveDeactiveAccount(dataset.userID)}><i className={Boolean(dataset.status)===false? "bi bi-chevron-up" : "bi bi-chevron-down"}></i>&nbsp; {Boolean(dataset.status)===false? "Activate" : "Deactivate"}</button> */}
+                        <div className="btn-group">
+                            <button type="button" className="btn btnPrimaryS dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                Options
+                            </button>
+                            <ul className="dropdown-menu">
+                                <li className="dropdown-item" onClick={()=>{EditModelHandleShow(); GetOneUser(dataset.userID);}}><i className="bi bi-pencil"></i>&nbsp; Edit</li>
+                                <li className="dropdown-item" onClick={()=>{ CpModelHandleShow(); handleCP("userID", String(dataset.userID)); }}><i className="bi bi-shield-lock"></i>&nbsp; Change Password</li>
+                                <li className="dropdown-item" onClick={()=>ActiveDeactiveAccount(dataset.userID)}><i className={Boolean(dataset.status)===false? "bi bi-chevron-up" : "bi bi-chevron-down"}></i>&nbsp; {Boolean(dataset.status)===false? "Activate" : "Deactivate"}</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            )
+        );
+    }
+
+    //Add Model
+    const [addModel, setAddModel] = useState(false);
+
+    const AddModelHandleClose = () => setAddModel(false);
+    const AddModelHandleShow = () => setAddModel(true);
+
+    //Add New
+    const [addNew, setAddNew] = useState({});
+
+    function handleAdd(id: string, value: string){
+        const newData: any = {...addNew};
+        newData[id] = value;
+        setAddNew(newData);
+        console.log(newData);
+    }
+
+    function AddUserValidate(){
+        const newData: any = {...addNew};
+        if(newData["name"] === "" || newData["name"] === undefined){
+            console.log("name");
+            return false;
+        }
+        else if(newData["nic"] === "" || newData["nic"] === undefined){
+            console.log("nic");
+            return false;
+        }
+        else if(newData["address"] === "" || newData["address"] === undefined){
+            console.log("address");
+            return false;
+        }
+        else if(newData["userName"] === "" || newData["userName"] === undefined){
+            console.log("userName");
+            return false;
+        }
+        else if(newData["password"] === "" || newData["password"] === undefined){
+            console.log("password");
+            return false;
+        }
+        else if(newData["type"] === "" || newData["type"] === undefined){
+            console.log("type");
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    function AddUser(){
+        if(AddUserValidate()){
+            Services.CreateUser(addNew)
+            .then(({data}) =>{
+                console.log(data);
+                fetchData();
+                AddModelHandleClose();
+                setAddNew({});
+            }).catch(({response})=>{
+                responseManage(response);
+                console.log(response);
+                alert(response);
+            })
+        }
+        else{
+            alert("Validation Failed!");
+        }
+        
+    }
+
+    //Edit Model
+    const [editModel, setEditModel] = useState(false);
+
+    const EditModelHandleClose = () => setEditModel(false);
+    const EditModelHandleShow = () => setEditModel(true);
+
+    //Edit User
+    const [editUser, setEditUser] = useState({
+        "userID": 0,
+        "name": "",
+        "nic": "",
+        "address": "",
+        "type": ""
+    });
+
+    function handleEdit(id: string, value: string){
+        const newData: any = {...editUser};
+        newData[id] = value;
+        setEditUser(newData);
+        console.log(newData);
+    }
+
+    function GetOneUser(id: number){
+        Services.getOneUser(id)
+        .then(({data}) =>{
+            console.log(data);
+            setEditUser(data);
+        }).catch(({response})=>{
+            responseManage(response);
+            console.log(response);
+            alert(response);
+        })     
+    }
+
+    function EditUserValidate(){
+        const newData: any = {...editUser};
+        if(newData["name"] === "" || newData["name"] === undefined){
+            console.log("name");
+            return false;
+        }
+        else if(newData["nic"] === "" || newData["nic"] === undefined){
+            console.log("nic");
+            return false;
+        }
+        else if(newData["address"] === "" || newData["address"] === undefined){
+            console.log("address");
+            return false;
+        }
+        else if(newData["type"] === "" || newData["type"] === undefined){
+            console.log("type");
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    function EditUser(){
+        if(EditUserValidate()){
+            Services.EditUser(editUser)
+            .then(({data}) =>{
+                console.log(data);
+                setEditUser({"userID": 0, "name": "", "nic": "", "address": "", "type": ""});
+                fetchData();
+                EditModelHandleClose();
+            }).catch(({response})=>{
+                responseManage(response);
+                console.log(response);
+                alert(response);
+            })     
+        }
+        else{
+            alert("Validation Failed!")
+        }
+    }
+
+    //Change Password Model
+    const [cpModel, setCpModel] = useState(false);
+
+    const CpModelHandleClose = () => setCpModel(false);
+    const CpModelHandleShow = () => setCpModel(true);
+
+    //Change Password
+    const [cp, setCp] = useState({
+        "userID": "",
+        "pw": "",
+        "cpw": "",
+    });
+
+    function handleCP(id: string, value: string){
+        const newData: any = {...cp};
+        newData[id] = value;
+        setCp(newData);
+        console.log(newData);
+    }
+
+    function CPValidate(){
+        const newData: any = {...cp};
+        if(newData["userID"] === "" || newData["userID"] === undefined){
+            console.log("userID");
+            return false;
+        }
+        else if(newData["pw"] === "" || newData["pw"] === undefined){
+            console.log("pw");
+            return false;
+        }
+        else if(newData["cpw"] === "" || newData["cpw"] === undefined){
+            console.log("cpw");
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    function changePassword(){
+        if(CPValidate()){
+            var query = {userID: cp.userID, password: cp.pw};
+            console.log(query);
+            if(cp.pw === cp.cpw){
+                Services.ResetPW(query)
+                .then(({data}) =>{
+                    console.log(data);
+                    setCp({"userID": "0", "pw": "", "cpw": ""});
+                    CpModelHandleClose();
+                }).catch(({response})=>{
+                    responseManage(response);
+                    console.log(response);
+                    alert(response);
+                })  
+            }
+            else{
+                alert("Password Confirmation Failed!");
+            }
+        }
+        else{
+            alert("Validation Failed!");
+        }
+    }
+
+    //Active Deactive Account
+
+    function ActiveDeactiveAccount(id: number){
+        if(window.confirm("Confirm to update status.")){
+            Services.ADAccount(id)
+            .then(({data}) =>{
+                console.log(data);
+                fetchData();
+            }).catch(({response})=>{
+                responseManage(response);
+                console.log(response);
+                alert(response);
+            }) 
+        }
+    }
+
     return(
         <>
             <div className="row">
@@ -12,13 +381,86 @@ export default function User(){
                     <div className="d-flex justify-content-between">
                         <div>
                             <div className="form-floating" style={{ minWidth: "300px" }}>
-                                <input className="form-control" type="text" id="txtSearch" placeholder="Search"/>
+                                <input className="form-control" type="text" id="txtSearch" placeholder="Search" onChange={(e) => SearchText(e.target.value)}/>
                                 <label htmlFor="txtSearch" className="form-label"><i className="bi bi-search text-secondary" /></label>
                             </div>
                         </div>
                         <div>
-
+                            <button type="button" className="btn btnPrimary" onClick={AddModelHandleShow}><i className="bi bi-plus"></i> &nbsp; Add user</button>
                         </div>
+                    </div>
+
+                    <div>
+                        <div className="my-2">
+                            <table className="table">
+                                <thead className="theadStyle">
+                                    <tr>
+                                        <th scope="col" className="text-light text-center">#</th>
+                                        <th scope="col" className="text-light text-center">Name</th>
+                                        <th scope="col" className="text-light text-center">NIC</th>
+                                        <th scope="col" className="text-light text-center">Address</th>
+                                        <th scope="col" className="text-light text-center">User Name</th>
+                                        <th scope="col" className="text-light text-center">Type</th>
+                                        <th scope="col" className="text-light text-center">Options</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {printTable()}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div>
+                        {/* <button type="button" className="btn text-light" style={{position:"fixed", width:"60px", height:"60px", bottom:"40px", right:"40px", borderRadius: "50%", backgroundColor: "#2e856e", fontSize:"28px"}}>
+                            <i className="bi bi-plus"></i>
+                        </button> */}
+                        <Modal show={addModel} onHide={AddModelHandleClose}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Add User</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <div>
+                                    <div className="form-floating mb-3">
+                                        <input type="text" className="form-control" id="name" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="John Smidth"/>
+                                        <label htmlFor="name" className="form-label">Name</label>
+                                    </div>
+                                    <div className="form-floating mb-3">
+                                        <input type="text" className="form-control" id="nic" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="75XXXXXXXXV"/>
+                                        <label htmlFor="nic" className="form-label">NIC</label>
+                                    </div>
+                                    <div className="form-floating mb-3">
+                                        <input type="text" className="form-control" id="address" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="No 15, Temple Road, Malabe."/>
+                                        <label htmlFor="address" className="form-label">Address</label>
+                                    </div>
+                                    <div className="form-floating mb-3">
+                                        <input type="text" className="form-control" id="userName" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="JohnS"/>
+                                        <label htmlFor="userName" className="form-label">UserName</label>
+                                    </div>
+                                    <div className="form-floating mb-3">
+                                        <input type="password" className="form-control" id="password" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="John Smidth"/>
+                                        <label htmlFor="password" className="form-label">Password</label>
+                                    </div>
+                                    <div className="form-floating mb-3">
+                                        <select className="form-select" id="type" onChange={(e) => handleAdd(e.target.id, e.target.value)}>
+                                            <option value="" selected>_</option>
+                                            <option value="Cashier">Cashier</option>
+                                            <option value="Admin">Admin</option>
+                                        </select>
+                                        <label htmlFor="type" className="form-label">Type</label>
+                                    </div>
+                                </div>
+                                
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="success" onClick={() => AddUser()}>
+                                    Save
+                                </Button>
+                                <Button variant="secondary" onClick={AddModelHandleClose}>
+                                    Close
+                                </Button>
+                            </Modal.Footer>
+                        </Modal>
                     </div>
                 </div>
             </div>
