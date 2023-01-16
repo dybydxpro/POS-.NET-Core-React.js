@@ -19,9 +19,9 @@ export default function User(){
     const [currentPage, setCurrentPage] = useState(1);
     const [indexOfLastRecord, setIndexOfLastRecord] = useState(currentPage * recordsPerPage);
     const [indexOfFirstRecord, useIndexOfFirstRecord] = useState(indexOfLastRecord - recordsPerPage);
-    const [numberOfPages, useNumberOfPages] = useState(Math.ceil(data.length / recordsPerPage));
+    const [numberOfPages, useNumberOfPages] = useState(/*Math.ceil(data.length / recordsPerPage)*/ 5);
     const [pageNumbers , usePageNumbers ] = useState([...Array.from(Array(numberOfPages+1).keys())].slice(1));
-
+    /** https://levelup.gitconnected.com/a-simple-guide-to-pagination-in-react-facd6f785bd0 */
     useEffect(() => {
         if(!(Number(sessionStorage.getItem("userID")) > 0)){
             window.location.replace("/login");
@@ -36,13 +36,16 @@ export default function User(){
     },[]);
 
     /* Pagination */
-    const nextPage = () => {
-        if(currentPage !== numberOfPages) 
-            setCurrentPage(currentPage + 1)
+    function nextPage(){
+        if(currentPage !== numberOfPages){
+            setCurrentPage(currentPage + 1);
+        }
     }
-    const prevPage = () => {
-        if(currentPage !== 1) 
-            setCurrentPage(currentPage - 1)
+
+    function prevPage(){
+        if(currentPage !== 1){
+            setCurrentPage(currentPage - 1);
+        }
     }
     /* Pagination */
 
@@ -429,21 +432,34 @@ export default function User(){
                             <div>
                                 <div className="d-flex justify-content-between">
                                     <div>
-
+                                        {currentPage}
+                                        <label className="input-group-text" htmlFor="noOfRows">No of Rows</label>
+                                        <select className="form-select" id="noOfRows" onClick={(e) => setRecordsPerPage(e.target.value)}>
+                                            <option value="5" selected>5</option>
+                                            <option value="10">10</option>
+                                            <option value="25">25</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                            <option value="200">200</option>
+                                            <option value="500">500</option>
+                                            <option value="1000">1000</option>
+                                        </select>
                                     </div>
                                     <div>
                                         <nav aria-label="Page navigation example">
                                             <ul className="pagination">
-                                                <li className="page-item">
-                                                    <div className="page-link" aria-label="Previous">
+                                                <li className="page-item" onClick={() => prevPage()}>
+                                                    <div className="page-link txtPrimary" aria-label="Previous">
                                                         <span aria-hidden="true">&laquo;</span>
                                                     </div>
                                                 </li>
-                                                <li className="page-item"><div className="page-link">1</div></li>
-                                                <li className="page-item"><div className="page-link">2</div></li>
-                                                <li className="page-item"><div className="page-link">3</div></li>
-                                                <li className="page-item">
-                                                    <div className="page-link" aria-label="Next">
+                                                {
+                                                    pageNumbers.map((pg) => 
+                                                        <li className="page-item"><div className={currentPage==pg? "page-link btnPagination": "page-link txtPrimary"} onClick={() => setCurrentPage(pg)}>{pg}</div></li>
+                                                    )
+                                                }
+                                                <li className="page-item" onClick={() => nextPage()}>
+                                                    <div className="page-link txtPrimary" aria-label="Next">
                                                         <span aria-hidden="true">&raquo;</span>
                                                     </div>
                                                 </li>

@@ -24,3 +24,14 @@
     /* padding: 12px 20px; */
     color: white;
 }
+
+.btnPagination{
+    background-color: #4D646F;
+    color: #FFFFFF;
+}
+
+/* Text Colour */
+.txtPrimary{
+    color: #4D646F;
+}
+
