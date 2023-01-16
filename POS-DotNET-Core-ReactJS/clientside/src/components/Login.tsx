@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Services from '../Services';
 import NavBar from "./NavBar";
 
@@ -10,6 +10,19 @@ import { LoginType } from "../models/Login";
 export default function Login(){
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
+
+    const refUserName = useRef<HTMLInputElement>(null);
+    const refPassword = useRef<HTMLInputElement>(null);
+
+    useEffect(() =>{
+        setTimeout(() =>{
+            refUserName.current?.focus();
+        }, 1000);
+
+        // setInterval(() => {
+        //     refUserName.current?.focus();
+        // }, 1000);
+    },[]);
 
     function login(){
         var data: LoginType = {
@@ -29,8 +42,20 @@ export default function Login(){
         });
     }
 
+    function keyRep(e: any){
+        console.log(e);
+        if(e.key === 'Enter'){
+            if(e.target.id === 'UserName'){
+                refPassword.current?.focus();
+            }
+            else if(e.target.id === 'Password'){
+                login();
+            }
+        }
+    }
+
     return(
-        <div style={{height: "100vh", backgroundColor: "#eee"}}>
+        <div style={{height: "100vh", backgroundColor: "#eee"}} >
             <NavBar/>
             <div>
                 <section className="login-gradient-form">
@@ -46,22 +71,21 @@ export default function Login(){
                                                     <h4 className="mt-4 mb-3 pb-1">Point of Sales System</h4>
                                                 </div>
 
-                                                <form onSubmit={() => login()}>
+                                                <div id="form" onKeyPress={(e)=> keyRep(e)} >
                                                     <p className="text-center">Please login to your account</p>
                                                     <div className="form-floating mb-4">
-                                                        <input type="text" id="UserName" className="form-control" placeholder="User Name" onChange={(e) => setUserName(e.target.value)}/>
+                                                        <input type="text" id="UserName" className="form-control" placeholder="User Name" onChange={(e) => setUserName(e.target.value)} ref={refUserName}/>
                                                         <label className="form-label" htmlFor="UserName">User Name</label>
                                                     </div>
                                                     <div className="form-floating mb-4">
-                                                        <input type="password" id="Password" className="form-control" placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
+                                                        <input type="password" id="Password" className="form-control" placeholder="Password" onChange={(e) => setPassword(e.target.value)} ref={refPassword}/>
                                                         <label className="form-label" htmlFor="Password">Password</label>
                                                     </div>
                                                     <div className="text-center pt-1 mb-5 pb-1">
                                                         <button className="btn login-gradient-custom-2 mb-3 px-5 text-light" type="submit">Login</button>
                                                         {/*<a className="text-muted" href="#!">Forgot password?</a>*/}
                                                     </div>
-                                                </form>
-
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="col-lg-6 d-flex align-items-center login-gradient-custom-2">

@@ -5,7 +5,6 @@ import Services from "../Services";
 import { responseManage } from "../controllers/CommonController";
 
 export default function User(){
-    const [count, setCount] = useState(10);
     const [data, setData] = useState([{
         "userID": 0,
         "name": "",
@@ -15,6 +14,13 @@ export default function User(){
         "type": "",
         "status": ""
     }]);
+
+    const [recordsPerPage, setRecordsPerPage] = useState(10);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [indexOfLastRecord, setIndexOfLastRecord] = useState(currentPage * recordsPerPage);
+    const [indexOfFirstRecord, useIndexOfFirstRecord] = useState(indexOfLastRecord - recordsPerPage);
+    const [numberOfPages, useNumberOfPages] = useState(Math.ceil(data.length / recordsPerPage));
+    const [pageNumbers , usePageNumbers ] = useState([...Array.from(Array(numberOfPages+1).keys())].slice(1));
 
     useEffect(() => {
         if(!(Number(sessionStorage.getItem("userID")) > 0)){
@@ -28,6 +34,18 @@ export default function User(){
 
         fetchData();
     },[]);
+
+    /* Pagination */
+    const nextPage = () => {
+        if(currentPage !== numberOfPages) 
+            setCurrentPage(currentPage + 1)
+    }
+    const prevPage = () => {
+        if(currentPage !== 1) 
+            setCurrentPage(currentPage - 1)
+    }
+    /* Pagination */
+
 
     function fetchData(){
         Services.getAllUser().then(({data})=>{
@@ -408,6 +426,32 @@ export default function User(){
                                     {printTable()}
                                 </tbody>
                             </table>
+                            <div>
+                                <div className="d-flex justify-content-between">
+                                    <div>
+
+                                    </div>
+                                    <div>
+                                        <nav aria-label="Page navigation example">
+                                            <ul className="pagination">
+                                                <li className="page-item">
+                                                    <div className="page-link" aria-label="Previous">
+                                                        <span aria-hidden="true">&laquo;</span>
+                                                    </div>
+                                                </li>
+                                                <li className="page-item"><div className="page-link">1</div></li>
+                                                <li className="page-item"><div className="page-link">2</div></li>
+                                                <li className="page-item"><div className="page-link">3</div></li>
+                                                <li className="page-item">
+                                                    <div className="page-link" aria-label="Next">
+                                                        <span aria-hidden="true">&raquo;</span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
