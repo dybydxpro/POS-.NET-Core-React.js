@@ -295,9 +295,9 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
                             cmd.Parameters.AddWithValue("@GRNRecorderID", id);
                             if (con.State == ConnectionState.Closed)
                                 con.Open();
-                            SqlDataAdapter adp = new SqlDataAdapter(cmd);
+                            //SqlDataAdapter adp = new SqlDataAdapter(cmd);
                             DataTable dt = new DataTable();
-                            adp.Fill(dt);
+                            //adp.Fill(dt);
                             foreach (DataRow dr in dt.Rows)
                             {
                                 grns.Add(new GRNCartGetDTO
@@ -367,7 +367,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
                         transaction.Commit();
                         return true;
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         transaction.Rollback();
                         return false;

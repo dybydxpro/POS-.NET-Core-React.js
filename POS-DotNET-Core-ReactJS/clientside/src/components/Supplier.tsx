@@ -3,13 +3,15 @@ import Services from "../Services";
 import { responseManage } from "../controllers/CommonController";
 import { Button, Modal } from 'react-bootstrap';
 
-export default function Item(){
+export default function Supplier(){
     const [recordsPerPage, setRecordsPerPage] = useState(5);
     const [currentPage, setCurrentPage] = useState(1);
+
     const [data, setData] = useState([{
-        "itemID": 0,
-        "itemName": "",
-        "unit": ""
+        "supplierID": 0,
+        "supplierName": "",
+        "address": "",
+        "contactNumber": ""
     }]);
 
     useEffect(() => {
@@ -41,7 +43,7 @@ export default function Item(){
     /* Pagination */
 
     function fetchData(){
-        Services.GetAllItems().then(({data})=>{
+        Services.GetAllSuppliers().then(({data})=>{
             setData(data)
         })
         .catch(({response})=>{
@@ -56,7 +58,7 @@ export default function Item(){
             fetchData();
         }
         else{
-            Services.GetSearchItems(search).then(({data})=>{
+            Services.GetSearchSuppliers(search).then(({data})=>{
                 setData(data)
             })
             .catch(({response})=>{
@@ -69,39 +71,36 @@ export default function Item(){
     function printTable(){
         return(
             currentPosts.map((dataset, index) =>
-                <tr key={dataset.itemID}>
+                <tr key={dataset.supplierID}>
                     <td>{index+((currentPage-1)*recordsPerPage)+1}</td>
-                    <td>{dataset.itemID}</td>
-                    <td>{dataset.itemName}</td>
-                    <td>{dataset.unit}</td>
+                    <td>{dataset.supplierID}</td>
+                    <td>{dataset.supplierName}</td>
+                    <td>{dataset.address}</td>
+                    <td>{dataset.contactNumber}</td>
                     <td>
-                        <button type="button" className="btn btnPrimaryS mx-2" onClick={()=>{EditModelHandleShow(); GetOneItems(dataset.itemID);}}><i className="bi bi-pencil"></i>&nbsp; Edit</button>
+                        <button type="button" className="btn btnPrimaryS mx-2" onClick={()=>{EditModelHandleShow(); GetOneSupplier(dataset.supplierID);}}><i className="bi bi-pencil"></i>&nbsp; Edit</button>
                         <Modal show={editModel} onHide={EditModelHandleClose}>
                             <Modal.Header closeButton>
-                                <Modal.Title>Edit Item</Modal.Title>
+                                <Modal.Title>Edit Supplier</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
                                 <div>
                                     <div className="form-floating mb-3">
-                                        <input type="text" className="form-control" id="itemName" value={editItem.itemName} onChange={(e) => handleEdit(e.target.id, e.target.value)} placeholder="Tile Addisive"/>
-                                        <label htmlFor="itemName" className="form-label">Item Name</label>
+                                        <input type="text" className="form-control" id="supplierName" value={editSupplier.supplierName} onChange={(e) => handleEdit(e.target.id, e.target.value)} placeholder="TS Company"/>
+                                        <label htmlFor="supplierName" className="form-label">Supplier Name</label>
                                     </div>
                                     <div className="form-floating mb-3">
-                                        <select className="form-select" id="unit" value={editItem.unit} onChange={(e) => handleEdit(e.target.id, e.target.value)}>
-                                            <option value="" selected>_</option>
-                                            <option value="NOS">NOS</option>
-                                            <option value="KG">KG</option>
-                                            <option value="BAG">BAG</option>
-                                            <option value="LITER">LITER</option>
-                                            <option value="MITER">MITER</option>
-                                            <option value="BOTTLE">BOTTLE</option>
-                                        </select>
-                                        <label htmlFor="unit" className="form-label">Unit</label>
+                                        <input type="text" className="form-control" id="address" value={editSupplier.address} onChange={(e) => handleEdit(e.target.id, e.target.value)} placeholder="Main Road, Gampaha."/>
+                                        <label htmlFor="address" className="form-label">Address</label>
+                                    </div>
+                                    <div className="form-floating mb-3">
+                                        <input type="text" className="form-control" id="contactNumber" value={editSupplier.contactNumber} onChange={(e) => handleEdit(e.target.id, e.target.value)} placeholder="+94#########"/>
+                                        <label htmlFor="contactNumber" className="form-label">Contact Number</label>
                                     </div>
                                 </div>
                             </Modal.Body>
                             <Modal.Footer>
-                                <Button variant="success" onClick={() => EditItem()}>
+                                <Button variant="success" onClick={() => EditSupplier()}>
                                     Save
                                 </Button>
                                 <Button variant="secondary" onClick={EditModelHandleClose}>
@@ -131,14 +130,18 @@ export default function Item(){
         console.log(newData);
     }
 
-    function AddItemValidate(){
+    function AddSupplierValidate(){
         const newData: any = {...addNew};
-        if(newData["itemName"] === "" || newData["itemName"] === undefined){
-            console.log("itemName");
+        if(newData["supplierName"] === "" || newData["supplierName"] === undefined){
+            console.log("supplierName");
             return false;
         }
-        else if(newData["unit"] === "" || newData["unit"] === undefined){
-            console.log("unit");
+        else if(newData["address"] === "" || newData["address"] === undefined){
+            console.log("address");
+            return false;
+        }
+        else if(newData["contactNumber"] === "" || newData["contactNumber"] === undefined){
+            console.log("contactNumber");
             return false;
         }
         else{
@@ -146,9 +149,9 @@ export default function Item(){
         }
     }
 
-    function AddItem(){
-        if(AddItemValidate()){
-            Services.PostItem(addNew)
+    function AddSupplier(){
+        if(AddSupplierValidate()){
+            Services.PostSupplier(addNew)
             .then(({data}) =>{
                 console.log(data);
                 fetchData();
@@ -173,24 +176,25 @@ export default function Item(){
     const EditModelHandleShow = () => setEditModel(true);
 
     //Edit User
-    const [editItem, setEditItem] = useState({
-        "itemID": "",
-        "itemName": "",
-        "unit": ""
+    const [editSupplier, setEditSupplier] = useState({
+        "supplierID": 0,
+        "supplierName": "",
+        "address": "",
+        "contactNumber": ""
     });
 
     function handleEdit(id: string, value: string){
-        const newData: any = {...editItem};
+        const newData: any = {...editSupplier};
         newData[id] = value;
-        setEditItem(newData);
+        setEditSupplier(newData);
         console.log(newData);
     }
 
-    function GetOneItems(id: number){
-        Services.GetOneItem(id)
+    function GetOneSupplier(id: number){
+        Services.GetOneSupplier(id)
         .then(({data}) =>{
             console.log(data);
-            setEditItem(data);
+            setEditSupplier(data);
         }).catch(({response})=>{
             responseManage(response);
             console.log(response);
@@ -198,14 +202,18 @@ export default function Item(){
         })     
     }
 
-    function EditItemValidate(){
-        const newData = {...editItem};
-        if(newData["itemName"] === "" || newData["itemName"] === undefined){
-            console.log("itemName");
+    function EditSupplierValidate(){
+        const newData: any = {...editSupplier};
+        if(newData["supplierName"] === "" || newData["supplierName"] === undefined){
+            console.log("supplierName");
             return false;
         }
-        else if(newData["unit"] === "" || newData["unit"] === undefined){
-            console.log("unit");
+        else if(newData["address"] === "" || newData["address"] === undefined){
+            console.log("address");
+            return false;
+        }
+        else if(newData["contactNumber"] === "" || newData["contactNumber"] === undefined){
+            console.log("contactNumber");
             return false;
         }
         else{
@@ -213,12 +221,12 @@ export default function Item(){
         }
     }
 
-    function EditItem(){
-        if(EditItemValidate()){
-            Services.EditItem(editItem)
+    function EditSupplier(){
+        if(EditSupplierValidate()){
+            Services.EditSupplier(editSupplier)
             .then(({data}) =>{
                 console.log(data);
-                EditItem();
+                setEditSupplier({"supplierID": 0, "supplierName": "", "address": "", "contactNumber": ""});
                 fetchData();
                 EditModelHandleClose();
             }).catch(({response})=>{
@@ -235,7 +243,7 @@ export default function Item(){
     return(
         <>
             <div className="row">
-                <p className="m-4" style={{ color: "#4d646f", fontSize: "18px", fontWeight: "600" }}>Items</p>
+                <p className="m-4" style={{ color: "#4d646f", fontSize: "18px", fontWeight: "600" }}>Suppliers</p>
             </div>
 
             <div className="row mx-3">
@@ -248,7 +256,7 @@ export default function Item(){
                             </div>
                         </div>
                         <div>
-                            <button type="button" className="btn btnPrimary" onClick={AddModelHandleShow}><i className="bi bi-plus"></i> &nbsp; Add item</button>
+                            <button type="button" className="btn btnPrimary" onClick={AddModelHandleShow}><i className="bi bi-plus"></i> &nbsp; Add Supplier</button>
                         </div>
                     </div>
 
@@ -256,11 +264,12 @@ export default function Item(){
                         <div className="my-2">
                             <table className="table">
                                 <thead className="theadStyle">
-                                    <tr>
+                                    <tr className="">
                                         <th scope="col" className="text-light text-center">#</th>
-                                        <th scope="col" className="text-light text-center">Item ID</th>
-                                        <th scope="col" className="text-light text-center">Item Name</th>
-                                        <th scope="col" className="text-light text-center">Unit</th>
+                                        <th scope="col" className="text-light text-center">Supplier ID</th>
+                                        <th scope="col" className="text-light text-center">Supplier Name</th>
+                                        <th scope="col" className="text-light text-center">Address</th>
+                                        <th scope="col" className="text-light text-center">Contact Number</th>
                                         <th scope="col" className="text-light text-center" style={{ width: "150px" }}>Options</th>
                                     </tr>
                                 </thead>
@@ -311,36 +320,29 @@ export default function Item(){
                 </div>
 
                 <div>
-                    {/* <button type="button" className="btn text-light" style={{position:"fixed", width:"60px", height:"60px", bottom:"40px", right:"40px", borderRadius: "50%", backgroundColor: "#2e856e", fontSize:"28px"}} onClick={AddModelHandleShow}>
-                        <i className="bi bi-plus"></i>
-                    </button> */}
                     <Modal show={addModel} onHide={AddModelHandleClose}>
                         <Modal.Header closeButton>
-                            <Modal.Title>Add Item</Modal.Title>
+                            <Modal.Title>Add Supplier</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <div>
                                 <div className="form-floating mb-3">
-                                    <input type="text" className="form-control" id="itemName" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="Tile Addisive"/>
-                                    <label htmlFor="itemName" className="form-label">Item Name</label>
+                                    <input type="text" className="form-control" id="supplierName" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="TS Company"/>
+                                    <label htmlFor="supplierName" className="form-label">Supplier Name</label>
                                 </div>
                                 <div className="form-floating mb-3">
-                                    <select className="form-select" id="unit" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="NOS">
-                                        <option value="" selected>_</option>
-                                        <option value="NOS">NOS</option>
-                                        <option value="KG">KG</option>
-                                        <option value="BAG">BAG</option>
-                                        <option value="LITER">LITER</option>
-                                        <option value="MITER">MITER</option>
-                                        <option value="BOTTLE">BOTTLE</option>
-                                    </select>
-                                    <label htmlFor="unit" className="form-label">Unit</label>
+                                    <input type="text" className="form-control" id="address" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="Main Road, Gampaha."/>
+                                    <label htmlFor="address" className="form-label">Address</label>
+                                </div>
+                                <div className="form-floating mb-3">
+                                    <input type="text" className="form-control" id="contactNumber" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="+94#########"/>
+                                    <label htmlFor="contactNumber" className="form-label">Contact Number</label>
                                 </div>
                             </div>
                             
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="success" onClick={() => AddItem()}>
+                            <Button variant="success" onClick={() => AddSupplier()}>
                                 Save
                             </Button>
                             <Button variant="secondary" onClick={AddModelHandleClose}>

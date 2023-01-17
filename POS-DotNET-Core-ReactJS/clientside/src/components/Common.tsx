@@ -6,6 +6,10 @@ import * as images from '../assets/image/images';
 import Dashboard from "./Dashboard";
 import User from "./User";
 import Item from "./Item";
+import Stock from "./Stock";
+import Supplier from "./Supplier";
+import GRN from "./GRN";
+import Return from "./Return";
 
 export default function Common(){
     const navigate = useNavigate();
@@ -149,6 +153,18 @@ export default function Common(){
                                     }
                                     {
                                         shift == 2 && <Item/>
+                                    }
+                                    {
+                                        shift == 3 && <Stock/>
+                                    }
+                                    {
+                                        shift == 4 && <Supplier/>
+                                    }
+                                    {
+                                        shift == 5 && <GRN/>
+                                    }
+                                    {
+                                        shift == 7 && <Return/>
                                     }
                                 </div>
                             </div>
