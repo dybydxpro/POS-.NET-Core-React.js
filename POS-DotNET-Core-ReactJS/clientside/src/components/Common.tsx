@@ -5,6 +5,7 @@ import { Offcanvas } from 'react-bootstrap';
 import * as images from '../assets/image/images';
 import Dashboard from "./Dashboard";
 import User from "./User";
+import Item from "./Item";
 
 export default function Common(){
     const navigate = useNavigate();
@@ -145,6 +146,9 @@ export default function Common(){
                                     }
                                     {
                                         shift == 1 && <User/>
+                                    }
+                                    {
+                                        shift == 2 && <Item/>
                                     }
                                 </div>
                             </div>

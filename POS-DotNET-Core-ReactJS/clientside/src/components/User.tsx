@@ -15,13 +15,9 @@ export default function User(){
         "status": ""
     }]);
 
-    const [recordsPerPage, setRecordsPerPage] = useState(10);
+    const [recordsPerPage, setRecordsPerPage] = useState(5);
     const [currentPage, setCurrentPage] = useState(1);
-    const [indexOfLastRecord, setIndexOfLastRecord] = useState(currentPage * recordsPerPage);
-    const [indexOfFirstRecord, useIndexOfFirstRecord] = useState(indexOfLastRecord - recordsPerPage);
-    const [numberOfPages, useNumberOfPages] = useState(/*Math.ceil(data.length / recordsPerPage)*/ 5);
-    const [pageNumbers , usePageNumbers ] = useState([...Array.from(Array(numberOfPages+1).keys())].slice(1));
-    /** https://levelup.gitconnected.com/a-simple-guide-to-pagination-in-react-facd6f785bd0 */
+
     useEffect(() => {
         if(!(Number(sessionStorage.getItem("userID")) > 0)){
             window.location.replace("/login");
@@ -36,6 +32,12 @@ export default function User(){
     },[]);
 
     /* Pagination */
+    const indexOfLastRecord = Number(currentPage * recordsPerPage);
+    const indexOfFirstRecord = Number(indexOfLastRecord - recordsPerPage);
+    const numberOfPages = Math.ceil(data.length / recordsPerPage);
+    const pageNumbers  = [...Array.from(Array(numberOfPages+1).keys())].slice(1); 
+    const currentPosts = data.slice(indexOfFirstRecord, indexOfLastRecord);
+
     function nextPage(){
         if(currentPage !== numberOfPages){
             setCurrentPage(currentPage + 1);
@@ -50,9 +52,9 @@ export default function User(){
     /* Pagination */
 
 
-    function fetchData(){
+    async function fetchData(){
         Services.getAllUser().then(({data})=>{
-            setData(data)
+            setData(data);
         })
         .catch(({response})=>{
             responseManage(response);
@@ -77,8 +79,9 @@ export default function User(){
 
     function printTable(){
         return(
-            data.map(dataset =>
+            currentPosts.map((dataset, index) =>
                 <tr key={dataset.userID} className={ Boolean(dataset.status)===false? "table-secondary" : ""}>
+                    <td><b>{index+((currentPage-1)*recordsPerPage)+1}</b></td>
                     <td>{dataset.userID}</td>
                     <td>{dataset.name}</td>
                     <td>{dataset.nic}</td>
@@ -417,6 +420,7 @@ export default function User(){
                                 <thead className="theadStyle">
                                     <tr>
                                         <th scope="col" className="text-light text-center">#</th>
+                                        <th scope="col" className="text-light text-center">UID</th>
                                         <th scope="col" className="text-light text-center">Name</th>
                                         <th scope="col" className="text-light text-center">NIC</th>
                                         <th scope="col" className="text-light text-center">Address</th>
@@ -431,11 +435,10 @@ export default function User(){
                             </table>
                             <div>
                                 <div className="d-flex justify-content-between">
-                                    <div>
-                                        {currentPage}
-                                        <label className="input-group-text" htmlFor="noOfRows">No of Rows</label>
-                                        <select className="form-select" id="noOfRows" onClick={(e) => setRecordsPerPage(e.target.value)}>
-                                            <option value="5" selected>5</option>
+                                    <div className="d-flex" style={{ minWidth: "300px"}}>
+                                        <label className="form-label mt-3" htmlFor="noOfRows">No of Rows:</label>
+                                        <select className="form-select mx-3" id="noOfRows" onChange={(e) => setRecordsPerPage(Number(e.target.value))} style={{ maxWidth: "100px"}}>
+                                            <option defaultValue="5">5</option>
                                             <option value="10">10</option>
                                             <option value="25">25</option>
                                             <option value="50">50</option>
@@ -455,7 +458,7 @@ export default function User(){
                                                 </li>
                                                 {
                                                     pageNumbers.map((pg) => 
-                                                        <li className="page-item"><div className={currentPage==pg? "page-link btnPagination": "page-link txtPrimary"} onClick={() => setCurrentPage(pg)}>{pg}</div></li>
+                                                        <li className="page-item" key={pg}><div className={currentPage==pg? "page-link btnPagination": "page-link txtPrimary"} onClick={() => setCurrentPage(pg)}>{pg}</div></li>
                                                     )
                                                 }
                                                 <li className="page-item" onClick={() => nextPage()}>
@@ -503,7 +506,7 @@ export default function User(){
                                     </div>
                                     <div className="form-floating mb-3">
                                         <select className="form-select" id="type" onChange={(e) => handleAdd(e.target.id, e.target.value)}>
-                                            <option value="" selected>_</option>
+                                            <option defaultValue="">_</option>
                                             <option value="Cashier">Cashier</option>
                                             <option value="Admin">Admin</option>
                                         </select>
