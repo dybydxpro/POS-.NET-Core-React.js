@@ -240,7 +240,7 @@ export default function GRN(){
                     <td>{dataset.itemCount}</td>
                     <td>{dataset.billPrice}</td>
                     <td>
-                        <button type="button" className="btn btn-info mx-2" onClick={()=>{ViewModelHandleShow(); GetOneGRN(dataset.grnNo);}}><i className="bi bi-clipboard2-data"></i>&nbsp; View</button>
+                        <button type="button" className="btn btnPrimaryS mx-2" onClick={()=>{ViewModelHandleShow(); GetOneGRN(dataset.grnNo);}}><i className="bi bi-clipboard2-data"></i>&nbsp; View</button>
                         <Modal show={viewModel} onHide={ViewModelHandleClose}  fullscreen={true}>
                             <Modal.Header closeButton>
                                 <Modal.Title>View Good Recieving Note</Modal.Title>
@@ -689,13 +689,13 @@ export default function GRN(){
                                 <thead className="theadStyle">
                                     <tr className="">
                                         <th scope="col" className="text-light text-center">#</th>
-                                        <th scope="col">GRN #</th>
-                                        <th scope="col">GRN Date</th>
-                                        <th scope="col">Invoice #</th>
-                                        <th scope="col">Supplier Name</th>
-                                        <th scope="col">Item Count</th>
-                                        <th scope="col">Bill Price</th>
-                                        <th scope="col" style={{ width: "150px" }}>Options</th>
+                                        <th scope="col" className="text-light text-center">GRN #</th>
+                                        <th scope="col" className="text-light text-center">GRN Date</th>
+                                        <th scope="col" className="text-light text-center">Invoice #</th>
+                                        <th scope="col" className="text-light text-center">Supplier Name</th>
+                                        <th scope="col" className="text-light text-center">Item Count</th>
+                                        <th scope="col" className="text-light text-center">Bill Price</th>
+                                        <th scope="col" className="text-light text-center" style={{ width: "150px" }}>Options</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -853,19 +853,19 @@ export default function GRN(){
 
                                 <div>
                                     <table className="table">
-                                        <thead>
-                                            <tr className="bg-warning">
-                                                <th scope="col">#</th>
-                                                <th scope="col">Item ID</th>
-                                                <th scope="col">Stock ID</th>
-                                                <th scope="col">Item</th>
-                                                <th scope="col">Unit</th>
-                                                <th scope="col">Qty</th>
-                                                <th scope="col">Unit Price</th>
-                                                <th scope="col">Bulk Price</th>
-                                                <th scope="col">Act. Bulk Price</th>
-                                                <th scope="col">Remarks</th>
-                                                <th scope="col">Options</th>
+                                        <thead className="theadStyle">
+                                            <tr className="">
+                                                <th className="text-light text-center" scope="col">#</th>
+                                                <th className="text-light text-center" scope="col">Item ID</th>
+                                                <th className="text-light text-center" scope="col">Stock ID</th>
+                                                <th className="text-light text-center" scope="col">Item</th>
+                                                <th className="text-light text-center" scope="col">Unit</th>
+                                                <th className="text-light text-center" scope="col">Qty</th>
+                                                <th className="text-light text-center" scope="col">Unit Price</th>
+                                                <th className="text-light text-center" scope="col">Bulk Price</th>
+                                                <th className="text-light text-center" scope="col">Act. Bulk Price</th>
+                                                <th className="text-light text-center" scope="col">Remarks</th>
+                                                <th className="text-light text-center" scope="col">Options</th>
                                             </tr>
                                         </thead>
                                         <tbody>

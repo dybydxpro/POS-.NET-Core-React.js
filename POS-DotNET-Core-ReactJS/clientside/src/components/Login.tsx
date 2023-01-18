@@ -3,8 +3,8 @@ import Services from '../Services';
 import NavBar from "./NavBar";
 
 import * as images from '../assets/image/images';
-
 import { LoginType } from "../models/Login";
+
 // import { loginFunction } from "../controllers/LoginController";
 
 export default function Login(){

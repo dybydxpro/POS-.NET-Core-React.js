@@ -128,8 +128,8 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
 
         public bool PostCarts(CartAddDTO obj)
         {
-            //try
-            //{
+            try
+            {
                 using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_CreateNewCart]", con))
@@ -153,11 +153,11 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
                         }
                     }
                 }
-            //}
-            //catch(Exception ex)
-            //{
-            //    return false;
-            //}
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
         }
 
         public bool EditCarts(Cart obj)

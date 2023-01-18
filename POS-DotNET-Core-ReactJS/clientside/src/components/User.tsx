@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import { useNavigate } from 'react-router-dom';
 import { Button, Modal } from 'react-bootstrap';
 import Services from "../Services";
@@ -17,6 +17,9 @@ export default function User(){
 
     const [recordsPerPage, setRecordsPerPage] = useState(5);
     const [currentPage, setCurrentPage] = useState(1);
+
+    const refUserName = useRef<HTMLInputElement>(null);
+    const refPassword = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if(!(Number(sessionStorage.getItem("userID")) > 0)){

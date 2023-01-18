@@ -52,12 +52,40 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         [HttpPost("{id}")]
         public async Task<ActionResult<GRNAllDTO>> PostGRN(int id)
         {
-            bool temp = _GRNRepository.PostAllGRNs(id);
-            if (temp)
+            List<GRNCartGetDTO> grns = _GRNCartRepository.GetGRNCarts(id).ToList();
+
+            int maxID = _GRNRepository.GetMaxIDGRNs() + 1;
+            DateTime dtm = DateTime.Now;
+
+            foreach (GRNCartGetDTO ch in grns)
             {
-                return Ok();
+                GRNAddDTO gadto = new GRNAddDTO();
+                gadto.GRNNo = maxID;
+                gadto.GRNDate = dtm;
+                gadto.InvoiceNo = ch.InvoiceNo;
+                gadto.InvoiceDate = ch.InvoiceDate;
+                gadto.SupplierID = ch.SupplierID;
+                gadto.ItemID = ch.ItemID;
+                gadto.StockID = ch.StockID;
+                gadto.GRNQty = ch.GRNQty;
+                gadto.PayType = ch.PayType;
+                gadto.BulckPrice = ch.BulckPrice;
+                gadto.ActualBulkPrice = ch.ActualBulkPrice;
+                gadto.GRNRecorderID = id;
+                gadto.DueDate = ch.DueDate;
+                gadto.Remarks = ch.Remarks;
+
+                _GRNRepository.PostGRNs(gadto);
+                _GRNCartRepository.DeleteGRNCarts(ch.GRNID);
             }
-            return BadRequest();
+            return Ok();
+
+            //bool temp = _GRNRepository.PostAllGRNs(id);
+            //if (temp)
+            //{
+            //    return Ok();
+            //}
+            //return BadRequest();
         }
 
         [HttpPut]
