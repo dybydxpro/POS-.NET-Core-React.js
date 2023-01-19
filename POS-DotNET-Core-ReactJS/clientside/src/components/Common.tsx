@@ -9,6 +9,7 @@ import Item from "./Item";
 import Stock from "./Stock";
 import Supplier from "./Supplier";
 import GRN from "./GRN";
+import Bill from "./Bill";
 import Return from "./Return";
 
 export default function Common(){
@@ -162,6 +163,9 @@ export default function Common(){
                                     }
                                     {
                                         shift == 5 && <GRN/>
+                                    }
+                                    {
+                                        shift == 6 && <Bill/>
                                     }
                                     {
                                         shift == 7 && <Return/>

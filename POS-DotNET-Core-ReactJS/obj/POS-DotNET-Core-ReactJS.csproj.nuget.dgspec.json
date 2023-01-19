@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "F:\\Github\\POS-.NET-Core-React.js\\POS-DotNET-Core-ReactJS\\POS-DotNET-Core-ReactJS.csproj": {}
+    "D:\\Coding\\VisualStudio\\POS-.NET-Core-React.js\\POS-DotNET-Core-ReactJS\\POS-DotNET-Core-ReactJS.csproj": {}
   },
   "projects": {
-    "F:\\Github\\POS-.NET-Core-React.js\\POS-DotNET-Core-ReactJS\\POS-DotNET-Core-ReactJS.csproj": {
+    "D:\\Coding\\VisualStudio\\POS-.NET-Core-React.js\\POS-DotNET-Core-ReactJS\\POS-DotNET-Core-ReactJS.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Github\\POS-.NET-Core-React.js\\POS-DotNET-Core-ReactJS\\POS-DotNET-Core-ReactJS.csproj",
+        "projectUniqueName": "D:\\Coding\\VisualStudio\\POS-.NET-Core-React.js\\POS-DotNET-Core-ReactJS\\POS-DotNET-Core-ReactJS.csproj",
         "projectName": "POS-DotNET-Core-ReactJS",
-        "projectPath": "F:\\Github\\POS-.NET-Core-React.js\\POS-DotNET-Core-ReactJS\\POS-DotNET-Core-ReactJS.csproj",
-        "packagesPath": "C:\\Users\\tharindu\\.nuget\\packages\\",
-        "outputPath": "F:\\Github\\POS-.NET-Core-React.js\\POS-DotNET-Core-ReactJS\\obj\\",
+        "projectPath": "D:\\Coding\\VisualStudio\\POS-.NET-Core-React.js\\POS-DotNET-Core-ReactJS\\POS-DotNET-Core-ReactJS.csproj",
+        "packagesPath": "C:\\Users\\thari\\.nuget\\packages\\",
+        "outputPath": "D:\\Coding\\VisualStudio\\POS-.NET-Core-React.js\\POS-DotNET-Core-ReactJS\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\tharindu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\thari\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
