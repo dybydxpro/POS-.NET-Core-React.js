@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef} from "react";
 import Services from "../Services";
 import { responseManage } from "../controllers/CommonController";
 import { Button, Modal } from 'react-bootstrap';
@@ -32,6 +32,12 @@ export default function Return(){
         "qty": 0,
         "price": 0
     }]);
+
+    const refSuplierName = useRef<HTMLInputElement>(null);
+    const refAddress = useRef<HTMLInputElement>(null);
+    const refContactNumber = useRef<HTMLInputElement>(null);
+    const refSuplierName = useRef<HTMLInputElement>(null);
+    const refAddress = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if(!(Number(sessionStorage.getItem("userID")) > 0)){

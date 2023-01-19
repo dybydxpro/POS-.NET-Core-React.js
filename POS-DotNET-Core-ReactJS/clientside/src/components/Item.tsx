@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Services from "../Services";
 import { responseManage } from "../controllers/CommonController";
 import { Button, Modal } from 'react-bootstrap';
@@ -11,6 +11,9 @@ export default function Item(){
         "itemName": "",
         "unit": ""
     }]);
+
+    const refItemName = useRef<HTMLInputElement>(null);
+    const refUnit = useRef<HTMLSelectElement>(null);
 
     useEffect(() => {
         if(!(Number(sessionStorage.getItem("userID")) > 0)){
@@ -39,6 +42,17 @@ export default function Item(){
         }
     }
     /* Pagination */
+
+    function keyRep(e: any){
+        if(e.key === 'Enter'){
+            if(e.target.id === 'itemName'){
+                refUnit.current?.focus();
+            }
+            else if(e.target.id === 'unit'){
+                AddItem();
+            }
+        }
+    }
 
     function fetchData(){
         Services.GetAllItems().then(({data})=>{
@@ -248,7 +262,7 @@ export default function Item(){
                             </div>
                         </div>
                         <div>
-                            <button type="button" className="btn btnPrimary" onClick={AddModelHandleShow}><i className="bi bi-plus"></i> &nbsp; Add item</button>
+                            <button type="button" className="btn btnPrimary" onClick={() => { AddModelHandleShow(); setTimeout(() =>{ refItemName.current?.focus() }, 1000); }}><i className="bi bi-plus"></i> &nbsp; Add item</button>
                         </div>
                     </div>
 
@@ -319,13 +333,13 @@ export default function Item(){
                             <Modal.Title>Add Item</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <div>
+                            <div id="form" onKeyPress={(e)=> keyRep(e)} >
                                 <div className="form-floating mb-3">
-                                    <input type="text" className="form-control" id="itemName" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="Tile Addisive"/>
+                                    <input type="text" className="form-control" id="itemName" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="Tile Addisive" ref={refItemName}/>
                                     <label htmlFor="itemName" className="form-label">Item Name</label>
                                 </div>
                                 <div className="form-floating mb-3">
-                                    <select className="form-select" id="unit" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="NOS">
+                                    <select className="form-select" id="unit" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="NOS" ref={refUnit}>
                                         <option value="" selected>_</option>
                                         <option value="NOS">NOS</option>
                                         <option value="KG">KG</option>

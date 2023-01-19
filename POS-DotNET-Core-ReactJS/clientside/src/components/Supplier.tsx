@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef} from "react";
 import Services from "../Services";
 import { responseManage } from "../controllers/CommonController";
 import { Button, Modal } from 'react-bootstrap';
@@ -13,6 +13,10 @@ export default function Supplier(){
         "address": "",
         "contactNumber": ""
     }]);
+
+    const refSuplierName = useRef<HTMLInputElement>(null);
+    const refAddress = useRef<HTMLInputElement>(null);
+    const refContactNumber = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if(!(Number(sessionStorage.getItem("userID")) > 0)){
@@ -41,6 +45,20 @@ export default function Supplier(){
         }
     }
     /* Pagination */
+
+    function keyRep(e: any){
+        if(e.key === 'Enter'){
+            if(e.target.id === 'supplierName'){
+                refAddress.current?.focus();
+            }
+            else if(e.target.id === 'address'){
+                refContactNumber.current?.focus();
+            }
+            else if(e.target.id === 'contactNumber'){
+                AddSupplier();
+            }
+        }
+    }
 
     function fetchData(){
         Services.GetAllSuppliers().then(({data})=>{
@@ -256,7 +274,7 @@ export default function Supplier(){
                             </div>
                         </div>
                         <div>
-                            <button type="button" className="btn btnPrimary" onClick={AddModelHandleShow}><i className="bi bi-plus"></i> &nbsp; Add Supplier</button>
+                            <button type="button" className="btn btnPrimary" onClick={() => {AddModelHandleShow(); setTimeout(() =>{ refSuplierName.current?.focus() }, 1000);}}><i className="bi bi-plus"></i> &nbsp; Add Supplier</button>
                         </div>
                     </div>
 
@@ -325,17 +343,17 @@ export default function Supplier(){
                             <Modal.Title>Add Supplier</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <div>
+                            <div id="form" onKeyPress={(e)=> keyRep(e)}>
                                 <div className="form-floating mb-3">
-                                    <input type="text" className="form-control" id="supplierName" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="TS Company"/>
+                                    <input type="text" className="form-control" id="supplierName" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="TS Company" ref={refSuplierName}/>
                                     <label htmlFor="supplierName" className="form-label">Supplier Name</label>
                                 </div>
                                 <div className="form-floating mb-3">
-                                    <input type="text" className="form-control" id="address" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="Main Road, Gampaha."/>
+                                    <input type="text" className="form-control" id="address" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="Main Road, Gampaha." ref={refAddress}/>
                                     <label htmlFor="address" className="form-label">Address</label>
                                 </div>
                                 <div className="form-floating mb-3">
-                                    <input type="text" className="form-control" id="contactNumber" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="+94#########"/>
+                                    <input type="text" className="form-control" id="contactNumber" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="+94#########" ref={refContactNumber}/>
                                     <label htmlFor="contactNumber" className="form-label">Contact Number</label>
                                 </div>
                             </div>

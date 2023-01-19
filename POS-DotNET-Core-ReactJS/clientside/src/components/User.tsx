@@ -18,8 +18,12 @@ export default function User(){
     const [recordsPerPage, setRecordsPerPage] = useState(5);
     const [currentPage, setCurrentPage] = useState(1);
 
+    const refName = useRef<HTMLInputElement>(null);
+    const refNIC = useRef<HTMLInputElement>(null);
+    const refAddress = useRef<HTMLInputElement>(null);
     const refUserName = useRef<HTMLInputElement>(null);
     const refPassword = useRef<HTMLInputElement>(null);
+    const refType = useRef<HTMLSelectElement>(null);
 
     useEffect(() => {
         if(!(Number(sessionStorage.getItem("userID")) > 0)){
@@ -54,6 +58,28 @@ export default function User(){
     }
     /* Pagination */
 
+    function keyRep(e: any){
+        if(e.key === 'Enter'){
+            if(e.target.id === 'name'){
+                refNIC.current?.focus();
+            }
+            else if(e.target.id === 'nic'){
+                refAddress.current?.focus();
+            }
+            else if(e.target.id === 'address'){
+                refUserName.current?.focus();
+            }
+            else if(e.target.id === 'userName'){
+                refPassword.current?.focus();
+            }
+            else if(e.target.id === 'password'){
+                refType.current?.focus();
+            }
+            else if(e.target.id === 'type'){
+                AddUser();
+            }
+        }
+    }
 
     async function fetchData(){
         Services.getAllUser().then(({data})=>{
@@ -413,7 +439,7 @@ export default function User(){
                             </div>
                         </div>
                         <div>
-                            <button type="button" className="btn btnPrimary" onClick={AddModelHandleShow}><i className="bi bi-plus"></i> &nbsp; Add user</button>
+                            <button type="button" className="btn btnPrimary" onClick={()=> {AddModelHandleShow(); setTimeout(() =>{ refName.current?.focus() }, 1000);}}><i className="bi bi-plus"></i> &nbsp; Add user</button>
                         </div>
                     </div>
 
@@ -486,29 +512,29 @@ export default function User(){
                                 <Modal.Title>Add User</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                <div>
+                                <div id="form" onKeyPress={(e)=> keyRep(e)} >
                                     <div className="form-floating mb-3">
-                                        <input type="text" className="form-control" id="name" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="John Smidth"/>
+                                        <input type="text" className="form-control" id="name" onChange={(e) => {handleAdd(e.target.id, e.target.value);}} placeholder="John Smidth" ref={refName}/>
                                         <label htmlFor="name" className="form-label">Name</label>
                                     </div>
                                     <div className="form-floating mb-3">
-                                        <input type="text" className="form-control" id="nic" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="75XXXXXXXXV"/>
+                                        <input type="text" className="form-control" id="nic" onChange={(e) => {handleAdd(e.target.id, e.target.value);}} placeholder="75XXXXXXXXV" ref={refNIC}/>
                                         <label htmlFor="nic" className="form-label">NIC</label>
                                     </div>
                                     <div className="form-floating mb-3">
-                                        <input type="text" className="form-control" id="address" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="No 15, Temple Road, Malabe."/>
+                                        <input type="text" className="form-control" id="address" onChange={(e) => {handleAdd(e.target.id, e.target.value);}} placeholder="No 15, Temple Road, Malabe." ref={refAddress}/>
                                         <label htmlFor="address" className="form-label">Address</label>
                                     </div>
                                     <div className="form-floating mb-3">
-                                        <input type="text" className="form-control" id="userName" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="JohnS"/>
+                                        <input type="text" className="form-control" id="userName" onChange={(e) => {handleAdd(e.target.id, e.target.value);}} placeholder="JohnS" ref={refUserName}/>
                                         <label htmlFor="userName" className="form-label">UserName</label>
                                     </div>
                                     <div className="form-floating mb-3">
-                                        <input type="password" className="form-control" id="password" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="John Smidth"/>
+                                        <input type="password" className="form-control" id="password" onChange={(e) => {handleAdd(e.target.id, e.target.value);}} placeholder="John Smidth" ref={refPassword}/>
                                         <label htmlFor="password" className="form-label">Password</label>
                                     </div>
                                     <div className="form-floating mb-3">
-                                        <select className="form-select" id="type" onChange={(e) => handleAdd(e.target.id, e.target.value)}>
+                                        <select className="form-select" id="type" onChange={(e) => {handleAdd(e.target.id, e.target.value);}} ref={refType}>
                                             <option defaultValue="">_</option>
                                             <option value="Cashier">Cashier</option>
                                             <option value="Admin">Admin</option>

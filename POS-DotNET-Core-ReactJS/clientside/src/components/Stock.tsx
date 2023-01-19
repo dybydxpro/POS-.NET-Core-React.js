@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef} from "react";
 import Services from "../Services";
 import { responseManage } from "../controllers/CommonController";
 import { Button, Modal } from 'react-bootstrap';
@@ -20,6 +20,10 @@ export default function Stock(){
         "itemName": "",
         "unit": ""
     }]);
+
+    const refItemName = useRef<HTMLSelectElement>(null);
+    const refQty = useRef<HTMLInputElement>(null);
+    const refUnitPrice = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if(!(Number(sessionStorage.getItem("userID")) > 0)){
@@ -48,6 +52,20 @@ export default function Stock(){
         }
     }
     /* Pagination */
+
+    function keyRep(e: any){
+        if(e.key === 'Enter'){
+            if(e.target.id === 'itemID'){
+                refQty.current?.focus();
+            }
+            else if(e.target.id === 'qty'){
+                refUnitPrice.current?.focus();
+            }
+            else if(e.target.id === 'price'){
+                AddStock();
+            }
+        }
+    }
 
     function fetchData(){
         Services.GetAllStocks().then(({data})=>{
@@ -169,7 +187,7 @@ export default function Stock(){
                             </div>
                         </div>
                         <div>
-                            <button type="button" className="btn btnPrimary" onClick={AddModelHandleShow}><i className="bi bi-plus"></i> &nbsp; Add Stock</button>
+                            <button type="button" className="btn btnPrimary" onClick={() => { AddModelHandleShow(); setTimeout(() =>{ refItemName.current?.focus() }, 1000);} }><i className="bi bi-plus"></i> &nbsp; Add Stock</button>
                         </div>
                     </div>
 
@@ -239,9 +257,9 @@ export default function Stock(){
                             <Modal.Title>Add Stock</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <div>
+                            <div id="form" onKeyPress={(e)=> keyRep(e)} >
                                 <div className="form-floating mb-3">
-                                    <select className="form-select" id="itemID" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="Item">
+                                    <select className="form-select" id="itemID" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="Item" ref={refItemName}>
                                         <option defaultValue="">_</option>
                                         {
                                             item.map(items => <option key={items.itemID} value={items.itemID}>{items.itemName}</option>)
@@ -250,11 +268,11 @@ export default function Stock(){
                                     <label htmlFor="itemID" className="form-label">Item Name</label>
                                 </div>
                                 <div className="form-floating mb-3">
-                                    <input type="text" className="form-control" id="qty" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="0.00"/>
+                                    <input type="text" className="form-control" id="qty" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="0.00"  ref={refQty}/>
                                     <label htmlFor="qty" className="form-label">Qty</label>
                                 </div>
                                 <div className="form-floating mb-3">
-                                    <input type="text" className="form-control" id="price" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="0.00"/>
+                                    <input type="text" className="form-control" id="price" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="0.00" ref={refUnitPrice}/>
                                     <label htmlFor="price" className="form-label">Unit Price</label>
                                 </div>
                             </div>
