@@ -33,11 +33,11 @@ export default function Return(){
         "price": 0
     }]);
 
-    const refSuplierName = useRef<HTMLInputElement>(null);
-    const refAddress = useRef<HTMLInputElement>(null);
-    const refContactNumber = useRef<HTMLInputElement>(null);
-    const refSuplierName = useRef<HTMLInputElement>(null);
-    const refAddress = useRef<HTMLInputElement>(null);
+    const refBillID = useRef<HTMLInputElement>(null);
+    const refItemID = useRef<HTMLSelectElement>(null);
+    const refStockID = useRef<HTMLSelectElement>(null);
+    const refQty = useRef<HTMLInputElement>(null);
+    const refPrice = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if(!(Number(sessionStorage.getItem("userID")) > 0)){
@@ -67,6 +67,26 @@ export default function Return(){
         }
     }
     /* Pagination */
+
+    function keyRep(e: any){
+        if(e.key === 'Enter'){
+            if(e.target.id === 'billID'){
+                refItemID.current?.focus();
+            }
+            else if(e.target.id === 'itemID'){
+                refStockID.current?.focus();
+            }
+            else if(e.target.id === 'stockID'){
+                refQty.current?.focus();
+            }
+            else if(e.target.id === 'qty'){
+                refPrice.current?.focus();
+            }
+            else if(e.target.id === 'price'){
+                AddItem();
+            }
+        }
+    }
 
     function fetchData(){
         Services.GetAllReturns().then(({data})=>{
@@ -413,13 +433,13 @@ export default function Return(){
                             <Modal.Title>Add Return</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <div>
+                            <div id="form" onKeyPress={(e)=> keyRep(e)}>
                                 <div className="form-floating mb-3">
-                                    <input type="number" className="form-control" id="billID" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="0" min={1}/>
+                                    <input type="number" className="form-control" id="billID" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="0" min={1} ref={refBillID}/>
                                     <label htmlFor="billID" className="form-label">Bill ID</label>
                                 </div>
                                 <div className="form-floating mb-3">
-                                    <select className="form-select" id="itemID" onChange={(e) => {handleAdd(e.target.id, e.target.value); fetchStock(e);}} placeholder="NOS">
+                                    <select className="form-select" id="itemID" onChange={(e) => {handleAdd(e.target.id, e.target.value); fetchStock(e);}} placeholder="0" ref={refItemID}>
                                         <option value="" selected>_</option>
                                         {
                                             item.map(items => <option key={items.itemID} value={items.itemID}>{items.itemName}</option>)
@@ -428,7 +448,7 @@ export default function Return(){
                                     <label htmlFor="itemID" className="form-label">Item</label>
                                 </div>
                                 <div className="form-floating mb-3">
-                                    <select className="form-select" id="stockID" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="NOS">
+                                    <select className="form-select" id="stockID" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="0" ref={refStockID}>
                                         <option value="" selected>_</option>
                                         {
                                             stock.map(stocks => <option key={stocks.stockID} value={stocks.stockID}>{stocks.price}</option>)
@@ -437,11 +457,11 @@ export default function Return(){
                                     <label htmlFor="stockID" className="form-label">Stock</label>
                                 </div>
                                 <div className="form-floating mb-3">
-                                    <input type="number" className="form-control" id="qty" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="0" min={1}/>
+                                    <input type="number" className="form-control" id="qty" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="0" min={1} ref={refQty}/>
                                     <label htmlFor="qty" className="form-label">Qty</label>
                                 </div>
                                 <div className="form-floating mb-3">
-                                    <input type="number" className="form-control" id="price" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="0" min={1}/>
+                                    <input type="number" className="form-control" id="price" onChange={(e) => handleAdd(e.target.id, e.target.value)} placeholder="0" min={1} ref={refPrice}/>
                                     <label htmlFor="price" className="form-label">Price</label>
                                 </div>
                             </div>

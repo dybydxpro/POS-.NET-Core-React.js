@@ -12,14 +12,14 @@
 
 /* Buttons */
 .btnPrimary, .btnPrimary:hover, .btnPrimary::after {
-    background-color: rgb(100,143,164);
+    background-color: #648FA4;
     border-radius: 10px;
     padding: 12px 20px;
     color: white;
 }
 
 .btnPrimaryS, .btnPrimaryS:hover, .btnPrimaryS::after {
-    background-color: rgb(100,143,164);
+    background-color: #648FA4;
     border-radius: 10px;
     /* padding: 12px 20px; */
     color: white;

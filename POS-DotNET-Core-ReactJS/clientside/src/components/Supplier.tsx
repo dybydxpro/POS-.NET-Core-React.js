@@ -102,7 +102,7 @@ export default function Supplier(){
                                 <Modal.Title>Edit Supplier</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                <div>
+                                <div id="form" onKeyPress={(e)=> keyRep(e)}>
                                     <div className="form-floating mb-3">
                                         <input type="text" className="form-control" id="supplierName" value={editSupplier.supplierName} onChange={(e) => handleEdit(e.target.id, e.target.value)} placeholder="TS Company"/>
                                         <label htmlFor="supplierName" className="form-label">Supplier Name</label>
