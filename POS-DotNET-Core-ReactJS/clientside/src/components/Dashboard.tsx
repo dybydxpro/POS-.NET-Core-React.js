@@ -378,35 +378,35 @@ export default function Dashboard(){
             </div>
 
             <div className="">
-                <div className="row py-2" style={{height: "450px", margin: "auto"}}>
-                    <div className="col py-3 px-2 mx-2 shadow rounded" style={{maxWidth: "48.3%"}}>
+                <div className="row py-2" style={{maxHeight: "450px", margin: "auto"}}>
+                    <div className="col-sm-6 py-3 px-2 mx-2 shadow rounded" style={{maxWidth: "48.3%"}}>
                         <Bar options={DailyChartOptions} data={DailyChartData} />
                     </div>
-                    <div className="col py-3 px-2 mx-2 shadow rounded" style={{maxWidth: "48.3%"}}>
+                    <div className="col-sm-6 py-3 px-2 mx-2 shadow rounded" style={{maxWidth: "48.3%"}}>
                         <Bar options={MonthlyChartOptions} data={MonthlyChartData} />
                     </div>
                 </div>
 
-                <div className="row py-2" style={{height: "450px", margin: "auto"}}>
-                    <div className="col py-3 px-2 mx-2 shadow rounded" style={{maxWidth: "23.7%"}}>
+                <div className="row py-2" style={{maxHeight: "450px", margin: "auto"}}>
+                    <div className="col-sm-3 py-3 px-2 mx-2 shadow rounded" style={{maxWidth: "23.6%"}}>
                         <Doughnut options={UsersChartOptions} data={UsersChartData} />
                     </div>
-                    <div className="col py-3 px-2 mx-2 shadow rounded" style={{maxWidth: "23.7%"}}>
+                    <div className="col-sm-3 py-3 px-2 mx-2 shadow rounded" style={{maxWidth: "23.6%"}}>
                         <Doughnut options={ItemsChartOptions} data={ItemsChartData} />
                     </div>
-                    <div className="col py-3 px-2 mx-2 shadow rounded" style={{maxWidth: "23.7%"}}>
+                    <div className="col-sm-3 py-3 px-2 mx-2 shadow rounded" style={{maxWidth: "23.6%"}}>
                         <Doughnut options={SuppliersChartOptions} data={SuppliersChartData} />
                     </div>
-                    <div className="col py-3 px-2 mx-2 shadow rounded" style={{maxWidth: "23.7%"}}>
+                    <div className="col-sm-3 py-3 px-2 mx-2 shadow rounded" style={{maxWidth: "23.6%"}}>
                         <Doughnut options={GrnsChartOptions} data={GrnsChartData} />
                     </div>
                 </div>
 
-                <div className="row py-2" style={{height: "450px", margin: "auto"}}>
-                    <div className="col py-3 px-2 mx-2 shadow rounded" style={{maxWidth: "48.3%"}}>
+                <div className="row py-2" style={{maxHeight: "450px", margin: "auto"}}>
+                    <div className="col-sm-6 py-3 px-2 mx-2 shadow rounded" style={{maxWidth: "48.3%"}}>
                         <Line options={DailyBillChartOptions} data={DailyBillChartData} />
                     </div>
-                    <div className="col py-3 px-2 mx-2 shadow rounded" style={{maxWidth: "48.3%"}}>
+                    <div className="col-sm-6 py-3 px-2 mx-2 shadow rounded" style={{maxWidth: "48.3%"}}>
                         <Line options={MonthlyBillChartOptions} data={MonthlyBillChartData} />
                     </div>
                 </div>

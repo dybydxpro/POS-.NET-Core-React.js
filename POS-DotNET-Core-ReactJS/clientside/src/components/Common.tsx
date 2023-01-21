@@ -47,7 +47,7 @@ export default function Common(){
                         <div className="col-2" style={{backgroundColor: "#4d646f", height: "100vh"}}>
                             <div className="d-flex flex-column flex-shrink-0 p-3 text-light" style={{minHeight: "100vh", backgroundColor: "#4d646f"}}>
                                 <a href="/system" className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none  text-center">
-                                    <span className="fs-4 text-light">POS System</span>
+                                    <span className="fs-4 text-light">POS.Auxi</span>
                                 </a>
                                 <hr/>
                                 <ul className="nav nav-pills flex-column mb-auto mx-3">

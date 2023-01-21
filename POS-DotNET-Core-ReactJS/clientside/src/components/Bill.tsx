@@ -85,9 +85,9 @@ export default function Bill(){
     /* Pagination */
     const indexOfLastRecord = Number(currentPage * recordsPerPage);
     const indexOfFirstRecord = Number(indexOfLastRecord - recordsPerPage);
-    const numberOfPages = Math.ceil(data.length / recordsPerPage);
+    const numberOfPages = Math.ceil(allBillData.length / recordsPerPage);
     const pageNumbers  = [...Array.from(Array(numberOfPages+1).keys())].slice(1); 
-    const currentPosts = data.slice(indexOfFirstRecord, indexOfLastRecord);
+    const currentPosts = allBillData.slice(indexOfFirstRecord, indexOfLastRecord);
     
     function nextPage(){
             if(currentPage !== numberOfPages){
@@ -299,6 +299,18 @@ export default function Bill(){
             console.log(data);
             setBill(data);
             printBillRealTime(data);
+        }).catch(({response})=>{
+            responseManage(response);
+            console.log(response);
+            alert(response);
+        })
+    }
+
+    function fetchBillDataForView(id: number){
+        Services.PrintBill(id)
+        .then(({data}) =>{
+            console.log(data);
+            setBill(data);
         }).catch(({response})=>{
             responseManage(response);
             console.log(response);
@@ -527,15 +539,15 @@ export default function Bill(){
                                         </thead>
                                         <tbody>
                                             {
-                                                allBillData.map((dts: any, index) =>
+                                                currentPosts.map((dts: any, index) =>
                                                     <tr className="" key={index + 1}>
-                                                        <td className="text-center">{index + 1}</td>
+                                                        <td className="text-center">{index+((currentPage-1)*recordsPerPage)+1}</td>
                                                         <td className="text-center">{dts.billNo}</td>
                                                         <td className="text-center">{(dts.timescape).substring(0, 10)+ " " +(dts.timescape).substring(11, 19)}</td>
                                                         <td className="text-center">{dts.itemCount}</td>
                                                         <td className="text-end">{parseFloat(dts.billPrice).toFixed(2)}</td>
                                                         <td className="text-center">
-                                                            <button className="btn btnPrimaryS mx-2" onClick={() => {OneBillModelHandleShow(); fetchBillData(Number(dts.billNo));}}>
+                                                            <button className="btn btnPrimaryS mx-2" onClick={() => {OneBillModelHandleShow(); fetchBillDataForView(Number(dts.billNo));}}>
                                                                 <i className="bi bi-clipboard2-data"></i>&nbsp; View
                                                             </button>
                                                             <Modal show={oneBill} onHide={OneBillModelHandleClose}  fullscreen={true}>
@@ -625,15 +637,56 @@ export default function Bill(){
                                                                 </Modal.Footer>
                                                             </Modal>
                                                         </td>
-                                                    </tr>)}
-                                                </tbody>
-                                            </table>
+                                                    </tr>
+                                                )
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                    <div>
+                                        <div className="d-flex justify-content-between">
+                                            <div className="d-flex" style={{ minWidth: "300px"}}>
+                                                <label className="form-label mt-3" htmlFor="noOfRows">No of Rows:</label>
+                                                <select className="form-select mx-3" id="noOfRows" onChange={(e) => setRecordsPerPage(Number(e.target.value))} style={{ maxWidth: "100px"}}>
+                                                    <option defaultValue="5">5</option>
+                                                    <option value="10">10</option>
+                                                    <option value="25">25</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+                                                    <option value="200">200</option>
+                                                    <option value="500">500</option>
+                                                    <option value="1000">1000</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <nav aria-label="Page navigation example">
+                                                    <ul className="pagination">
+                                                        <li className="page-item" onClick={() => prevPage()}>
+                                                            <div className="page-link txtPrimary" aria-label="Previous">
+                                                                <span aria-hidden="true">&laquo;</span>
+                                                            </div>
+                                                        </li>
+                                                        {
+                                                            pageNumbers.map((pg) => 
+                                                                <li className="page-item" key={pg}><div className={currentPage==pg? "page-link btnPagination": "page-link txtPrimary"} onClick={() => setCurrentPage(pg)}>{pg}</div></li>
+                                                            )
+                                                        }
+                                                        <li className="page-item" onClick={() => nextPage()}>
+                                                            <div className="page-link txtPrimary" aria-label="Next">
+                                                                <span aria-hidden="true">&raquo;</span>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </nav>
+                                            </div>
                                         </div>
                                     </div>
-                                </Modal.Body>
-                                <Modal.Footer>
-                                    <Button variant="secondary" onClick={AllBillModelHandleClose}>Close</Button>
-                                </Modal.Footer>
+                                </div>
+                            </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={AllBillModelHandleClose}>Close</Button>
+                        </Modal.Footer>
                     </Modal>
                             {/*<Modal show={allBill} onHide={AllBillModelHandleClose}  fullscreen={true}>
                                 <Modal.Header closeButton>
@@ -711,13 +764,13 @@ export default function Bill(){
                             </table>
    
                             <div className="d-flex justify-content-end mx-2">
-                                {ppbtn===0 &&
-                                    <button className="btn py-3 px-4" onClick={() => {ProcessBill(); /*setTimeout(() => {setPpbtn(1);}, 5000);*/  }} style={{ backgroundColor: "#337AB7", color: "white", fontSize: "24px" }}><i className="bi bi-arrow-repeat"></i>&nbsp;Process Bill</button>
+                                {/* {ppbtn===0 &&
+                                    <button className="btn py-3 px-4" onClick={() => {ProcessBill(); }} style={{ backgroundColor: "#337AB7", color: "white", fontSize: "24px" }}><i className="bi bi-arrow-repeat"></i>&nbsp;Process Bill</button>
                                 }
                                 {ppbtn===1 &&
                                     <button className="btn py-3 px-4" onClick={() => printBill()} style={{ backgroundColor: "#337AB7", color: "white", fontSize: "24px" }}><i className="bi bi-receipt"></i>&nbsp;Print</button>
-                                }
-                                    {/* <button className="btn py-3 px-4" onClick={() => {ProcessBill(); setTimeout(() => {setPpbtn(1);}, 5000);}} style={{ backgroundColor: "#337AB7", color: "white", fontSize: "24px" }}><i className="bi bi-arrow-repeat"></i>&nbsp;Process Bill</button> */}
+                                } */}
+                                    <button className="btn py-3 px-4" onClick={() => {ProcessBill(); }} style={{ backgroundColor: "#337AB7", color: "white", fontSize: "24px" }}><i className="bi bi-arrow-repeat"></i>&nbsp;Process Bill</button>
                             </div>
                         </div>
                     </div>
