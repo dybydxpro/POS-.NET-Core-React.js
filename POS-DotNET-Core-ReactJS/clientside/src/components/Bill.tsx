@@ -509,9 +509,9 @@ export default function Bill(){
                         </Modal.Header>
                         <Modal.Body>
                             <div>
-                                <div className="d-flex justify-content-center">
+                                {/* <div className="d-flex justify-content-center">
                                     <p className="text-secondary" style={{fontSize: "36px"}}><strong>List Of Bill</strong></p>
-                                </div>
+                                </div> */}
 
                                 <div className="px-5">
                                     <div className="d-flex justify-content-between mb-3">

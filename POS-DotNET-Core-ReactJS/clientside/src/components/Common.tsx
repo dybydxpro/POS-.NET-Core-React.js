@@ -11,6 +11,7 @@ import Supplier from "./Supplier";
 import GRN from "./GRN";
 import Bill from "./Bill";
 import Return from "./Return";
+import BillFullScrean from "./BillFullScrean";
 
 export default function Common(){
     const navigate = useNavigate();
@@ -185,7 +186,7 @@ export default function Common(){
             }
             {
                 shift == 10 && <>
-                    <h1>Hi</h1>
+                    <BillFullScrean/>
                     <button type="button" className="btn text-light" style={{position:"fixed", width:"60px", height:"60px", bottom:"40px", right:"40px", borderRadius: "50%", backgroundColor: "#648FA4", fontSize:"28px"}} onClick={() => setShift(6)}>
                         <i className="bi bi-arrows-angle-contract"></i>
                     </button>
