@@ -459,7 +459,7 @@ export default function Bill(){
     return(
         <>
             <div className="row">
-                <p className="m-4" style={{ color: "#4d646f", fontSize: "18px", fontWeight: "600" }}>Bills</p>
+                <p className="m-4" style={{ color: "#03053B", fontSize: "18px", fontWeight: "600" }}>Bills</p>
             </div>
 
             <div className="row mx-3">
@@ -500,7 +500,7 @@ export default function Bill(){
                 </div>
 
                 <div className="row">
-                    <button type="button" className="btn text-light" onClick={() => AllBillModelHandleShow()} style={{position:"fixed", width:"60px", height:"60px", bottom:"110px", right:"40px", borderRadius: "50%", backgroundColor: "#648FA4", fontSize:"28px"}}>
+                    <button type="button" className="btn text-light btnFloating" onClick={() => AllBillModelHandleShow()} style={{position:"fixed", width:"60px", height:"60px", bottom:"110px", right:"40px", borderRadius: "50%"}}>
                         <i className="bi bi-clipboard2-pulse"></i>
                     </button>
                     <Modal show={allBill} onHide={AllBillModelHandleClose} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>

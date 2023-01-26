@@ -58,6 +58,13 @@ export default function BillFullScrean(){
         "billPrice": 0
     }]);
 
+    const [recordsPerPage, setRecordsPerPage] = useState(5);
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const refItemID = useRef<HTMLSelectElement>(null);
+    const refStockID = useRef<HTMLSelectElement>(null);
+    const refCartQty = useRef<HTMLInputElement>(null);
+
     useEffect(() => {
         if(!(Number(sessionStorage.getItem("userID")) > 0)){
             window.location.replace("/login");
@@ -71,6 +78,41 @@ export default function BillFullScrean(){
         fetchItem();
         fetchAllBill();
     },[]);
+
+    /* Pagination */
+    const indexOfLastRecord = Number(currentPage * recordsPerPage);
+    const indexOfFirstRecord = Number(indexOfLastRecord - recordsPerPage);
+    const numberOfPages = Math.ceil(item.length / recordsPerPage);
+    const pageNumbers  = [...Array.from(Array(numberOfPages+1).keys())].slice(1); 
+    const currentPosts = item.slice(indexOfFirstRecord, indexOfLastRecord);
+        
+    function nextPage(){
+        if(currentPage !== numberOfPages){
+            setCurrentPage(currentPage + 1);
+        }
+    }
+        
+    function prevPage(){
+        if(currentPage !== 1){
+            setCurrentPage(currentPage - 1);
+        }
+    }
+    /* Pagination */
+
+    function keyRep(e: any){
+        if(e.key === 'Enter'){
+            if(e.target.id === 'itemID'){
+                refStockID.current?.focus();
+            }
+            else if(e.target.id === 'stockID'){
+                refCartQty.current?.focus();
+            }
+            else if(e.target.id === 'cartQty'){
+                addnewItem();
+                refStockID.current?.focus();
+            }
+        }
+    }
 
     function fetchAllBill(){
         Services.FetchAllBills().then(({data})=>{
@@ -97,13 +139,12 @@ export default function BillFullScrean(){
 
     function SearchText(value: string){
         const search = value;
-        console.log(search);
         if(search === ""){
-            fetchAllBill();
+            fetchItem();
         }
         else{
-            Services.FetchSearchBills(search).then(({data})=>{
-                setAllBillData(data)
+            Services.GetSearchItems(search).then(({data})=>{
+                setItem(data)
             })
             .catch(({response})=>{
                 responseManage(response);
@@ -413,13 +454,132 @@ export default function BillFullScrean(){
 
     return(
         <>
-            <div style={{ backgroundColor:"#4D646F", maxHeight: "100vh", minHeight: "100vh", padding: "15px", overflowY: "hidden" }}>
+            <div style={{ backgroundColor:"#03053B", maxHeight: "100vh", minHeight: "100vh", padding: "15px", overflowY: "hidden" }}>
                 <div className="shadow-sm px-3 mb-5 rounded" style={{ maxHeight: "96vh", minHeight: "96vh", backgroundColor: "#eeeeee" }}>
                     <div className="row py-3">
                         <div className="col-sm-9">
                             <div className="shadow-sm pl-3 pr-2 mb-5 rounded" style={{ maxHeight: "93vh", minHeight: "93vh", backgroundColor: "#ffffff" }}>
                                 <div className="px-2">
-                                    <h1>Hi</h1>
+                                    <div className="row">
+                                        <div className="row">
+                                            <p className="m-4" style={{ color: "#03053B", fontSize: "18px", fontWeight: "600" }}>Bills</p>
+                                        </div>
+
+                                        <div className="row mx-3" id="form" onKeyPress={(e)=> keyRep(e)}>
+                                            <div className="col">
+                                                <div className="form-floating mb-4 shadow">
+                                                    <select className="form-select" id="itemID" value={addNew.itemID} onChange={(e) => {handle(e.target.id, e.target.value); fetchStock(Number(e.target.value));}} placeholder="TXT" ref={refItemID}>
+                                                        <option defaultValue="0"> </option>
+                                                            {item.map((items) =>
+                                                                <option key={items.itemID} value={items.itemID}>{items.itemName}</option>
+                                                            )}
+                                                    </select>
+                                                    <label className="form-label" htmlFor="itemID">Item</label>
+                                                </div>
+                                            </div>
+                                            <div className="col">
+                                                <div className="form-floating mb-4 shadow">
+                                                    <select className="form-select" id="stockID" value={addNew.stockID} onChange={(e) => handle(e.target.id, e.target.value)} placeholder="TXT" ref={refStockID}>
+                                                        <option value="0"> </option>
+                                                        {stock.map((stocks) =>
+                                                            <option key={stocks.stockID} value={stocks.stockID}>{Number(stocks.price).toFixed(2)}</option>
+                                                        )}
+                                                    </select>
+                                                    <label className="form-label" htmlFor="stockID">Stock (LKR.)</label>
+                                                </div>
+                                            </div>
+                                            <div className="col">
+                                                <div className="form-floating mb-4 shadow">
+                                                    <input type="number" id="cartQty" className="form-control" value={addNew.cartQty} onChange={(e) => handle(e.target.id, e.target.value)} placeholder="TXT" min={1} ref={refCartQty}/>
+                                                    <label className="form-label" htmlFor="cartQty">Qty</label>
+                                                </div>
+                                            </div>
+                                            <div className="col">
+                                                <div className="align-middle">
+                                                    <button className="btn btnPrimaryS btn-lg shadow" onClick={() => addnewItem()} style={{height: "57px"}}><i className="bi bi-save"></i>&nbsp; Add to Bill</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="px-4"><hr/></div>
+                                        
+                                        <div className="px-4">
+                                            <div className="my-2">
+                                                <div>
+                                                    <div className="form-floating" style={{ minWidth: "300px", maxWidth: "300px" }}>
+                                                        <input className="form-control" type="text" id="txtSearch" placeholder="Search" onChange={(e) => SearchText(e.target.value)}/>
+                                                        <label htmlFor="txtSearch" className="form-label"><i className="bi bi-search text-secondary" /></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="my-2">
+                                                <table className="table">
+                                                    <thead className="theadStyle">
+                                                        <tr>
+                                                            <th scope="col" className="text-light text-center">#</th>
+                                                            <th scope="col" className="text-light text-center">Item ID</th>
+                                                            <th scope="col" className="text-light text-center">Item Name</th>
+                                                            <th scope="col" className="text-light text-center">Unit</th>
+                                                            <th scope="col" className="text-light text-center" style={{ width: "220px" }}>Options</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {
+                                                            currentPosts.map((dataset, index) =>
+                                                                <tr key={dataset.itemID}>
+                                                                    <td className="text-center">{index+((currentPage-1)*recordsPerPage)+1}</td>
+                                                                    <td className="text-center">{dataset.itemID}</td>
+                                                                    <td>{dataset.itemName}</td>
+                                                                    <td className="text-center">{dataset.unit}</td>
+                                                                    <td className="text-center">
+                                                                        <button type="button" className="btn btnPrimaryS mx-2" onClick={() => {handle("itemID", String(dataset.itemID)); fetchStock(Number(dataset.itemID));}}><i className="bi bi-box-arrow-in-right"></i>&nbsp; Add to Bucket</button>
+                                                                    </td>
+                                                                </tr>
+                                                            )
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                                <div>
+                                                    <div className="d-flex justify-content-between">
+                                                        <div className="d-flex" style={{ minWidth: "300px"}}>
+                                                            <label className="form-label mt-3" htmlFor="noOfRows">No of Rows:</label>
+                                                            <select className="form-select mx-3" id="noOfRows" onChange={(e) => setRecordsPerPage(Number(e.target.value))} style={{ maxWidth: "100px"}}>
+                                                                <option defaultValue="5">5</option>
+                                                                <option value="10">10</option>
+                                                                <option value="25">25</option>
+                                                                <option value="50">50</option>
+                                                                <option value="100">100</option>
+                                                                <option value="200">200</option>
+                                                                <option value="500">500</option>
+                                                                <option value="1000">1000</option>
+                                                            </select>
+                                                        </div>
+                                                        <div>
+                                                            <nav aria-label="Page navigation example">
+                                                                <ul className="pagination">
+                                                                    <li className="page-item" onClick={() => prevPage()}>
+                                                                        <div className="page-link txtPrimary" aria-label="Previous">
+                                                                            <span aria-hidden="true">&laquo;</span>
+                                                                        </div>
+                                                                    </li>
+                                                                    {
+                                                                        pageNumbers.map((pg) => 
+                                                                            <li className="page-item" key={pg}><div className={currentPage==pg? "page-link btnPagination": "page-link txtPrimary"} onClick={() => setCurrentPage(pg)}>{pg}</div></li>
+                                                                        )
+                                                                    }
+                                                                    <li className="page-item" onClick={() => nextPage()}>
+                                                                        <div className="page-link txtPrimary" aria-label="Next">
+                                                                            <span aria-hidden="true">&raquo;</span>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </nav>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -428,7 +588,7 @@ export default function BillFullScrean(){
                                 <div className="p-2">
                                     <div>
                                         <ul className="list-group">
-                                            <li className="list-group-item"style={{ backgroundColor:"#4D646F" }}>
+                                            <li className="list-group-item"style={{ backgroundColor:"#03053B" }}>
                                                 <div className="d-flex justify-content-center">
                                                     <p className="h3 text-light pt-2">Shopping List</p>
                                                 </div>
@@ -441,7 +601,10 @@ export default function BillFullScrean(){
                                                 data.map((dt: any, index: any) =>
                                                 <li className="list-group-item d-flex justify-content-between align-items-start" key={index}>
                                                     <div className="ms-2 me-auto">
-                                                        <div className="fw-bold">{dt.itemName}</div>
+                                                        <div className="d-flex justify-content-between">
+                                                            <div className="fw-bold">{dt.itemName}</div>
+                                                            <span className="badge bg-danger rounded-pill p-2" onClick={() => deleteItem(dt.cartID)}><i className="bi bi-x-lg"></i></span>
+                                                        </div>
                                                         <div className="row" style={{ minWidth: "20vw" }}>
                                                             <div className="col-sm-2">{dt.unit}</div>
                                                             <div className="col-sm-2 text-end">{dt.cartQty}</div>
@@ -456,7 +619,7 @@ export default function BillFullScrean(){
 
                                         <div>
                                             <ul className="list-group">
-                                                <li className="list-group-item"style={{ backgroundColor:"#4D646F" }}>
+                                                <li className="list-group-item"style={{ backgroundColor:"#03053B" }}>
                                                     <div className="row">
                                                         <div className="col-sm-8">
                                                             <div className="d-flex justify-content-center">

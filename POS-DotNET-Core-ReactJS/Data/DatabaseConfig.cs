@@ -7,7 +7,7 @@ namespace POS_DotNET_Core_ReactJS.Data
     {
         public string Connection()
         {
-            return "Data Source=THARINDUD\\SQLEXPRESS;Database=POSSystem_v2;Trusted_Connection=True;MultipleActiveResultSets=True;Integrated Security=True;";
+            return "Data Source=LAPTOP-THARINDU\\SQLEXPRESS;Database=POSSystem_v2x;Trusted_Connection=True;MultipleActiveResultSets=True;Integrated Security=True;";
             //return "Data Source=THARINDUD\\SQLEXPRESS;Database=POSSystem_v2;Trusted_Connection=True;MultipleActiveResultSets=True;Integrated Security=True;";
             //return "Data Source=LAPTOP-THARINDU\SQLEXPRESS;Database=POSSystem_v2;Trusted_Connection=True;MultipleActiveResultSets=True;Integrated Security=True;";
             //return Convert.ToString(_configuration.GetValue<string>("ConnectionStrings:DefaultConnecion"));

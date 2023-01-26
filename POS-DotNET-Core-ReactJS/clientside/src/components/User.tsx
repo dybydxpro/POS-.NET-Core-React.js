@@ -426,7 +426,7 @@ export default function User(){
     return(
         <>
             <div className="row">
-                <p className="m-4" style={{ color: "#4d646f", fontSize: "18px", fontWeight: "600" }}>Users</p>
+                <p className="m-4" style={{ color: "#03053B", fontSize: "18px", fontWeight: "600" }}>Users</p>
             </div>
 
             <div className="row mx-3">

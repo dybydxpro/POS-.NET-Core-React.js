@@ -45,10 +45,10 @@ export default function Common(){
             {
                 shift != 10 && <div className="container-fluid" style={{ overflow: "hidden" }}>
                     <div className="row">
-                        <div className="col-2" style={{backgroundColor: "#4d646f", height: "100vh"}}>
-                            <div className="d-flex flex-column flex-shrink-0 p-3 text-light" style={{minHeight: "100vh", backgroundColor: "#4d646f"}}>
+                        <div className="col-2" style={{backgroundColor: "#03053B", height: "100vh"}}>
+                            <div className="d-flex flex-column flex-shrink-0 p-3 text-light" style={{minHeight: "100vh", backgroundColor: "#03053B"}}>
                                 <a href="/system" className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none  text-center">
-                                    <span className="fs-4 text-light">POS.Auxi</span>
+                                    <span className="fs-4 text-light">POS System</span>
                                 </a>
                                 <hr/>
                                 <ul className="nav nav-pills flex-column mb-auto mx-3">
@@ -135,7 +135,7 @@ export default function Common(){
                             </div>
                         </div>
                         <div className="col" style={{ backgroundColor: "#f5f5f5" }}>
-                            <div className="row" style={{ backgroundColor: "#4d646f" }}>
+                            <div className="row" style={{ backgroundColor: "#03053B" }}>
                                 <div className="d-flex justify-content-end p-3">
                                     <div style={{ minWidth: "250px", color: "white", fontSize: "18px"}}>
                                         <div className="d-flex">
@@ -169,7 +169,7 @@ export default function Common(){
                                         {
                                             shift == 6 && <>
                                                 <Bill/>
-                                                <button type="button" className="btn text-light" style={{position:"fixed", width:"60px", height:"60px", bottom:"40px", right:"40px", borderRadius: "50%", backgroundColor: "#648FA4", fontSize:"28px"}} onClick={() => setShift(10)}>
+                                                <button type="button" className="btn text-light btnFloating" style={{position:"fixed", width:"60px", height:"60px", bottom:"40px", right:"40px", borderRadius: "50%", fontSize:"28px"}} onClick={() => setShift(10)}>
                                                     <i className="bi bi-arrows-angle-expand"></i>
                                                 </button>
                                             </>
@@ -187,7 +187,7 @@ export default function Common(){
             {
                 shift == 10 && <>
                     <BillFullScrean/>
-                    <button type="button" className="btn text-light" style={{position:"fixed", width:"60px", height:"60px", bottom:"40px", right:"40px", borderRadius: "50%", backgroundColor: "#648FA4", fontSize:"28px"}} onClick={() => setShift(6)}>
+                    <button type="button" className="btn text-light btnFloating" style={{position:"fixed", width:"60px", height:"60px", bottom:"40px", right:"40px", borderRadius: "50%", backgroundColor: "#648FA4", fontSize:"28px"}} onClick={() => setShift(6)}>
                         <i className="bi bi-arrows-angle-contract"></i>
                     </button>
                 </>
