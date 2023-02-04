@@ -1,6 +1,5 @@
 ﻿using POS_DotNET_Core_ReactJS.Data;
 using POS_DotNET_Core_ReactJS.Models;
-using POS_DotNET_Core_ReactJS.Models.DTO;
 using POS_DotNET_Core_ReactJS.Repository.Interfaces;
 using System.Data;
 using System.Data.SqlClient;
@@ -14,7 +13,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<ReturnItemGetDTO> rets = new List<ReturnItemGetDTO>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetAllReturns]", con))
                     {
@@ -55,7 +54,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<ReturnItemGetDTO> rets = new List<ReturnItemGetDTO>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetOneReturn]", con))
                     {
@@ -136,7 +135,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<ReturnItemGetDTO> rets = new List<ReturnItemGetDTO>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetSearchReturns]", con))
                     {
@@ -177,7 +176,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_SetReturn]", con))
                     {
@@ -212,7 +211,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_UpdateReturn]", con))
                     {
@@ -248,7 +247,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_DeleteReturns]", con))
                     {

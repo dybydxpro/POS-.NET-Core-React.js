@@ -9,6 +9,16 @@ DROP DATABASE POSSystem
 
 --- Create Tables
 
+--CREATE TABLE Clients
+--(
+--    ClientID INTEGER IDENTITY PRIMARY KEY,
+--    ClientName VARCHAR(225),
+--	  ClientNIC VARCHAR(225) NULL,
+--	  ClientCompany VARCHAR(255) NULL,
+--    ClientAddress VARCHAR(255),
+--    ClientStatus BIT
+--)
+
 CREATE TABLE Users
 (
     UserID INTEGER IDENTITY PRIMARY KEY,
@@ -16,7 +26,7 @@ CREATE TABLE Users
     NIC VARCHAR(225) UNIQUE,
     Address VARCHAR(255),
     UserName VARCHAR(255) UNIQUE,
-    Password TEXT,
+    Password VARCHAR(255),
     Type VARCHAR(255) CHECK (Type = 'Admin' OR Type = 'Cashier'),
     Status BIT
 )
@@ -128,6 +138,7 @@ CREATE TABLE ReturnItem
 
 --- Drop Table
 
+--DROP TABLE Clients
 --DROP TABLE Users
 --DROP TABLE Item
 --DROP TABLE Stock
@@ -157,6 +168,7 @@ UPDATE ReturnItem SET ReturnerID = 1 WHERE ReturnID = 1
 
 
 --- Selection
+SELECT * FROM Clients;
 SELECT * FROM Users;
 SELECT * FROM Item;
 SELECT * FROM Stock;
@@ -168,12 +180,95 @@ SELECT * FROM Sale;
 SELECT * FROM ReturnItem;
 
 --- Stored Procidures
+---- Client SPs
+--CREATE PROCEDURE sp_GetAllClients
+--AS
+--BEGIN
+--	SELECT * 
+--	FROM Clients;
+--END;
+
+--EXEC sp_GetAllClients;
+
+--CREATE PROCEDURE sp_GetClientByID(
+--@Id AS INTEGER
+--)
+--AS
+--BEGIN
+--	SELECT * 
+--	FROM Clients
+--	WHERE ClientID = @Id;
+--END;
+
+--EXEC sp_GetClientByID @Id = 1;
+
+--CREATE PROCEDURE sp_GetSearchClients(
+--@Search AS VARCHAR(255)
+--)
+--AS
+--BEGIN
+--	SELECT * 
+--	FROM Clients
+--	WHERE ClientName LIKE @Search OR ClientNIC LIKE @Search OR ClientCompany LIKE @Search OR ClientAddress LIKE @Search;
+--END;
+
+--EXEC sp_GetSearchClients @Search = "Sachin";
+
+--CREATE PROCEDURE sp_CreateClients(
+--@ClientName AS VARCHAR(225),
+--@ClientNIC AS VARCHAR(225),
+--@ClientCompany AS VARCHAR(255),
+--@ClientAddress AS VARCHAR(255)
+--)
+--AS
+--BEGIN
+--	INSERT INTO Clients(ClientName, ClientNIC, ClientCompany, ClientAddress, ClientStatus) 
+--	VALUES (@ClientName, @ClientNIC, @ClientCompany, @ClientAddress, 'False');
+--END;
+
+--EXEC sp_CreateClients @ClientName = 'Nalinda Gamage', @ClientNIC = '952509902V', @ClientCompany = 'Nalinda Stores', @ClientAddress = 'Galle.';
+
+--CREATE PROCEDURE sp_UpdateClients(
+--@ClientID AS INTEGER,
+--@ClientName AS VARCHAR(225),
+--@ClientNIC AS VARCHAR(225),
+--@ClientCompany AS VARCHAR(255),
+--@ClientAddress AS VARCHAR(255)
+--)
+--AS
+--BEGIN
+--	UPDATE Clients
+--	SET ClientName = @ClientName, ClientNIC = @ClientNIC, ClientCompany = @ClientCompany, ClientAddress = @ClientAddress
+--	WHERE ClientID = @ClientID;
+--END;
+
+--EXEC sp_UpdateClients @ClientID = 1, @ClientName = 'Nalinda Gamage', @ClientNIC = '952509902V', @ClientCompany = 'Gamage Stores', @ClientAddress = 'Galle.';
+
+--CREATE PROCEDURE sp_ActiveDeactiveClient(
+--    @ClientID AS INTEGER)
+--AS
+--BEGIN
+--    DECLARE @AvailableStatus BIT;
+--    SET @AvailableStatus = (SELECT ClientStatus FROM Clients WHERE ClientID = @ClientID);
+
+--    IF @AvailableStatus != 'True'
+--    BEGIN
+--        UPDATE Clients SET ClientStatus = 'True' WHERE ClientID = @ClientID
+--    END
+--    ELSE
+--    BEGIN
+--        UPDATE Clients SET ClientStatus = 'False' WHERE ClientID = @ClientID
+--    END
+--END;
+
+--EXEC sp_ActiveDeactiveClient @ClientID = 1;
+
 ---- User SPs
 CREATE PROCEDURE sp_GetAllUsers
 AS
 BEGIN
-    SELECT UserID, Name, NIC, Address, UserName, Type, Status
-    FROM Users
+    SELECT u.UserID, u.Name, u.NIC, u.Address, u.UserName, u.Type, u.Status
+    FROM Users u;
 END;
 
 EXEC sp_GetAllUsers;
@@ -194,7 +289,7 @@ CREATE PROCEDURE sp_CreateUser(
     @NIC AS VARCHAR(255),
     @Address AS VARCHAR(255),
     @UserName AS VARCHAR(255),
-    @Password AS TEXT,
+    @Password AS VARCHAR(255),
     @Type AS VARCHAR(255))
 AS
 BEGIN
@@ -242,39 +337,43 @@ EXEC sp_ActiveDeactiveUser @UserID = 1;
 
 CREATE PROCEDURE sp_CheckPassword(
     @UserName AS VARCHAR(255),
-    @Password AS VARCHAR(255))
+    @Password AS VARCHAR(255)
+)
 AS
 BEGIN
-    SELECT * FROM Users WHERE UserName LIKE @UserName AND Password LIKE @Password
+    SELECT * FROM Users WHERE UserName LIKE @UserName AND Password LIKE @Password;
 END;
 
 EXEC sp_CheckPassword @UserName = 'TharinduD', @Password = '125';
 
 CREATE PROCEDURE sp_ChangePassword(
     @UserID AS INTEGER,
-    @Password AS VARCHAR(255))
+    @Password AS VARCHAR(255)
+)
 AS
 BEGIN
-    UPDATE Users SET Password = @Password WHERE UserID = @UserID
+    UPDATE Users SET Password = @Password WHERE UserID = @UserID;
 END;
 
 EXEC sp_ChangePassword @UserID = 1, @Password = '125';
 
 CREATE PROCEDURE sp_Login(
     @UserName AS VARCHAR(255),
-    @Password AS VARCHAR(255))
+	@Password AS VARCHAR(255)
+)
 AS
 BEGIN
     SELECT UserID, UserName, Type
     FROM Users
-    WHERE UserName LIKE @UserName AND Password LIKE @Password
+    WHERE UserName LIKE @UserName AND Password LIKE @Password;
 END;
 
-EXEC sp_Login @UserName = 'TharinduD', @Password = '125';
+EXEC sp_Login @UserName = 'TharinduD' @Password = '125';
 
-CREATE PROCEDURE sp_ResetPassword(
+ALTER PROCEDURE sp_ResetPassword(
     @UserID AS INTEGER,
-    @Password AS VARCHAR(255))
+    @Password AS VARCHAR(255)
+)
 AS
 BEGIN
     UPDATE Users SET Password = @Password WHERE UserID = @UserID
