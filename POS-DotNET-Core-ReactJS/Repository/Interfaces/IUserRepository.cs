@@ -1,5 +1,4 @@
 ﻿using POS_DotNET_Core_ReactJS.Models;
-using POS_DotNET_Core_ReactJS.Models.DTO;
 
 namespace POS_DotNET_Core_ReactJS.Repository.Interfaces
 {
@@ -15,7 +14,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Interfaces
 
         bool CheckPassword(string un, string pw);
 
-        bool AddUsers(User users);
+        bool AddUsers(UserAdd users);
 
         bool ActiveDeactiveUser(int id);
 

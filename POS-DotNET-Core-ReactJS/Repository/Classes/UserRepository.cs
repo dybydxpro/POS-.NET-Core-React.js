@@ -1,9 +1,11 @@
-﻿using POS_DotNET_Core_ReactJS.Data;
+﻿using Microsoft.IdentityModel.Tokens;
+using POS_DotNET_Core_ReactJS.Data;
 using POS_DotNET_Core_ReactJS.Models;
-using POS_DotNET_Core_ReactJS.Models.DTO;
 using POS_DotNET_Core_ReactJS.Repository.Interfaces;
 using System.Data;
 using System.Data.SqlClient;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -17,7 +19,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             try
             {
                 string query = "EXEC [dbo].[sp_GetAllUsers]";
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand(query))
                     {
@@ -34,7 +36,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
                                 NIC = Convert.ToString(dr[2]),
                                 Address = Convert.ToString(dr[3]),
                                 UserName = Convert.ToString(dr[4]),
-                                Password = "",
+                                Password = Convert.ToString(""),
                                 Type = Convert.ToString(dr[5]),
                                 Status = Convert.ToBoolean(dr[6])
                             });
@@ -42,20 +44,20 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
                         return list;
                     }
                 }
-            }
+        }
             catch(Exception ex)
             {
                 return list;
             }
-            
-        }
+
+}
 
         public List<User> SearchUser(string text)
         {
             List<User> list = new List<User>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("sp_GetSearchUsers", con))
                     {
@@ -96,7 +98,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<UserEdit> list = new List<UserEdit>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("sp_GetByOne", con))
                     {
@@ -158,7 +160,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("sp_EditUser", con))
                     {
@@ -193,9 +195,10 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
         public bool CheckPassword(string un, string pw)
         {
             List<User> ur = new List<User>();
+            pw = Md5(pw);
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("sp_CheckPassword", con))
                     {
@@ -216,7 +219,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
                                 NIC = Convert.ToString(dr[2]),
                                 Address = Convert.ToString(dr[3]),
                                 UserName = Convert.ToString(dr[4]),
-                                Password = "",
+                                Password = Convert.ToString(""),
                                 Type = Convert.ToString(dr[6]),
                                 Status = Convert.ToBoolean(dr[7])
                             });
@@ -239,12 +242,12 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             }            
         }
 
-        public bool AddUsers(User users)
+        public bool AddUsers(UserAdd users)
         {
+            users.Password = Md5(users.Password);
             try
-            {
-                users.Password = Md5(users.Password);
-                using (SqlConnection con = new SqlConnection(Connection))
+            {   
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("sp_CreateUser", con))
                     {
@@ -270,18 +273,18 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
                         }
                     }
                 }
-            }
+        }
             catch(Exception ex)
             {
                 return false;
             }
-        }
+}
 
         public bool ActiveDeactiveUser(int id)
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("sp_ActiveDeactiveUser", con))
                     {
@@ -311,10 +314,10 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
         public UserAccountDTO Login(string un, string pw)
         {
             pw = Md5(pw);
-            List<UserAccountDTO> ur = new List<UserAccountDTO>();
+            List<UserAccountHashDTO> ur = new List<UserAccountHashDTO>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("sp_Login", con))
                     {
@@ -328,19 +331,22 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
                         adp.Fill(dt);
                         foreach (DataRow dr in dt.Rows)
                         {
-                            ur.Add(new UserAccountDTO
+                            ur.Add(new UserAccountHashDTO
                             {
                                 UserID = Convert.ToInt32(dr[0]),
                                 UserName = Convert.ToString(dr[1]),
                                 Type = Convert.ToString(dr[2]),
                             });
                         }
+
                         UserAccountDTO uad = new UserAccountDTO();
                         if (ur.Count >= 1)
                         {
+                            
                             uad.UserID = ur[0].UserID;
                             uad.UserName = ur[0].UserName;
                             uad.Type = ur[0].Type;
+                            uad.Token = "";
                             return uad;
                         }
                         else
@@ -348,27 +354,29 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
                             uad.UserID = 0;
                             uad.UserName = "";
                             uad.Type = "";
-                            return uad;
+                            uad.Token = "";
+                        return uad;
                         }
                     }
                 }
-            }
+        }
             catch(Exception ex)
             {
                 UserAccountDTO uad = new UserAccountDTO();
-                uad.UserID = 0;
+        uad.UserID = 0;
                 uad.UserName = "";
                 uad.Type = "";
+                uad.Token = "";
                 return uad;
             }
-        }
+}
 
         public bool ChangePassword(int id, string pw)
         {
             pw = Md5(pw);
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("sp_ResetPassword", con))
                     {
