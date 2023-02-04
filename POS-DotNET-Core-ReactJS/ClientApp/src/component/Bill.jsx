@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { jsPDF } from "jspdf";
 import autoTable from 'jspdf-autotable';
 import Services from "../Services";
-import Common from "../services/common";
 import { Button, Modal } from 'react-bootstrap';
 import canvasImg from '../image/bill.jpg';
 
@@ -65,7 +64,6 @@ export default function Bill(){
             setAllBillData(data)
         })
         .catch(({response})=>{
-            Common.responseManage(response);
             console.log(response);
         })
     }
@@ -77,7 +75,6 @@ export default function Bill(){
             setData(data)
         })
         .catch(({response})=>{
-            Common.responseManage(response);
             console.log(response);
             setData([]);
         })
@@ -94,7 +91,6 @@ export default function Bill(){
                 setAllBillData(data)
             })
             .catch(({response})=>{
-                Common.responseManage(response);
                 console.log(response);
             })
         }
@@ -105,7 +101,6 @@ export default function Bill(){
             setItem(data)
         })
         .catch(({response})=>{
-            Common.responseManage(response);
             console.log(response);
         })
     }
@@ -116,7 +111,6 @@ export default function Bill(){
             console.log(data);
         })
         .catch(({response})=>{
-            Common.responseManage(response);
             console.log(response);
         })
     }
@@ -130,7 +124,6 @@ export default function Bill(){
             fetchBillData(Number(data));
         })
         .catch(({response})=>{
-            Common.responseManage(response);
             console.log(response);
             fetchData();
         })
@@ -243,7 +236,6 @@ export default function Bill(){
             console.log(data);
             setBill(data);
         }).catch(({response})=>{
-            Common.responseManage(response);
             console.log(response);
             alert(response);
         })
@@ -528,41 +520,41 @@ export default function Bill(){
                         </div>
 
                         <div className="container">
-                                <div className="row">
-                                    <div className="col">
-                                        <div className="form-floating mb-4 shadow">
-                                            <select className="form-select" id="itemID" value={addNew.itemID} onChange={(e) => {handle(e); fetchStock(e);}} placeholder="TXT">
-                                                <option value="0" selected> </option>
-                                                {item.map((items) =>
-                                                    <option key={items.itemID} value={items.itemID}>{items.itemName}</option>
-                                                )}
-                                            </select>
-                                            <label className="form-label" htmlFor="itemID">Item</label>
-                                        </div>
+                            <div className="row">
+                                <div className="col">
+                                    <div className="form-floating mb-4 shadow">
+                                        <select className="form-select" id="itemID" value={addNew.itemID} onChange={(e) => {handle(e); fetchStock(e);}} placeholder="TXT">
+                                            <option value="0" selected> </option>
+                                            {item.map((items) =>
+                                                <option key={items.itemID} value={items.itemID}>{items.itemName}</option>
+                                            )}
+                                        </select>
+                                        <label className="form-label" htmlFor="itemID">Item</label>
                                     </div>
-                                    <div className="col">
-                                        <div className="form-floating mb-4 shadow">
-                                            <select className="form-select" id="stockID" value={addNew.stockID} onChange={(e) => handle(e)} placeholder="TXT">
-                                                <option value="0" selected> </option>
-                                                {stock.map((stocks) =>
-                                                    <option key={stocks.stockID} value={stocks.stockID}>{parseFloat(stocks.price).toFixed(2)}</option>
-                                                )}
-                                            </select>
-                                            <label className="form-label" htmlFor="stockID">Stock (LKR.)</label>
-                                        </div>
+                                </div>
+                                <div className="col">
+                                    <div className="form-floating mb-4 shadow">
+                                        <select className="form-select" id="stockID" value={addNew.stockID} onChange={(e) => handle(e)} placeholder="TXT">
+                                            <option value="0" selected> </option>
+                                            {stock.map((stocks) =>
+                                                <option key={stocks.stockID} value={stocks.stockID}>{parseFloat(stocks.price).toFixed(2)}</option>
+                                            )}
+                                        </select>
+                                        <label className="form-label" htmlFor="stockID">Stock (LKR.)</label>
                                     </div>
-                                    <div className="col">
-                                        <div className="form-floating mb-4 shadow">
-                                            <input type="number" id="cartQty" className="form-control" value={addNew.cartQty} onChange={(e) => handle(e)} placeholder="TXT" min={1}/>
-                                            <label className="form-label" htmlFor="cartQty">Qty</label>
-                                        </div>
+                                </div>
+                                <div className="col">
+                                    <div className="form-floating mb-4 shadow">
+                                        <input type="number" id="cartQty" className="form-control" value={addNew.cartQty} onChange={(e) => handle(e)} placeholder="TXT" min={1}/>
+                                        <label className="form-label" htmlFor="cartQty">Qty</label>
                                     </div>
-                                    <div className="col">
-                                        <div className="align-middle">
-                                            <button className="btn btn-primary btn-lg shadow" onClick={() => addnewItem()} style={{height: "57px"}}><i className="bi bi-save"></i>&nbsp; Add to Bill</button>
-                                        </div>
+                                </div>
+                                <div className="col">
+                                    <div className="align-middle">
+                                        <button className="btn btn-primary btn-lg shadow" onClick={() => addnewItem()} style={{height: "57px"}}><i className="bi bi-save"></i>&nbsp; Add to Bill</button>
                                     </div>
-                                </div>                            
+                                </div>
+                            </div>                            
 
                             <div className="mx-2">
                                 <hr />

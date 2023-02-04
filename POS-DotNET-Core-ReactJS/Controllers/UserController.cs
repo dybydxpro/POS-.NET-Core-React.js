@@ -1,25 +1,21 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using POS_DotNET_Core_ReactJS.Data;
 using POS_DotNET_Core_ReactJS.Models;
-using POS_DotNET_Core_ReactJS.Repository.Classes;
+using POS_DotNET_Core_ReactJS.Models.DTO;
 using POS_DotNET_Core_ReactJS.Repository.Interfaces;
 
 namespace POS_DotNET_Core_ReactJS.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
-        private readonly IAuthRepository _authRepository;
 
-        public UserController(IUserRepository userRepository, IAuthRepository authRepository)
+        public UserController(IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            _authRepository = authRepository;
         }
 
         [HttpGet]
@@ -43,7 +39,7 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<User>>> CreateUser(UserAdd user)
+        public async Task<ActionResult<List<User>>> CreateUser(User user)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +87,6 @@ namespace POS_DotNET_Core_ReactJS.Controllers
         }
 
         [HttpPost("Login")]
-        [AllowAnonymous]
         public async Task<ActionResult<List<UserAccountDTO>>> Login(LoginDTO obj)
         {
             if (ModelState.IsValid)
@@ -103,7 +98,6 @@ namespace POS_DotNET_Core_ReactJS.Controllers
                 }
                 else
                 {
-                    data.Token = _authRepository.GenarateToken(data);
                     return Ok(data);
                 }
             }

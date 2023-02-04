@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import Services from '../Services';
+import { useNavigate } from 'react-router-dom';
 import NavBar from "./NavBar";
 
 import dp1 from '../image/profile.png';
 
 export default function Login(){
+    const navigate = useNavigate();
     const [data, setData] = useState({
         "UserName": "",
         "Password": ""
@@ -24,8 +26,7 @@ export default function Login(){
             sessionStorage.setItem('userID', data.userID);
             sessionStorage.setItem('userName', data.userName);
             sessionStorage.setItem('type', data.type);
-            sessionStorage.setItem('token', data.token);
-            window.location.replace("/dashboard");
+            navigate("/dashboard");
         }).catch(({response})=>{
             alert("Email or password wrong!");
             console.log(response);

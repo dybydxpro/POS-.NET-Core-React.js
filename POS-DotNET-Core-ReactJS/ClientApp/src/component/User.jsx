@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 //import { useNavigate } from 'react-router-dom';
 import Services from "../Services";
-import Common from "../services/common";
 import { Button, Modal } from 'react-bootstrap';
 
 import SlideBar from "./SlideBar";
@@ -35,10 +34,6 @@ export default function User(){
         Services.getAllUser().then(({data})=>{
             setData(data)
         })
-        .catch(({response})=>{
-            Common.responseManage(response);
-            console.log(response);
-        })
     }
 
     function SearchText(e){
@@ -49,10 +44,6 @@ export default function User(){
         else{
             Services.SearchUser(search).then(({data})=>{
                 setData(data)
-            })
-            .catch(({response})=>{
-                Common.responseManage(response);
-                console.log(response);
             })
         }
     }
@@ -197,7 +188,6 @@ export default function User(){
                 AddModelHandleClose();
                 setAddNew({});
             }).catch(({response})=>{
-                Common.responseManage(response);
                 console.log(response);
                 alert(response);
             })
@@ -236,7 +226,6 @@ export default function User(){
             console.log(data);
             setEditUser(data);
         }).catch(({response})=>{
-            Common.responseManage(response);
             console.log(response);
             alert(response);
         })     
@@ -274,7 +263,6 @@ export default function User(){
                 fetchData();
                 EditModelHandleClose();
             }).catch(({response})=>{
-                Common.responseManage(response);
                 console.log(response);
                 alert(response);
             })     
@@ -334,7 +322,6 @@ export default function User(){
                     setCp({"userID": 0, "pw": "", "cpw": ""});
                     CpModelHandleClose();
                 }).catch(({response})=>{
-                    Common.responseManage(response);
                     console.log(response);
                     alert(response);
                 })  
@@ -357,7 +344,6 @@ export default function User(){
                 console.log(data);
                 fetchData();
             }).catch(({response})=>{
-                Common.responseManage(response);
                 console.log(response);
                 alert(response);
             }) 
@@ -389,7 +375,7 @@ export default function User(){
                         <div className="d-flex justify-content-end container">
                             <div className="form-floating mb-2">
                                 <input type="text" className="form-control" id="search" placeholder="Search" onChange={(e) => SearchText(e)}/>
-                                <label htmlFor="search"><i className="bi bi-search"></i>&nbsp; Search</label>
+                                <label for="search"><i className="bi bi-search"></i>&nbsp; Search</label>
                             </div>
                         </div>
 

@@ -1,4 +1,5 @@
 ﻿using POS_DotNET_Core_ReactJS.Models;
+using POS_DotNET_Core_ReactJS.Models.DTO;
 
 namespace POS_DotNET_Core_ReactJS.Repository.Interfaces
 {

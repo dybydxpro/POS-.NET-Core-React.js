@@ -11,12 +11,4 @@ namespace POS_DotNET_Core_ReactJS.Models
         [Required]
         public string Unit { get; set; }
     }
-
-    public class ItemAddDTO
-    {
-        [Required]
-        public string ItemName { get; set; }
-        [Required]
-        public string Unit { get; set; }
-    }
 }
