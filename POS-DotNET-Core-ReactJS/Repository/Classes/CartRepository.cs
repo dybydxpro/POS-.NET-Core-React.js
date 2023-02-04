@@ -1,5 +1,6 @@
 ﻿using POS_DotNET_Core_ReactJS.Data;
 using POS_DotNET_Core_ReactJS.Models;
+using POS_DotNET_Core_ReactJS.Models.DTO;
 using POS_DotNET_Core_ReactJS.Repository.Interfaces;
 using System.Data;
 using System.Data.SqlClient;
@@ -13,7 +14,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<CartGetDTO> carts = new List<CartGetDTO>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection()))
+                using (SqlConnection con = new SqlConnection(Connection))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetCart]", con))
                     {
@@ -54,7 +55,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<CartGetDTO> carts = new List<CartGetDTO>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection()))
+                using (SqlConnection con = new SqlConnection(Connection))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetCartById]", con))
                     {
@@ -128,9 +129,9 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
 
         public bool PostCarts(CartAddDTO obj)
         {
-            try
-            {
-                using (SqlConnection con = new SqlConnection(Connection()))
+            //try
+            //{
+                using (SqlConnection con = new SqlConnection(Connection))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_CreateNewCart]", con))
                     {
@@ -153,18 +154,18 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
                         }
                     }
                 }
-            }
-            catch(Exception ex)
-            {
-                return false;
-            }
+            //}
+            //catch(Exception ex)
+            //{
+            //    return false;
+            //}
         }
 
         public bool EditCarts(Cart obj)
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection()))
+                using (SqlConnection con = new SqlConnection(Connection))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_UpdateCart]", con))
                     {
@@ -199,7 +200,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection()))
+                using (SqlConnection con = new SqlConnection(Connection))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_DropCart]", con))
                     {

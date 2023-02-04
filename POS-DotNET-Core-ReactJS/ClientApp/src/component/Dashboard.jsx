@@ -5,7 +5,6 @@ import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, P
 import { Bar, Doughnut, Line } from 'react-chartjs-2';
 //import faker from 'faker';
 import Services from "../Services";
-import Common from "../services/common";
 
 import SlideBar from "./SlideBar";
 
@@ -60,14 +59,13 @@ export default function Dashboard(){
         GRNCount();
         DailyBillCount();
         MonthlyBillCount();
-    }, [sessionStorage.getItem("token")]);
+    }, []);
 
     function DailySale(){
         Services.DailySales().then(({data})=>{
             setDaily(data);
         })
         .catch(({response})=>{
-            Common.responseManage(response);
             console.log(response);
         })
     }
@@ -77,7 +75,6 @@ export default function Dashboard(){
             setMonthly(data);
         })
         .catch(({response})=>{
-            Common.responseManage(response);
             console.log(response);
         })
     }
@@ -87,7 +84,6 @@ export default function Dashboard(){
             setUser(data);
         })
         .catch(({response})=>{
-            Common.responseManage(response);
             console.log(response);
         })
     }
@@ -97,7 +93,6 @@ export default function Dashboard(){
             setItem(Number(data));
         })
         .catch(({response})=>{
-            Common.responseManage(response);
             console.log(response);
         })
     }
@@ -107,7 +102,6 @@ export default function Dashboard(){
             setSupplier(Number(data));
         })
         .catch(({response})=>{
-            Common.responseManage(response);
             console.log(response);
         })
     }
@@ -117,7 +111,6 @@ export default function Dashboard(){
             setGrn(Number(data));
         })
         .catch(({response})=>{
-            Common.responseManage(response);
             console.log(response);
         })
     }
@@ -127,7 +120,6 @@ export default function Dashboard(){
             setDailyBill(data);
         })
         .catch(({response})=>{
-            Common.responseManage(response);
             console.log(response);
         })
     }
@@ -137,7 +129,6 @@ export default function Dashboard(){
             setMonthlyBill(data);
         })
         .catch(({response})=>{
-            Common.responseManage(response);
             console.log(response);
         })
     }

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Services from "../Services";
-import Common from "../services/common";
 import { Button, Modal } from 'react-bootstrap';
 
 import SlideBar from "./SlideBar";
@@ -45,10 +44,6 @@ export default function Return(){
         Services.GetAllReturns().then(({data})=>{
             setData(data)
         })
-        .catch(({response})=>{
-            Common.responseManage(response);
-            console.log(response);
-        })
     }
 
     function fetchItem(){
@@ -56,7 +51,6 @@ export default function Return(){
             setItem(data)
         })
         .catch(({response})=>{
-            Common.responseManage(response);
             console.log(response);
         })
     }
@@ -67,7 +61,6 @@ export default function Return(){
             console.log(data);
         })
         .catch(({response})=>{
-            Common.responseManage(response);
             console.log(response);
         })
     }
@@ -81,10 +74,6 @@ export default function Return(){
             Services.GetSearchReturn(search).then(({data})=>{
                 setData(data)
             })
-            .catch(({response})=>{
-                Common.responseManage(response);
-                console.log(response);
-            })
         }
     }
 
@@ -95,7 +84,6 @@ export default function Return(){
                 console.log(data);
             })
             .catch(({response})=>{
-                Common.responseManage(response);
                 console.log(response);
             })
         }
@@ -163,7 +151,7 @@ export default function Return(){
                                     Close
                                 </Button>
                             </Modal.Footer>
-                        </Modal>*/}
+                                        </Modal>*/}
                     </td>
                 </tr>
             )
@@ -223,7 +211,6 @@ export default function Return(){
                 AddModelHandleClose();
                 setAddNew({});
             }).catch(({response})=>{
-                Common.responseManage(response);
                 console.log(response);
                 alert(response);
             })
@@ -260,7 +247,6 @@ export default function Return(){
             console.log(data);
             setEditItem(data);
         }).catch(({response})=>{
-            Common.responseManage(response);
             console.log(response);
             alert(response);
         })     
@@ -290,7 +276,6 @@ export default function Return(){
                 fetchData();
                 EditModelHandleClose();
             }).catch(({response})=>{
-                Common.responseManage(response);
                 console.log(response);
                 alert(response);
             })     

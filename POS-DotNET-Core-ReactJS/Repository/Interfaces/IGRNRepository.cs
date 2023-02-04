@@ -1,4 +1,4 @@
-﻿using POS_DotNET_Core_ReactJS.Models;
+﻿using POS_DotNET_Core_ReactJS.Models.DTO;
 
 namespace POS_DotNET_Core_ReactJS.Repository.Interfaces
 {
@@ -15,8 +15,6 @@ namespace POS_DotNET_Core_ReactJS.Repository.Interfaces
         int GetMaxIDGRNs();
 
         bool PostGRNs(GRNAddDTO obj);
-
-        bool PostAllGRNs(int id);
 
         bool EditGRNs(GRNEditDTO obj);
     }

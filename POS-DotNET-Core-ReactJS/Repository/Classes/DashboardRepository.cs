@@ -1,5 +1,5 @@
 ﻿using POS_DotNET_Core_ReactJS.Data;
-using POS_DotNET_Core_ReactJS.Models;
+using POS_DotNET_Core_ReactJS.Models.DTO;
 using POS_DotNET_Core_ReactJS.Repository.Interfaces;
 using System.Data;
 using System.Data.SqlClient;
@@ -13,7 +13,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<DailySalesDashDTO> data = new List<DailySalesDashDTO>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection()))
+                using (SqlConnection con = new SqlConnection(Connection))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_dailySales]", con))
                     {
@@ -46,7 +46,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<MonthlySalesDashDTO> data = new List<MonthlySalesDashDTO>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection()))
+                using (SqlConnection con = new SqlConnection(Connection))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_MonthlySales]", con))
                     {
@@ -79,7 +79,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<UserCountDTO> data = new List<UserCountDTO>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection()))
+                using (SqlConnection con = new SqlConnection(Connection))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_UsersCount]", con))
                     {
@@ -111,7 +111,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection()))
+                using (SqlConnection con = new SqlConnection(Connection))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_ItemsCount]", con))
                     {
@@ -139,7 +139,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection()))
+                using (SqlConnection con = new SqlConnection(Connection))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_SuppliersCount]", con))
                     {
@@ -167,7 +167,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection()))
+                using (SqlConnection con = new SqlConnection(Connection))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GRNsCount]", con))
                     {
@@ -196,7 +196,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<DailySalesDashDTO> data = new List<DailySalesDashDTO>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection()))
+                using (SqlConnection con = new SqlConnection(Connection))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_dailyBillCounts]", con))
                     {
@@ -229,7 +229,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<MonthlySalesDashDTO> data = new List<MonthlySalesDashDTO>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection()))
+                using (SqlConnection con = new SqlConnection(Connection))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_MonthlyBillCounts]", con))
                     {

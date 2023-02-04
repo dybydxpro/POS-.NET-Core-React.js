@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Services from "../Services";
-import Common from "../services/common";
 import { Button, Modal } from 'react-bootstrap';
 
 import SlideBar from "./SlideBar";
@@ -25,10 +24,6 @@ export default function Supplier(){
         Services.GetAllSuppliers().then(({data})=>{
             setData(data)
         })
-        .catch(({response})=>{
-            Common.responseManage(response);
-            console.log(response);
-        })
     }
 
     function SearchText(e){
@@ -39,10 +34,6 @@ export default function Supplier(){
         else{
             Services.GetSearchSuppliers(search).then(({data})=>{
                 setData(data)
-            })
-            .catch(({response})=>{
-                Common.responseManage(response);
-                console.log(response);
             })
         }
     }
@@ -136,7 +127,6 @@ export default function Supplier(){
                 AddModelHandleClose();
                 setAddNew({});
             }).catch(({response})=>{
-                Common.responseManage(response);
                 console.log(response);
                 alert(response);
             })
@@ -174,7 +164,6 @@ export default function Supplier(){
             console.log(data);
             setEditSupplier(data);
         }).catch(({response})=>{
-            Common.responseManage(response);
             console.log(response);
             alert(response);
         })     
@@ -208,7 +197,6 @@ export default function Supplier(){
                 fetchData();
                 EditModelHandleClose();
             }).catch(({response})=>{
-                Common.responseManage(response);
                 console.log(response);
                 alert(response);
             })     

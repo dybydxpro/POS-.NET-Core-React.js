@@ -1,5 +1,6 @@
 ﻿using POS_DotNET_Core_ReactJS.Data;
 using POS_DotNET_Core_ReactJS.Models;
+using POS_DotNET_Core_ReactJS.Models.DTO;
 using POS_DotNET_Core_ReactJS.Repository.Interfaces;
 using System.Data;
 using System.Data.SqlClient;
@@ -13,7 +14,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<StockGetDTO> stocks = new List<StockGetDTO>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection()))
+                using (SqlConnection con = new SqlConnection(Connection))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetAllStocks]", con))
                     {
@@ -50,7 +51,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<Stock> stocks = new List<Stock>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection()))
+                using (SqlConnection con = new SqlConnection(Connection))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetAllStocksASC]", con))
                     {
@@ -86,7 +87,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<StockGetDTO> stocks = new List<StockGetDTO>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection()))
+                using (SqlConnection con = new SqlConnection(Connection))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetStockOnce]", con))
                     {
@@ -151,7 +152,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<StockGetDTO> stocks = new List<StockGetDTO>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection()))
+                using (SqlConnection con = new SqlConnection(Connection))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetSearchStocks]", con))
                     {
@@ -188,7 +189,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection()))
+                using (SqlConnection con = new SqlConnection(Connection))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_CreateStock]", con))
                     {
@@ -220,7 +221,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection()))
+                using (SqlConnection con = new SqlConnection(Connection))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_UpdateStocks]", con))
                     {
