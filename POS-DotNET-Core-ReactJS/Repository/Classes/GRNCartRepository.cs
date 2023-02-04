@@ -1,6 +1,5 @@
 ﻿using POS_DotNET_Core_ReactJS.Data;
 using POS_DotNET_Core_ReactJS.Models;
-using POS_DotNET_Core_ReactJS.Models.DTO;
 using POS_DotNET_Core_ReactJS.Repository.Interfaces;
 using System.Data;
 using System.Data.SqlClient;
@@ -14,7 +13,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<GRNCartGetDTO> grns = new List<GRNCartGetDTO>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetGRNCart]", con))
                     {
@@ -65,7 +64,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<GRNCart> grns = new List<GRNCart>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_GetGRNCartOnce]", con))
                     {
@@ -157,7 +156,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_CreateGRNCart]", con))
                     {
@@ -199,7 +198,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
             List<GRNCart> grns = new List<GRNCart>();
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_UpdateGRNCart]", con))
                     {
@@ -241,7 +240,7 @@ namespace POS_DotNET_Core_ReactJS.Repository.Classes
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(Connection))
+                using (SqlConnection con = new SqlConnection(Connection()))
                 {
                     using (SqlCommand cmd = new SqlCommand("[dbo].[sp_DropGRNCart]", con))
                     {

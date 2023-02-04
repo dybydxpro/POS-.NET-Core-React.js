@@ -11,12 +11,13 @@ export default function SlideBar(){
             alert("Please login to the system!");
             navigate("/login");
         }
-    });
+    }, [sessionStorage.getItem("token")]);
 
     function logout(){
         sessionStorage.setItem('userID', 0);
         sessionStorage.setItem('userName', "");
         sessionStorage.setItem('type', "");
+        sessionStorage.setItem('token', "");
         navigate("/");
     }
 

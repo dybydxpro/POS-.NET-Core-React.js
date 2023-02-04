@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { jsPDF } from "jspdf";
 import autoTable from 'jspdf-autotable';
 import Services from "../Services";
+import Common from "../services/common";
 import { Button, Modal } from 'react-bootstrap';
 import canvasImg from '../image/grn.jpg';
 
@@ -52,6 +53,7 @@ export default function GRN(){
             setData(data)
         })
         .catch(({response})=>{
+            Common.responseManage(response);
             console.log(response);
         })
     }
@@ -61,6 +63,7 @@ export default function GRN(){
             setItem(data)
         })
         .catch(({response})=>{
+            Common.responseManage(response);
             console.log(response);
         })
     }
@@ -71,6 +74,7 @@ export default function GRN(){
             console.log(data);
         })
         .catch(({response})=>{
+            Common.responseManage(response);
             console.log(response);
         })
     }
@@ -78,6 +82,10 @@ export default function GRN(){
     function fetchSupplier(){
         Services.GetAllSuppliersASC().then(({data})=>{
             setSupplier(data)
+        })
+        .catch(({response})=>{
+            Common.responseManage(response);
+            console.log(response);
         })
     }
 
@@ -89,6 +97,10 @@ export default function GRN(){
         else{
             Services.GetSearchGRNs(search).then(({data})=>{
                 setData(data)
+            })
+            .catch(({response})=>{
+                Common.responseManage(response);
+                console.log(response);
             })
         }
     }
@@ -362,6 +374,7 @@ export default function GRN(){
             console.log(data);
             setViewGRN(data);
         }).catch(({response})=>{
+            Common.responseManage(response);
             console.log(response);
             alert(response);
         })     
@@ -485,6 +498,7 @@ export default function GRN(){
                 AddXModelHandleClose();
                 fetchGRNCart();
             }).catch(({response})=>{
+                Common.responseManage(response);
                 console.log(response);
                 alert(response);
             })
@@ -508,6 +522,7 @@ export default function GRN(){
                     "remarks": ""
             });
         }).catch(({response})=>{
+            Common.responseManage(response);
             console.log(response);
             alert(response);
         })
@@ -520,6 +535,7 @@ export default function GRN(){
             setAddNew({});
             fetchGRNCart();
         }).catch(({response})=>{
+            Common.responseManage(response);
             console.log(response);
             alert(response);
         })
@@ -547,6 +563,7 @@ export default function GRN(){
             }]);
             AddModelHandleClose();
         }).catch(({response})=>{
+            Common.responseManage(response);
             console.log(response);
             alert(response);
         })
@@ -574,6 +591,7 @@ export default function GRN(){
             console.log(data);
   
         }).catch(({response})=>{
+            Common.responseManage(response);
             console.log(response);
             alert(response);
         })

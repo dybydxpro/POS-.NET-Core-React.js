@@ -1,0 +1,49 @@
+/* Slide Bar */
+.navSelect {
+    border-radius: 25px;
+    /* background: rgb(100,143,164);
+    background: linear-gradient(90deg, rgba(100,143,164,1) 0%, rgba(77,100,111,1) 90%, rgba(77,100,111,1) 100%); */
+    background: rgb(3,5,59);
+    background-color: linear-gradient(270deg, rgba(3,5,59,1) 0%, rgba(1,131,179,1) 100%);
+}
+
+/* Table */
+.theadStyle {
+    background-color: #181C75;
+}
+
+/* Buttons */
+.btnPrimary, .btnPrimary:hover, .btnPrimary::after {
+    /* background-color: #648FA4; */
+    background: linear-gradient(315deg, rgba(3,5,59,1) 0%, rgba(1,131,179,1) 100%);
+    border-radius: 10px;
+    padding: 12px 20px;
+    color: white;
+}
+
+.btnPrimaryS, .btnPrimaryS:hover, .btnPrimaryS::after {
+    /* background-color: #648FA4; */
+    background: linear-gradient(315deg, rgba(3,5,59,1) 0%, rgba(1,131,179,1) 100%);
+    border-radius: 10px;
+    /* padding: 12px 20px; */
+    color: white;
+}
+
+.btnPagination{
+    background-color: #181C75;
+    color: #FFFFFF;
+}
+
+/* Text Colour */
+.txtPrimary{
+    color: #181C75;
+}
+
+.btnFloating{
+    background: linear-gradient(315deg, rgba(3,5,59,1) 0%, rgba(1,131,179,1) 100%);
+}
+
+/* 
+#4D646F
+#648FA4
+*/
