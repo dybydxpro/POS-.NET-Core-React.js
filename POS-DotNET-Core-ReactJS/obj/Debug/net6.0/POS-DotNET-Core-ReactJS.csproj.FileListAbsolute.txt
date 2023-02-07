@@ -68,9 +68,6 @@ D:\Coding\VisualStudio\POS\POS-.NET-Core-React.js\POS-DotNET-Core-ReactJS\obj\De
 D:\Coding\VisualStudio\POS\POS-.NET-Core-React.js\POS-DotNET-Core-ReactJS\obj\Debug\net6.0\ref\POS-DotNET-Core-ReactJS.dll
 D:\Coding\VisualStudio\POS-.NET-Core-React.js\POS-DotNET-Core-ReactJS\bin\Debug\net6.0\appsettings.Development.json
 D:\Coding\VisualStudio\POS-.NET-Core-React.js\POS-DotNET-Core-ReactJS\bin\Debug\net6.0\appsettings.json
-D:\Coding\VisualStudio\POS-.NET-Core-React.js\POS-DotNET-Core-ReactJS\bin\Debug\net6.0\ClientApp\public\manifest.json
-D:\Coding\VisualStudio\POS-.NET-Core-React.js\POS-DotNET-Core-ReactJS\bin\Debug\net6.0\ClientApp\package-lock.json
-D:\Coding\VisualStudio\POS-.NET-Core-React.js\POS-DotNET-Core-ReactJS\bin\Debug\net6.0\ClientApp\package.json
 D:\Coding\VisualStudio\POS-.NET-Core-React.js\POS-DotNET-Core-ReactJS\bin\Debug\net6.0\POS-DotNET-Core-ReactJS.exe
 D:\Coding\VisualStudio\POS-.NET-Core-React.js\POS-DotNET-Core-ReactJS\bin\Debug\net6.0\POS-DotNET-Core-ReactJS.deps.json
 D:\Coding\VisualStudio\POS-.NET-Core-React.js\POS-DotNET-Core-ReactJS\bin\Debug\net6.0\POS-DotNET-Core-ReactJS.runtimeconfig.json
