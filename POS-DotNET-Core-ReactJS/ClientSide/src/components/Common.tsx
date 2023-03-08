@@ -57,11 +57,13 @@ export default function Common(){
                                             <i className="bi bi-grid"></i> &nbsp; Dashboard
                                         </div>
                                     </li>
+                                    { sessionStorage.getItem('type') == "Admin" &&
                                     <li className={ shift==1? "navSelect": ""}>
                                         <div onClick={() => setShift(1)} className="nav-link link-dark text-light">
                                             <i className="bi bi-person"></i> &nbsp; Users
                                         </div>
                                     </li>
+                                    }
                                     <li className={ shift==2? "navSelect": ""}>
                                         <div onClick={() => setShift(2)} className="nav-link link-dark text-light">
                                             <i className="bi bi-box"></i> &nbsp; Items

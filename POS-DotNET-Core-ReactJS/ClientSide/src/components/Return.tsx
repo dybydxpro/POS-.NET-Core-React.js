@@ -351,7 +351,7 @@ export default function Return(){
     return(
         <>
             <div className="row">
-                <p className="m-4" style={{ color: "#4d646f", fontSize: "18px", fontWeight: "600" }}>Suppliers</p>
+                <p className="m-4" style={{ color: "#03053B", fontSize: "18px", fontWeight: "600" }}>Returns</p>
             </div>
 
             <div className="row mx-3">
@@ -374,10 +374,15 @@ export default function Return(){
                                 <thead className="theadStyle">
                                     <tr className="">
                                         <th scope="col" className="text-light text-center">#</th>
-                                        <th scope="col" className="text-light text-center">Supplier ID</th>
-                                        <th scope="col" className="text-light text-center">Supplier Name</th>
-                                        <th scope="col" className="text-light text-center">Address</th>
-                                        <th scope="col" className="text-light text-center">Contact Number</th>
+                                        <th scope="col" className="text-light text-center">Return ID</th>
+                                        <th scope="col" className="text-light text-center">Bill ID</th>
+                                        <th scope="col" className="text-light text-center">Item ID</th>
+                                        <th scope="col" className="text-light text-center">Stock ID</th>
+                                        <th scope="col" className="text-light text-center">Item Name</th>
+                                        <th scope="col" className="text-light text-center">Unit</th>
+                                        <th scope="col" className="text-light text-center">QTY</th>
+                                        <th scope="col" className="text-light text-center">Price</th>
+                                        <th scope="col" className="text-light text-center">User Name</th>
                                         <th scope="col" className="text-light text-center" style={{ width: "150px" }}>Options</th>
                                     </tr>
                                 </thead>

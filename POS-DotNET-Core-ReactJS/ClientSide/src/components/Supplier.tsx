@@ -230,7 +230,7 @@ export default function Supplier(){
             console.log("address");
             return false;
         }
-        else if(newData["contactNumber"] === "" || newData["contactNumber"] === undefined){
+        else if((newData["contactNumber"]).match(/^\(([0-9]{10})/)){
             console.log("contactNumber");
             return false;
         }
@@ -254,7 +254,7 @@ export default function Supplier(){
             })     
         }
         else{
-            alert("Validation Failed!")
+            alert("Validation Failed!");
         }
     }
 

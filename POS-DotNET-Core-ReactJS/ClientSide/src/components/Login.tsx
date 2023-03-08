@@ -38,6 +38,12 @@ export default function Login(){
             sessionStorage.setItem('token', data.token);
             window.location.replace("/system");
         }).catch(({response})=>{
+            if(response.status == 404){
+                alert("Username or password is wrong!");
+            }
+            else if(response.status == 500){
+                alert("Connection failed!");
+            }
             console.log(response);
         });
     }
@@ -82,7 +88,7 @@ export default function Login(){
                                                         <label className="form-label" htmlFor="Password">Password</label>
                                                     </div>
                                                     <div className="text-center pt-1 mb-5 pb-1">
-                                                        <button className="btn login-gradient-custom-2 mb-3 px-5 text-light" type="submit">Login</button>
+                                                        <button className="btn login-gradient-custom-2 mb-3 px-5 text-light" type="submit" onClick={() => login()}>Login</button>
                                                         {/*<a className="text-muted" href="#!">Forgot password?</a>*/}
                                                     </div>
                                                 </div>
