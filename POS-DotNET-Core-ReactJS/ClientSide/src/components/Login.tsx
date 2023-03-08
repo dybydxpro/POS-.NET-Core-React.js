@@ -88,7 +88,8 @@ export default function Login(){
                                                         <label className="form-label" htmlFor="Password">Password</label>
                                                     </div>
                                                     <div className="text-center pt-1 mb-5 pb-1">
-                                                        <button className="btn login-gradient-custom-2 mb-3 px-5 text-light" type="submit" onClick={() => login()}>Login</button>
+                                                        <button className="btn login-gradient-custom-2 mb-3 px-5 text-light" onClick={() => login()} type="button">Login</button>
+
                                                         {/*<a className="text-muted" href="#!">Forgot password?</a>*/}
                                                     </div>
                                                 </div>

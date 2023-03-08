@@ -53,45 +53,45 @@ export default function Common(){
                                 <hr/>
                                 <ul className="nav nav-pills flex-column mb-auto mx-3">
                                     <li className={ shift==0? "navSelect": ""}>
-                                        <div onClick={() => setShift(0)} className="nav-link link-dark text-light">
+                                        <div onClick={() => setShift(0)} className="nav-link link-light text-light" style={{  }}>
                                             <i className="bi bi-grid"></i> &nbsp; Dashboard
                                         </div>
                                     </li>
                                     { sessionStorage.getItem('type') == "Admin" &&
                                     <li className={ shift==1? "navSelect": ""}>
-                                        <div onClick={() => setShift(1)} className="nav-link link-dark text-light">
+                                        <div onClick={() => setShift(1)} className="nav-link link-light text-light">
                                             <i className="bi bi-person"></i> &nbsp; Users
                                         </div>
                                     </li>
                                     }
                                     <li className={ shift==2? "navSelect": ""}>
-                                        <div onClick={() => setShift(2)} className="nav-link link-dark text-light">
+                                        <div onClick={() => setShift(2)} className="nav-link link-light text-light">
                                             <i className="bi bi-box"></i> &nbsp; Items
                                         </div>
                                     </li>
                                     <li className={ shift==3? "navSelect": ""}>
-                                        <div onClick={() => setShift(3)} className="nav-link link-dark text-light">
+                                        <div onClick={() => setShift(3)} className="nav-link link-light text-light">
                                             <i className="bi bi-grid-1x2"></i> &nbsp; Stocks
                                         </div>
                                     </li>
                                     <li className={ shift==4? "navSelect": ""}>
-                                        <div onClick={() => setShift(4)} className="nav-link link-dark text-light">
+                                        <div onClick={() => setShift(4)} className="nav-link link-light text-light">
                                             <i className="bi bi-people"></i> &nbsp; Suppliers
                                         </div>
                                     </li>
                                     <li className={ shift==5? "navSelect": ""}>
-                                        <div onClick={() => setShift(5)} className="nav-link link-dark text-light">
+                                        <div onClick={() => setShift(5)} className="nav-link link-light text-light">
                                             <i className="bi bi-box-arrow-in-left"></i> &nbsp; GRNs
                                         </div>
                                     </li>
                                     <hr/>
                                     <li className={ shift==6? "navSelect": ""}>
-                                        <div onClick={() => setShift(6)} className="nav-link link-dark text-light">
+                                        <div onClick={() => setShift(6)} className="nav-link link-light text-light">
                                             <i className="bi bi-receipt-cutoff"></i> &nbsp; Billing
                                         </div>
                                     </li>
                                     <li className={ shift==7? "navSelect": ""}>
-                                        <div onClick={() => setShift(7)} className="nav-link link-dark text-light">
+                                        <div onClick={() => setShift(7)} className="nav-link link-light text-light">
                                             <i className="bi bi-bootstrap-reboot"></i> &nbsp; Returns
                                         </div>
                                     </li>

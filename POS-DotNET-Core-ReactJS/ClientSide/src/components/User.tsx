@@ -110,7 +110,7 @@ export default function User(){
         return(
             currentPosts.map((dataset, index) =>
                 <tr key={dataset.userID} className={ Boolean(dataset.status)===false? "table-secondary" : ""}>
-                    <td><b>{index+((currentPage-1)*recordsPerPage)+1}</b></td>
+                    <td>{index+((currentPage-1)*recordsPerPage)+1}</td>
                     <td>{dataset.userID}</td>
                     <td>{dataset.name}</td>
                     <td>{dataset.nic}</td>
